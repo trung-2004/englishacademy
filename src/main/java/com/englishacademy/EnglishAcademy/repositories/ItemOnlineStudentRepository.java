@@ -7,4 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ItemOnlineStudentRepository extends JpaRepository<ItemOnlineStudent, Long> {
     ItemOnlineStudent findByItemOnlineAndStudent(ItemOnline itemOnline, Student student);
+    ItemOnlineStudent findByItemOnline_OrderTopAndStudent(Integer order, Student student);
 }

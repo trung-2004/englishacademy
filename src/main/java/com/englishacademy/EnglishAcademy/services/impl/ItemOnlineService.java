@@ -54,8 +54,13 @@ public class ItemOnlineService implements IItemOnlineService {
         if (courseOnlineStudent == null){
             throw new RuntimeException("Not Found");
         }
-        ItemOnlineStudent itemOnlineStudentExing = itemOnlineStudentRepository.findByItemOnlineAndStudent(model, student.get());
-        if (itemOnlineStudentExing != null){
+        ItemOnlineStudent itemOnlineStudentExisting = itemOnlineStudentRepository.findByItemOnlineAndStudent(model, student.get());
+        if (itemOnlineStudentExisting == null){
+            throw new RuntimeException("Not Found");
+        }
+
+        ItemOnlineStudent itemOnlineStudent = itemOnlineStudentRepository.findByItemOnline_OrderTopAndStudent(model.getOrderTop()+1, student.get());
+        if (itemOnlineStudent == null){
             throw new RuntimeException("Not Found");
         }
 
@@ -63,12 +68,8 @@ public class ItemOnlineService implements IItemOnlineService {
         ZonedDateTime zonedDateTime = ZonedDateTime.ofInstant(Instant.now(), zoneId);
         Timestamp timestamp = Timestamp.from(zonedDateTime.toInstant());
 
-        ItemOnlineStudent itemOnlineStudent = ItemOnlineStudent.builder()
-                .itemOnline(model)
-                .student(student.get())
-                .status(true)
-                .lastAccessed(timestamp)
-                .build();
+        itemOnlineStudent.setStatus(true);
+        itemOnlineStudent.setLastAccessed(timestamp);
 
         itemOnlineStudentRepository.save(itemOnlineStudent);
 

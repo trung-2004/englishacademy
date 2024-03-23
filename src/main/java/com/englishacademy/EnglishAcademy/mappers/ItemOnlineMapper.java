@@ -68,11 +68,7 @@ public class ItemOnlineMapper {
                 .build();
 
         if (itemOnlineStudent != null){
-            if (model.getOrderTop() == 1){
-                itemOnlineDTO.setStatus(true);
-            } else {
-                itemOnlineDTO.setStatus(itemOnlineStudent.isStatus());
-            }
+            itemOnlineDTO.setStatus(itemOnlineStudent.isStatus());
             itemOnlineDTO.setLastAccessed(itemOnlineStudent.getLastAccessed());
         }
 

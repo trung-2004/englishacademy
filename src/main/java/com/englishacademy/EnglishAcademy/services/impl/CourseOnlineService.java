@@ -4,12 +4,16 @@ import com.englishacademy.EnglishAcademy.dtos.courseOnline.CourseOnlineDTO;
 import com.englishacademy.EnglishAcademy.dtos.courseOnline.CourseOnlineDetail;
 import com.englishacademy.EnglishAcademy.dtos.topicOnline.TopicOnlineDTO;
 import com.englishacademy.EnglishAcademy.entities.CourseOnline;
+import com.englishacademy.EnglishAcademy.entities.CourseOnlineStudent;
+import com.englishacademy.EnglishAcademy.entities.Student;
 import com.englishacademy.EnglishAcademy.entities.TopicOnline;
 import com.englishacademy.EnglishAcademy.mappers.CourseOnlineMapper;
 import com.englishacademy.EnglishAcademy.mappers.TopicOnlineMapper;
 import com.englishacademy.EnglishAcademy.models.courseOnline.CreateCourseOnline;
 import com.englishacademy.EnglishAcademy.models.courseOnline.EditCourseOnline;
 import com.englishacademy.EnglishAcademy.repositories.CourseOnlineRepository;
+import com.englishacademy.EnglishAcademy.repositories.CourseOnlineStudentRepository;
+import com.englishacademy.EnglishAcademy.repositories.StudentRepository;
 import com.englishacademy.EnglishAcademy.services.ICourseOnlineService;
 import com.englishacademy.EnglishAcademy.services.IStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +23,6 @@ import java.sql.Timestamp;
 import java.time.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class CourseOnlineService implements ICourseOnlineService {
@@ -30,11 +32,23 @@ public class CourseOnlineService implements ICourseOnlineService {
     private CourseOnlineRepository courseOnlineRepository;
     @Autowired
     private IStorageService storageService;
+    @Autowired
+    private StudentRepository studentRepository;
+    @Autowired
+    private CourseOnlineStudentRepository courseOnlineStudentRepository;
 
 
     @Override
     public List<CourseOnlineDTO> findAll() {
         return courseOnlineRepository.findAll().stream().map(courseOnlineMapper::toCourseOnlineDTO).toList();
+    }
+
+    @Override
+    public List<CourseOnlineDTO> findAllByStudent(Long studentId) {
+        Student student = studentRepository.findById(studentId)
+                .orElseThrow(() -> new RuntimeException("Not Found"));
+        List<CourseOnline> courseOnlineStudentList = student.getCourseOnlineStudents().stream().map(CourseOnlineStudent::getCourseOnline).toList();
+        return courseOnlineStudentList.stream().map(courseOnlineMapper::toCourseOnlineDTO).toList();
     }
 
     @Override

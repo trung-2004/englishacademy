@@ -37,6 +37,20 @@ public class CourseOnlineController {
         }
     }
 
+    @GetMapping("/student/{studentId}")
+    ResponseEntity<ResponseObject> getAllByStudent(@PathVariable("studentId") Long studentId) {
+        try {
+            List<CourseOnlineDTO> list = courseOnlineService.findAllByStudent(studentId);
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject(true, "ok", list)
+            );
+        } catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new ResponseObject(false, e.getMessage(), "")
+            );
+        }
+    }
+
     @GetMapping("/{slug}")
     ResponseEntity<ResponseObject> getBySlug(@PathVariable("slug") String slug) {
         try {

@@ -9,6 +9,7 @@ import java.util.List;
 
 public interface ICourseOnlineService {
     List<CourseOnlineDTO> findAll();
+    List<CourseOnlineDTO> findAllByStudent(Long studentId);
     CourseOnlineDTO findBySlug(String slug);
     CourseOnlineDTO create(CreateCourseOnline model);
     CourseOnlineDTO edit(EditCourseOnline model);
