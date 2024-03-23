@@ -15,6 +15,7 @@ import java.util.Date;
 public class ItemOnlineDTO {
     private Long id;
     private String title;
+    private String slug;
 
     private String content;
 

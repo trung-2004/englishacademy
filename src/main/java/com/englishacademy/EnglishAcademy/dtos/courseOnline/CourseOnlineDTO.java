@@ -23,6 +23,7 @@ public class CourseOnlineDTO {
 
     private Double price;
     private Double star;
+    private Integer totalReview;
 
     private String description;
 

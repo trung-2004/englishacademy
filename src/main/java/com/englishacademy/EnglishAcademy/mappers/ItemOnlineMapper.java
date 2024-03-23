@@ -33,6 +33,7 @@ public class ItemOnlineMapper {
         ItemOnlineDTO itemOnlineDTO = ItemOnlineDTO.builder()
                 .id(model.getId())
                 .title(model.getTitle())
+                .slug(model.getSlug())
                 .content(model.getContent())
                 .itemType(model.getItemType())
                 .orderTop(model.getOrderTop())
@@ -55,6 +56,7 @@ public class ItemOnlineMapper {
         ItemOnlineDTO itemOnlineDTO = ItemOnlineDTO.builder()
                 .id(model.getId())
                 .title(model.getTitle())
+                .slug(model.getSlug())
                 .content(model.getContent())
                 .itemType(model.getItemType())
                 .orderTop(model.getOrderTop())
@@ -66,7 +68,11 @@ public class ItemOnlineMapper {
                 .build();
 
         if (itemOnlineStudent != null){
-            itemOnlineDTO.setStatus(itemOnlineStudent.isStatus());
+            if (model.getOrderTop() == 1){
+                itemOnlineDTO.setStatus(true);
+            } else {
+                itemOnlineDTO.setStatus(itemOnlineStudent.isStatus());
+            }
             itemOnlineDTO.setLastAccessed(itemOnlineStudent.getLastAccessed());
         }
 
@@ -85,6 +91,7 @@ public class ItemOnlineMapper {
         ItemOnlineDetail itemOnlineDetail = ItemOnlineDetail.builder()
                 .id(model.getId())
                 .title(model.getTitle())
+                .slug(model.getSlug())
                 .content(model.getContent())
                 .itemType(model.getItemType())
                 .orderTop(model.getOrderTop())
