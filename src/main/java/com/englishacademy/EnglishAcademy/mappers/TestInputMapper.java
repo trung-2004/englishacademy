@@ -13,6 +13,7 @@ public class TestInputMapper {
         TestInputDTO testInputDTO = TestInputDTO.builder()
                 .id(model.getId())
                 .title(model.getTitle())
+                .slug(model.getSlug())
                 .type(model.getType())
                 .description(model.getDescription())
                 .totalQuestion(model.getTotalQuestion())

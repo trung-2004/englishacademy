@@ -1,14 +1,12 @@
 package com.englishacademy.EnglishAcademy.services.impl;
 
-import com.englishacademy.EnglishAcademy.dtos.questionItemOnline.QuestionItemOnlineDTO;
 import com.englishacademy.EnglishAcademy.dtos.questionTestInput.QuestionTestInputDTO;
-import com.englishacademy.EnglishAcademy.dtos.sessionInput.SessionInputDetail;
 import com.englishacademy.EnglishAcademy.dtos.testInput.TestInputDTO;
 import com.englishacademy.EnglishAcademy.dtos.testInput.TestInputDetail;
-import com.englishacademy.EnglishAcademy.dtos.topicOnline.TopicOnlineDetail;
+import com.englishacademy.EnglishAcademy.dtos.testInputSession.TestInputSessionDetail;
 import com.englishacademy.EnglishAcademy.entities.QuestionTestInput;
-import com.englishacademy.EnglishAcademy.entities.SessionInput;
 import com.englishacademy.EnglishAcademy.entities.TestInput;
+import com.englishacademy.EnglishAcademy.entities.TestInputSession;
 import com.englishacademy.EnglishAcademy.mappers.TestInputMapper;
 import com.englishacademy.EnglishAcademy.repositories.TestInputRepository;
 import com.englishacademy.EnglishAcademy.services.ITestInputService;
@@ -46,11 +44,10 @@ public class TestInputService implements ITestInputService {
             throw new RuntimeException("Not Found");
         }
 
-        List<SessionInputDetail> sessionInputDetails = new ArrayList<>();
-
-        for (SessionInput sessionInput: testInput.getSessionInputs()) {
+        List<TestInputSessionDetail> testInputSessionDetailList = new ArrayList<>();
+        for (TestInputSession testInputSession : testInput.getTestInputSessions()) {
             List<QuestionTestInputDTO> questionTestInputDTOS = new ArrayList<>();
-            for (QuestionTestInput questionTestInput: sessionInput.getQuestionTestInputs()) {
+            for (QuestionTestInput questionTestInput: testInputSession.getQuestionTestInputs()) {
                 QuestionTestInputDTO questionTestInputDTO = QuestionTestInputDTO.builder()
                         .audiomp3(questionTestInput.getAudiomp3())
                         .image(questionTestInput.getImage())
@@ -70,26 +67,27 @@ public class TestInputService implements ITestInputService {
             // sort by order
             questionTestInputDTOS.sort(Comparator.comparingInt(QuestionTestInputDTO::getOrderTop));
 
-            SessionInputDetail sessionInputDetail = SessionInputDetail.builder()
-                    .title(sessionInput.getTitle())
-                    .type(sessionInput.getType())
-                    .totalQuestion(sessionInput.getTotalQuestion())
-                    .orderTop(sessionInput.getOrderTop())
-                    .questionTestInputDTOS(questionTestInputDTOS)
+            TestInputSessionDetail testInputSessionDetail = TestInputSessionDetail.builder()
+                    .testInputId(testInput.getId())
+                    .sessionId(testInputSession.getSession().getId())
+                    .sessionName(testInputSession.getSession().getTitle())
+                    .totalQuestion(testInputSession.getTotalQuestion())
+                    .orderTop(testInputSession.getOrderTop())
+                    .questionTestInputs(questionTestInputDTOS)
                     .build();
-            sessionInputDetails.add(sessionInputDetail);
+            testInputSessionDetailList.add(testInputSessionDetail);
         }
-
         // sort by order
-        sessionInputDetails.sort(Comparator.comparingInt(SessionInputDetail::getOrderTop));
+        testInputSessionDetailList.sort(Comparator.comparingInt(TestInputSessionDetail::getOrderTop));
 
         TestInputDetail testInputDetail = TestInputDetail.builder()
+                .id(testInput.getId())
                 .title(testInput.getTitle())
                 .slug(testInput.getSlug())
                 .type(testInput.getType())
                 .totalQuestion(testInput.getTotalQuestion())
                 .description(testInput.getDescription())
-                .sessionInputDetails(sessionInputDetails)
+                .testInputSessionDetails(testInputSessionDetailList)
                 .createdDate(testInput.getCreatedDate())
                 .modifiedBy(testInput.getModifiedBy())
                 .createdBy(testInput.getCreatedBy())

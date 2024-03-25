@@ -37,9 +37,8 @@ public class TestInput extends BaseEntity{
     @Column(name = "time", nullable = false)
     private Integer time;
 
-
     @OneToMany(mappedBy = "testInput")
     @JsonIgnore
-    private List<SessionInput> sessionInputs;
+    private List<TestInputSession> testInputSessions;
 
 }

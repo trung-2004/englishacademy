@@ -50,7 +50,7 @@ public class QuestionTestInput extends BaseEntity{
     private Integer orderTop;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "sessionInputId")
-    private SessionInput sessionInput;
+    @JoinColumn(name = "testInputSessionId")
+    private TestInputSession testInputSession;
 
 }

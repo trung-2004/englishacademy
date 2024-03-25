@@ -1,6 +1,6 @@
 package com.englishacademy.EnglishAcademy.dtos.testInput;
 
-import com.englishacademy.EnglishAcademy.dtos.sessionInput.SessionInputDetail;
+import com.englishacademy.EnglishAcademy.dtos.testInputSession.TestInputSessionDetail;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,7 +20,7 @@ public class TestInputDetail {
     private Integer type;
     private String description;
     private String totalQuestion;
-    private List<SessionInputDetail> sessionInputDetails;
+    private List<TestInputSessionDetail> testInputSessionDetails;
     private Timestamp createdDate;
     private Timestamp modifiedDate;
     private String createdBy;

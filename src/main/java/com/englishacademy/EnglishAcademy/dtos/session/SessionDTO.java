@@ -1,4 +1,4 @@
-package com.englishacademy.EnglishAcademy.dtos.sessionInput;
+package com.englishacademy.EnglishAcademy.dtos.session;
 
 import com.englishacademy.EnglishAcademy.dtos.questionTestInput.QuestionTestInputDTO;
 import lombok.AllArgsConstructor;
@@ -12,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class SessionInputDetail {
+public class SessionDTO {
     private String title;
 
     private Integer type;

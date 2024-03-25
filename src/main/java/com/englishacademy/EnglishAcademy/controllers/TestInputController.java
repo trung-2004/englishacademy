@@ -9,10 +9,7 @@ import com.englishacademy.EnglishAcademy.services.ITestInputService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -52,6 +49,20 @@ public class TestInputController {
 
     @GetMapping("/detail/{slug}")
     ResponseEntity<ResponseObject> getAllIelts(@PathVariable("slug") String slug) {
+        try {
+            TestInputDetail testInputDetail = testInputService.getdetailTest(slug);
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject(true, "ok", testInputDetail)
+            );
+        } catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new ResponseObject(false, e.getMessage(), "")
+            );
+        }
+    }
+
+    @PostMapping("/detail")
+    ResponseEntity<ResponseObject> submitTest(@RequestBody String slug) {
         try {
             TestInputDetail testInputDetail = testInputService.getdetailTest(slug);
             return ResponseEntity.status(HttpStatus.OK).body(
