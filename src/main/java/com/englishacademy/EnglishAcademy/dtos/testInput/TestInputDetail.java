@@ -19,7 +19,7 @@ public class TestInputDetail {
     private String slug;
     private Integer type;
     private String description;
-    private String totalQuestion;
+    private Integer totalQuestion;
     private List<TestInputSessionDetail> testInputSessionDetails;
     private Timestamp createdDate;
     private Timestamp modifiedDate;

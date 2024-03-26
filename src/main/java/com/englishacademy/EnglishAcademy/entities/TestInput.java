@@ -32,7 +32,7 @@ public class TestInput extends BaseEntity{
     private String description;
 
     @Column(name = "totalQuestion", nullable = false)
-    private String totalQuestion;
+    private Integer totalQuestion;
 
     @Column(name = "time", nullable = false)
     private Integer time;

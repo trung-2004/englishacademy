@@ -17,7 +17,7 @@ public class TestInputDTO {
     private String slug;
     private Integer type;
     private String description;
-    private String totalQuestion;
+    private Integer totalQuestion;
     private Timestamp createdDate;
     private Timestamp modifiedDate;
     private String createdBy;

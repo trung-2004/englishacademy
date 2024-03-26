@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TestInputStudentRepository extends JpaRepository<TestInputStudent, Long> {
-
+    TestInputStudent findByCode(String code);
 }

@@ -2,8 +2,10 @@ package com.englishacademy.EnglishAcademy.controllers;
 
 import com.englishacademy.EnglishAcademy.dtos.ResponseObject;
 import com.englishacademy.EnglishAcademy.dtos.courseOnline.CourseOnlineDTO;
+import com.englishacademy.EnglishAcademy.dtos.questionTestInput.QuestionTestInputDetailResult;
 import com.englishacademy.EnglishAcademy.dtos.testInput.TestInputDTO;
 import com.englishacademy.EnglishAcademy.dtos.testInput.TestInputDetail;
+import com.englishacademy.EnglishAcademy.dtos.testInputStudent.TestInputStudentDTO;
 import com.englishacademy.EnglishAcademy.models.answerStudent.CreateAnswerStudent;
 import com.englishacademy.EnglishAcademy.repositories.TestInputRepository;
 import com.englishacademy.EnglishAcademy.services.ITestInputService;
@@ -79,5 +81,36 @@ public class TestInputController {
             );
         }
     }
+
+    @GetMapping("/result/{code}")
+    ResponseEntity<ResponseObject> getResultTest(@PathVariable("code") String code) {
+        try {
+            TestInputStudentDTO testInputStudentDTO = testInputService.getresultTest(code);
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject(true, "ok", testInputStudentDTO)
+            );
+        } catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new ResponseObject(false, e.getMessage(), "")
+            );
+        }
+    }
+
+    @GetMapping("/result-detail/{code}")
+    ResponseEntity<ResponseObject> getResultDetailTest(@PathVariable("code") String code) {
+        try {
+            List<QuestionTestInputDetailResult> questionTestInputDetailResults = testInputService.getresultDetailTest(code);
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject(true, "ok", questionTestInputDetailResults)
+            );
+        } catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new ResponseObject(false, e.getMessage(), "")
+            );
+        }
+    }
+
+
+
 
 }
