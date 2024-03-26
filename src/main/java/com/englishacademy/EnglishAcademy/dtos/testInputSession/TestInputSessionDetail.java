@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 @Data
@@ -14,6 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class TestInputSessionDetail {
+    private Long id;
     private Long testInputId;
 
     private Long sessionId;
@@ -25,4 +27,11 @@ public class TestInputSessionDetail {
     private Integer orderTop;
 
     private List<QuestionTestInputDTO> questionTestInputs;
+    private Timestamp createdDate;
+
+    private Timestamp modifiedDate;
+
+    private String createdBy;
+
+    private String modifiedBy;
 }

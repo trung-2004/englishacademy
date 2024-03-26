@@ -5,11 +5,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.sql.Timestamp;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class QuestionTestInputDTO {
+    private Long id;
     private String title;
 
     private String audiomp3;
@@ -31,4 +34,11 @@ public class QuestionTestInputDTO {
     private Integer part;
 
     private Integer orderTop;
+    private Timestamp createdDate;
+
+    private Timestamp modifiedDate;
+
+    private String createdBy;
+
+    private String modifiedBy;
 }

@@ -41,4 +41,8 @@ public class TestInput extends BaseEntity{
     @JsonIgnore
     private List<TestInputSession> testInputSessions;
 
+    @OneToMany(mappedBy = "testInput")
+    @JsonIgnore
+    private List<TestInputStudent> testInputStudents;
+
 }

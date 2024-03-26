@@ -4,11 +4,10 @@ import com.englishacademy.EnglishAcademy.dtos.questionTestInput.QuestionTestInpu
 import com.englishacademy.EnglishAcademy.dtos.testInput.TestInputDTO;
 import com.englishacademy.EnglishAcademy.dtos.testInput.TestInputDetail;
 import com.englishacademy.EnglishAcademy.dtos.testInputSession.TestInputSessionDetail;
-import com.englishacademy.EnglishAcademy.entities.QuestionTestInput;
-import com.englishacademy.EnglishAcademy.entities.TestInput;
-import com.englishacademy.EnglishAcademy.entities.TestInputSession;
+import com.englishacademy.EnglishAcademy.entities.*;
 import com.englishacademy.EnglishAcademy.mappers.TestInputMapper;
-import com.englishacademy.EnglishAcademy.repositories.TestInputRepository;
+import com.englishacademy.EnglishAcademy.models.answerStudent.CreateAnswerStudent;
+import com.englishacademy.EnglishAcademy.repositories.*;
 import com.englishacademy.EnglishAcademy.services.ITestInputService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,12 +15,22 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 @Service
 public class TestInputService implements ITestInputService {
+    private static final String ALLOWED_CHARACTERS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
     @Autowired
     private TestInputRepository testInputRepository;
+    @Autowired
+    private StudentRepository studentRepository;
+    @Autowired
+    private TestInputStudentRepository testInputStudentRepository;
+    @Autowired
+    private AnswerStudentRepository answerStudentRepository;
+    @Autowired
+    private QuestionTestInputRepository questionTestInputRepository;
     @Autowired
     private TestInputMapper testInputMapper;
 
@@ -49,6 +58,7 @@ public class TestInputService implements ITestInputService {
             List<QuestionTestInputDTO> questionTestInputDTOS = new ArrayList<>();
             for (QuestionTestInput questionTestInput: testInputSession.getQuestionTestInputs()) {
                 QuestionTestInputDTO questionTestInputDTO = QuestionTestInputDTO.builder()
+                        .id(questionTestInput.getId())
                         .audiomp3(questionTestInput.getAudiomp3())
                         .image(questionTestInput.getImage())
                         .paragraph(questionTestInput.getParagraph())
@@ -60,6 +70,10 @@ public class TestInputService implements ITestInputService {
                         .type(questionTestInput.getType())
                         .part(questionTestInput.getPart())
                         .orderTop(questionTestInput.getOrderTop())
+                        .createdBy(questionTestInput.getCreatedBy())
+                        .createdDate(questionTestInput.getCreatedDate())
+                        .modifiedBy(questionTestInput.getModifiedBy())
+                        .modifiedDate(questionTestInput.getModifiedDate())
                         .build();
                 questionTestInputDTOS.add(questionTestInputDTO);
             }
@@ -68,12 +82,17 @@ public class TestInputService implements ITestInputService {
             questionTestInputDTOS.sort(Comparator.comparingInt(QuestionTestInputDTO::getOrderTop));
 
             TestInputSessionDetail testInputSessionDetail = TestInputSessionDetail.builder()
+                    .id(testInputSession.getId())
                     .testInputId(testInput.getId())
                     .sessionId(testInputSession.getSession().getId())
                     .sessionName(testInputSession.getSession().getTitle())
                     .totalQuestion(testInputSession.getTotalQuestion())
                     .orderTop(testInputSession.getOrderTop())
                     .questionTestInputs(questionTestInputDTOS)
+                    .createdBy(testInputSession.getCreatedBy())
+                    .createdDate(testInputSession.getCreatedDate())
+                    .modifiedBy(testInputSession.getModifiedBy())
+                    .modifiedDate(testInputSession.getModifiedDate())
                     .build();
             testInputSessionDetailList.add(testInputSessionDetail);
         }
@@ -95,5 +114,150 @@ public class TestInputService implements ITestInputService {
                 .build();
 
         return testInputDetail;
+    }
+
+    @Override
+    public void submitTest(String slug, Long studentId, List<CreateAnswerStudent> answersForStudents) {
+        /*TestInput testInput = testInputRepository.findBySlug(slug);
+        if (testInput == null){
+            throw new RuntimeException("Not Found");
+        }
+        Student student = studentRepository.findById(studentId)
+                .orElseThrow(() -> new RuntimeException("Not Found"));
+
+        TestInputStudent testInputStudent = TestInputStudent.builder()
+                .code(generateRandomString(8))
+                .student(student)
+                .time(30.0)
+                .testInput(testInput)
+                .build();
+
+        List<QuestionTestInput> questionTestInputList = new ArrayList<>();
+        for (TestInputSession testInputSession : testInput.getTestInputSessions()) {
+            questionTestInputList.addAll(testInputSession.getQuestionTestInputs());
+        }
+
+        List<AnswerStudent> answerStudentList = new ArrayList<>();
+        for (CreateAnswerStudent createAnswerStudent: answersForStudents) {
+            QuestionTestInput questionTestInput = questionTestInputRepository.findById(createAnswerStudent.getQuestionId())
+                    .orElseThrow(() -> new RuntimeException("Not Found"));
+            AnswerStudent answerStudent = AnswerStudent.builder()
+                    .testInputStudent(testInputStudent)
+                    .questionTestInput(questionTestInput)
+                    .content(createAnswerStudent.getContent())
+                    .build();
+            //save
+            answerStudentRepository.save(answerStudent);
+
+            answerStudentList.add(answerStudent);
+        }*/
+
+        // Tìm testInput theo slug
+        TestInput testInput = testInputRepository.findBySlug(slug);
+        if (testInput == null){
+            throw new RuntimeException("Test Input Not Found");
+        }
+
+        // Tìm sinh viên theo studentId
+        Student student = studentRepository.findById(studentId)
+                .orElseThrow(() -> new RuntimeException("Student Not Found"));
+
+        // Tạo đối tượng TestInputStudent mới
+        TestInputStudent testInputStudent = TestInputStudent.builder()
+                .code(generateRandomString(8))
+                .student(student)
+                .time(30.0)
+                .testInput(testInput)
+                .build();
+        testInputStudentRepository.save(testInputStudent);
+
+        // Lấy danh sách câu hỏi từ các phiên test
+        List<QuestionTestInput> questionTestInputList = testInput.getTestInputSessions()
+                .stream()
+                .flatMap(session -> session.getQuestionTestInputs().stream())
+                .collect(Collectors.toList());
+
+        // Lưu câu trả lời của sinh viên
+        List<AnswerStudent> answerStudentList = new ArrayList<>();
+        for (CreateAnswerStudent createAnswerStudent: answersForStudents) {
+            QuestionTestInput questionTestInput = questionTestInputRepository.findById(createAnswerStudent.getQuestionId())
+                    .orElseThrow(() -> new RuntimeException("Question Not Found"));
+
+            AnswerStudent answerStudent = AnswerStudent.builder()
+                    .testInputStudent(testInputStudent)
+                    .questionTestInput(questionTestInput)
+                    .content(createAnswerStudent.getContent())
+                    .build();
+
+            // Lưu câu trả lời của sinh viên
+            answerStudentRepository.save(answerStudent);
+            answerStudentList.add(answerStudent);
+        }
+
+        double totalScore = 0;
+        int correctReading = 0;
+        int correctListening = 0;
+        int correctVocabulary = 0;
+        int correctGrammar = 0;
+
+        for (QuestionTestInput questionTestInput: questionTestInputList) {
+            AnswerStudent answerStudent = findAnswerForQuestion(answerStudentList, questionTestInput);
+            if (answerStudent != null) {
+                // So sánh câu trả lời của sinh viên với đáp án chính xác của câu hỏi
+                if (answerStudent.getContent().trim().equals(questionTestInput.getCorrectanswer().trim())) {
+                    // Nếu câu trả lời đúng, tăng điểm lên
+                    totalScore+=1;
+                    answerStudent.setCorrect(true);
+                } else {
+                    answerStudent.setCorrect(false);
+                }
+                answerStudentRepository.save(answerStudent);
+            }
+
+            if (questionTestInput.getTestInputSession().getSession().getId() == 1) {
+                correctReading ++;
+            } else if (questionTestInput.getTestInputSession().getSession().getId() == 2) {
+                correctListening++;
+            } else if (questionTestInput.getTestInputSession().getSession().getId() == 3) {
+                correctVocabulary++;
+            } else if (questionTestInput.getTestInputSession().getSession().getId() == 4) {
+                correctGrammar++;
+            }
+        }
+
+        for (TestInputSession testInputSession: testInput.getTestInputSessions()) {
+            if (testInputSession.getSession().getId() == 1) {
+                testInputStudent.setCorrectReading(correctReading);
+            } else if (testInputSession.getSession().getId() == 2) {
+                testInputStudent.setCorrectListening(correctListening);
+            } else if (testInputSession.getSession().getId() == 3) {
+                testInputStudent.setCorrectVocabulary(correctVocabulary);
+            } else if (testInputSession.getSession().getId() == 4) {
+                testInputStudent.setCorrectGrammar(correctGrammar);
+            }
+
+        }
+        testInputStudent.setScore(totalScore);
+
+        testInputStudentRepository.save(testInputStudent);
+    }
+
+    private AnswerStudent findAnswerForQuestion(List<AnswerStudent> studentAnswers, QuestionTestInput questionTestInput) {
+        for (AnswerStudent answer : studentAnswers) {
+            if (answer.getQuestionTestInput().equals(questionTestInput)) {
+                return answer;
+            }
+        }
+        return null;
+    }
+
+    public static String generateRandomString(int length) {
+        Random random = new Random();
+        StringBuilder sb = new StringBuilder(length);
+        for (int i = 0; i < length; i++) {
+            int randomIndex = random.nextInt(ALLOWED_CHARACTERS.length());
+            sb.append(ALLOWED_CHARACTERS.charAt(randomIndex));
+        }
+        return sb.toString();
     }
 }

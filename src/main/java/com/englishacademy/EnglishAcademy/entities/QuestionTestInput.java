@@ -1,10 +1,13 @@
 package com.englishacademy.EnglishAcademy.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -52,5 +55,9 @@ public class QuestionTestInput extends BaseEntity{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "testInputSessionId")
     private TestInputSession testInputSession;
+
+    @OneToMany(mappedBy = "questionTestInput")
+    @JsonIgnore
+    private List<AnswerStudent> answerStudents;
 
 }

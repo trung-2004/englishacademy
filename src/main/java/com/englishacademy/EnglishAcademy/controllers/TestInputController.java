@@ -4,6 +4,7 @@ import com.englishacademy.EnglishAcademy.dtos.ResponseObject;
 import com.englishacademy.EnglishAcademy.dtos.courseOnline.CourseOnlineDTO;
 import com.englishacademy.EnglishAcademy.dtos.testInput.TestInputDTO;
 import com.englishacademy.EnglishAcademy.dtos.testInput.TestInputDetail;
+import com.englishacademy.EnglishAcademy.models.answerStudent.CreateAnswerStudent;
 import com.englishacademy.EnglishAcademy.repositories.TestInputRepository;
 import com.englishacademy.EnglishAcademy.services.ITestInputService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,12 +62,16 @@ public class TestInputController {
         }
     }
 
-    @PostMapping("/detail")
-    ResponseEntity<ResponseObject> submitTest(@RequestBody String slug) {
+    @PostMapping("/detail/{slug}/{studentId}")
+    ResponseEntity<ResponseObject> submitTest(
+            @RequestBody List<CreateAnswerStudent> answersForStudents,
+            @PathVariable("slug") String slug,
+            @PathVariable("studentId") Long studentId
+    ) {
         try {
-            TestInputDetail testInputDetail = testInputService.getdetailTest(slug);
+            testInputService.submitTest(slug, studentId, answersForStudents);
             return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject(true, "ok", testInputDetail)
+                    new ResponseObject(true, "ok", "")
             );
         } catch (Exception e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
