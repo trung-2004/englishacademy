@@ -168,11 +168,15 @@ public class TestInputService implements ITestInputService {
         int correctListening = 0;
         int correctVocabulary = 0;
         int correctGrammar = 0;
-        double score = 0;
-        if (testInput.getType() == 0){
-            score = 990/(testInput.getTotalQuestion());
-        } else if (testInput.getType() == 1){
-            score = 9/(testInput.getTotalQuestion());
+
+        // Tính toán score dựa trên loại bài kiểm tra và số câu hỏi
+        double score;
+        if (testInput.getType() == 0) {
+            score = 990.0 / testInput.getTotalQuestion();
+        } else if (testInput.getType() == 1) {
+            score = 9.0 / testInput.getTotalQuestion();
+        } else {
+            throw new IllegalArgumentException("Invalid test type: " + testInput.getType());
         }
 
         for (QuestionTestInput questionTestInput: questionTestInputList) {
