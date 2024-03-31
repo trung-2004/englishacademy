@@ -1,14 +1,11 @@
 package com.englishacademy.EnglishAcademy.services.impl;
 
-import com.englishacademy.EnglishAcademy.dtos.courseOnline.CourseOnlineDetail;
-import com.englishacademy.EnglishAcademy.dtos.topicOnline.TopicOnlineDetail;
+import com.englishacademy.EnglishAcademy.dtos.topicOnline.TopicOnlineDetailResponse;
 import com.englishacademy.EnglishAcademy.entities.CourseOnline;
-import com.englishacademy.EnglishAcademy.entities.ItemOnline;
 import com.englishacademy.EnglishAcademy.entities.Student;
 import com.englishacademy.EnglishAcademy.entities.TopicOnline;
 import com.englishacademy.EnglishAcademy.mappers.TopicOnlineMapper;
 import com.englishacademy.EnglishAcademy.repositories.CourseOnlineRepository;
-import com.englishacademy.EnglishAcademy.repositories.ItemOnlineRepository;
 import com.englishacademy.EnglishAcademy.repositories.StudentRepository;
 import com.englishacademy.EnglishAcademy.repositories.TopicOnlineRepository;
 import com.englishacademy.EnglishAcademy.services.ITopicOnlineService;
@@ -19,7 +16,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class TopicOnlineService implements ITopicOnlineService {
@@ -33,7 +29,7 @@ public class TopicOnlineService implements ITopicOnlineService {
     private TopicOnlineMapper topicOnlineMapper;
 
     @Override
-    public List<TopicOnlineDetail> findAllByCourseSlug(String slug, Long userId) {
+    public List<TopicOnlineDetailResponse> findAllByCourseSlug(String slug, Long userId) {
         CourseOnline courseOnline = courseOnlineRepository.findBySlug(slug);
         if (courseOnline == null) {
             throw new RuntimeException("Not Found");
@@ -45,14 +41,14 @@ public class TopicOnlineService implements ITopicOnlineService {
 
         List<TopicOnline> topicOnlineList = topicOnlineRepository.findAllByCourseOnline(courseOnline);
 
-        List<TopicOnlineDetail> topicOnlineDetailList = new ArrayList<>();
+        List<TopicOnlineDetailResponse> topicOnlineDetailList = new ArrayList<>();
 
         for (TopicOnline topicOnline: topicOnlineList) {
-            TopicOnlineDetail TopicOnlineDetail = topicOnlineMapper.toTopicOnlineAndStudentDetail(topicOnline, student.get());
-            topicOnlineDetailList.add(TopicOnlineDetail);
+            TopicOnlineDetailResponse TopicOnlineDetailResponse = topicOnlineMapper.toTopicOnlineAndStudentDetailResponse(topicOnline, student.get());
+            topicOnlineDetailList.add(TopicOnlineDetailResponse);
         }
 
-        topicOnlineDetailList.sort(Comparator.comparingInt(TopicOnlineDetail::getOrderTop));
+        topicOnlineDetailList.sort(Comparator.comparingInt(TopicOnlineDetailResponse::getOrderTop));
 
         return topicOnlineDetailList;
     }

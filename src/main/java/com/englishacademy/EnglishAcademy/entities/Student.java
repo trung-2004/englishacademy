@@ -58,10 +58,6 @@ public class Student extends BaseEntity{
 
     @OneToMany(mappedBy = "student")
     @JsonIgnore
-    private List<ItemOnlineStudent> itemOnlineStudents;
-
-    @OneToMany(mappedBy = "student")
-    @JsonIgnore
     private List<TestInputStudent> testInputStudents;
 
 }

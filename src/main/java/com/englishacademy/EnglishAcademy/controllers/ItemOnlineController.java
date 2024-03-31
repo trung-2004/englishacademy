@@ -29,7 +29,7 @@ public class ItemOnlineController {
         }
     }
 
-    @PutMapping("/{slug}/{userId}")
+    /*@PutMapping("/{slug}/{userId}")
     ResponseEntity<ResponseObject> completeItem(@PathVariable("slug") String slug, @PathVariable("userId") Long userId) {
         try {
             ItemOnlineDTO itemOnlineDTO = itemOnlineService.completeItem(slug, userId);
@@ -41,5 +41,5 @@ public class ItemOnlineController {
                     new ResponseObject(false, e.getMessage(), "")
             );
         }
-    }
+    }*/
 }

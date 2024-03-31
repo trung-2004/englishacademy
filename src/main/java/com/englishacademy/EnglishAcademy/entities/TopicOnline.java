@@ -28,4 +28,8 @@ public class TopicOnline extends BaseEntity{
     @OneToMany(mappedBy = "topicOnline")
     @JsonIgnore
     private List<ItemOnline> itemOnlines;
+
+    @OneToMany(mappedBy = "topicOnline")
+    @JsonIgnore
+    private List<TestOnline> testOnlines;
 }

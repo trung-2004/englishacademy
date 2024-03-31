@@ -4,24 +4,19 @@ import com.englishacademy.EnglishAcademy.dtos.itemOnline.ItemOnlineDTO;
 import com.englishacademy.EnglishAcademy.dtos.itemOnline.ItemOnlineDetail;
 import com.englishacademy.EnglishAcademy.dtos.questionItemOnline.QuestionItemOnlineDTO;
 import com.englishacademy.EnglishAcademy.entities.ItemOnline;
-import com.englishacademy.EnglishAcademy.entities.ItemOnlineStudent;
 import com.englishacademy.EnglishAcademy.entities.Student;
-import com.englishacademy.EnglishAcademy.repositories.ItemOnlineStudentRepository;
 import com.englishacademy.EnglishAcademy.repositories.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
 public class ItemOnlineMapper {
     @Autowired
     private QuestionItemOnlineMapper questionItemOnlineMapper;
-    @Autowired
-    private ItemOnlineStudentRepository itemOnlineStudentRepository;
     @Autowired
     private StudentRepository studentRepository;
 
@@ -46,7 +41,7 @@ public class ItemOnlineMapper {
         return itemOnlineDTO;
     }
 
-    public ItemOnlineDTO toItemOnlineStudentDTO(ItemOnline model, Student student){
+    /*public ItemOnlineDTO toItemOnlineStudentDTO(ItemOnline model, Student student){
         if (model == null) {
             throw new RuntimeException("Not Found");
         }
@@ -74,7 +69,7 @@ public class ItemOnlineMapper {
 
         return itemOnlineDTO;
     }
-
+*/
     public ItemOnlineDetail toItemOnlineDetail(ItemOnline model){
         if (model == null) {
             throw new RuntimeException("Not Found");

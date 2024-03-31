@@ -23,5 +23,9 @@ public class Session extends BaseEntity{
     @JsonIgnore
     private List<TestInputSession> testInputSessions;
 
+    @OneToMany(mappedBy = "session")
+    @JsonIgnore
+    private List<TestOnlineSession> testOnlineSessions;
+
 
 }

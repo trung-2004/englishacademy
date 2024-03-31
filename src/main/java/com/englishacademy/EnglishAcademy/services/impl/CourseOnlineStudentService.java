@@ -7,7 +7,6 @@ import com.englishacademy.EnglishAcademy.mappers.StudentMapper;
 import com.englishacademy.EnglishAcademy.models.courseOnlineStudent.CreateCourseOnlineStudent;
 import com.englishacademy.EnglishAcademy.repositories.CourseOnlineRepository;
 import com.englishacademy.EnglishAcademy.repositories.CourseOnlineStudentRepository;
-import com.englishacademy.EnglishAcademy.repositories.ItemOnlineStudentRepository;
 import com.englishacademy.EnglishAcademy.repositories.StudentRepository;
 import com.englishacademy.EnglishAcademy.services.ICourseOnlineStudentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +26,6 @@ public class CourseOnlineStudentService implements ICourseOnlineStudentService {
     private StudentRepository studentRepository;
     @Autowired
     private CourseOnlineStudentRepository courseOnlineStudentRepository;
-    @Autowired
-    private ItemOnlineStudentRepository itemOnlineStudentRepository;
     @Autowired
     private CourseOnlineMapper courseOnlineMapper;
     @Autowired
@@ -67,27 +64,6 @@ public class CourseOnlineStudentService implements ICourseOnlineStudentService {
         courseOnlineStudent.setModifiedDate(timestamp);
 
         courseOnlineStudentRepository.save(courseOnlineStudent);
-
-        for (TopicOnline topicOnline: courseOnline.getTopicOnlines()) {
-            for (ItemOnline itemOnline: topicOnline.getItemOnlines()) {
-                ItemOnlineStudent itemOnlineStudent = new ItemOnlineStudent();
-                    itemOnlineStudent.setStudent(student);
-                    itemOnlineStudent.setItemOnline(itemOnline);
-                    if (itemOnline.getOrderTop() == 1){
-                        itemOnlineStudent.setStatus(true);
-                        itemOnlineStudent.setLastAccessed(timestamp);
-                    } else {
-                        itemOnlineStudent.setStatus(false);
-                        itemOnlineStudent.setLastAccessed(null);
-                    }
-                    itemOnlineStudent.setCreatedBy("Demo");
-                    itemOnlineStudent.setCreatedDate(timestamp);
-                    itemOnlineStudent.setModifiedBy("Demo");
-                    itemOnlineStudent.setModifiedDate(timestamp);
-
-                    itemOnlineStudentRepository.save(itemOnlineStudent);
-            }
-        }
 
 
         CourseOnlineStudentDTO courseOnlineStudentDTO = CourseOnlineStudentDTO.builder()

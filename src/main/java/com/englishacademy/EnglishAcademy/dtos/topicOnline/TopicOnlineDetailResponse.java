@@ -1,7 +1,8 @@
 package com.englishacademy.EnglishAcademy.dtos.topicOnline;
 
-import com.englishacademy.EnglishAcademy.dtos.itemOnline.ItemOnlineDTO;
+import com.englishacademy.EnglishAcademy.dtos.itemOnline.ItemOnlineDetail;
 import com.englishacademy.EnglishAcademy.dtos.testOnline.TestOnlineDTO;
+import com.englishacademy.EnglishAcademy.dtos.testOnline.TestOnlineResponseDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,15 +15,15 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class TopicOnlineDetail {
+public class TopicOnlineDetailResponse {
     private Long id;
     private String name;
     private String slug;
     private Integer orderTop;
 
-    private List<ItemOnlineDTO> itemOnlineDTOList;
+    private List<ItemOnlineDetail> itemOnlineDetailList;
 
-    private List<TestOnlineDTO> testOnlineDTOList;
+    private List<TestOnlineResponseDTO> testOnlineResponseDTOList;
 
     private Timestamp createdDate;
 

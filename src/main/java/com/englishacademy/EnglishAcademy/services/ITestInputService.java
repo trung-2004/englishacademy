@@ -9,8 +9,7 @@ import com.englishacademy.EnglishAcademy.models.answerStudent.CreateAnswerStuden
 import java.util.List;
 
 public interface ITestInputService {
-    List<TestInputDTO> findAllToiec();
-    List<TestInputDTO> findAllIelts();
+    List<TestInputDTO> findAll();
     TestInputDetail getdetailTest(String slug);
 
     void submitTest(String slug, Long studentId, List<CreateAnswerStudent> answersForStudents);

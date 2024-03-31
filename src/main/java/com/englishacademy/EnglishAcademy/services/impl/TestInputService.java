@@ -37,14 +37,8 @@ public class TestInputService implements ITestInputService {
     private TestInputMapper testInputMapper;
 
     @Override
-    public List<TestInputDTO> findAllToiec() {
-        List<TestInputDTO> testInputDTOS = testInputRepository.findAllByType(0).stream().map(testInputMapper::toTestInputDTO).collect(Collectors.toList());
-        return testInputDTOS;
-    }
-
-    @Override
-    public List<TestInputDTO> findAllIelts() {
-        List<TestInputDTO> testInputDTOS = testInputRepository.findAllByType(1).stream().map(testInputMapper::toTestInputDTO).collect(Collectors.toList());
+    public List<TestInputDTO> findAll() {
+        List<TestInputDTO> testInputDTOS = testInputRepository.findAll().stream().map(testInputMapper::toTestInputDTO).collect(Collectors.toList());
         return testInputDTOS;
     }
 

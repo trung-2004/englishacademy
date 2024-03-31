@@ -1,13 +1,11 @@
 package com.englishacademy.EnglishAcademy.controllers;
 
 import com.englishacademy.EnglishAcademy.dtos.ResponseObject;
-import com.englishacademy.EnglishAcademy.dtos.courseOnline.CourseOnlineDTO;
 import com.englishacademy.EnglishAcademy.dtos.questionTestInput.QuestionTestInputDetailResult;
 import com.englishacademy.EnglishAcademy.dtos.testInput.TestInputDTO;
 import com.englishacademy.EnglishAcademy.dtos.testInput.TestInputDetail;
 import com.englishacademy.EnglishAcademy.dtos.testInputStudent.TestInputStudentDTO;
 import com.englishacademy.EnglishAcademy.models.answerStudent.CreateAnswerStudent;
-import com.englishacademy.EnglishAcademy.repositories.TestInputRepository;
 import com.englishacademy.EnglishAcademy.services.ITestInputService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,10 +20,10 @@ public class TestInputController {
     @Autowired
     private ITestInputService testInputService;
 
-    @GetMapping("/toiec")
+    @GetMapping("")
     ResponseEntity<ResponseObject> getAllToiec() {
         try {
-            List<TestInputDTO> list = testInputService.findAllToiec();
+            List<TestInputDTO> list = testInputService.findAll();
             return ResponseEntity.status(HttpStatus.OK).body(
                     new ResponseObject(true, "ok", list)
             );
@@ -36,22 +34,9 @@ public class TestInputController {
         }
     }
 
-    @GetMapping("/ielts")
-    ResponseEntity<ResponseObject> getAllIelts() {
-        try {
-            List<TestInputDTO> list = testInputService.findAllIelts();
-            return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject(true, "ok", list)
-            );
-        } catch (Exception e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    new ResponseObject(false, e.getMessage(), "")
-            );
-        }
-    }
 
     @GetMapping("/detail/{slug}")
-    ResponseEntity<ResponseObject> getAllIelts(@PathVariable("slug") String slug) {
+    ResponseEntity<ResponseObject> getDetailTest(@PathVariable("slug") String slug) {
         try {
             TestInputDetail testInputDetail = testInputService.getdetailTest(slug);
             return ResponseEntity.status(HttpStatus.OK).body(

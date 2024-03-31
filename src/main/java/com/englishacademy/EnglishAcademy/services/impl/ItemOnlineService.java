@@ -6,7 +6,6 @@ import com.englishacademy.EnglishAcademy.entities.*;
 import com.englishacademy.EnglishAcademy.mappers.ItemOnlineMapper;
 import com.englishacademy.EnglishAcademy.repositories.CourseOnlineStudentRepository;
 import com.englishacademy.EnglishAcademy.repositories.ItemOnlineRepository;
-import com.englishacademy.EnglishAcademy.repositories.ItemOnlineStudentRepository;
 import com.englishacademy.EnglishAcademy.repositories.StudentRepository;
 import com.englishacademy.EnglishAcademy.services.IItemOnlineService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +24,6 @@ public class ItemOnlineService implements IItemOnlineService {
     @Autowired
     private ItemOnlineMapper itemOnlineMapper;
     @Autowired
-    private ItemOnlineStudentRepository itemOnlineStudentRepository;
-    @Autowired
     private StudentRepository studentRepository;
     @Autowired
     private CourseOnlineStudentRepository courseOnlineStudentRepository;
@@ -40,7 +37,7 @@ public class ItemOnlineService implements IItemOnlineService {
         return itemOnlineMapper.toItemOnlineDetail(model);
     }
 
-    @Override
+    /*@Override
     public ItemOnlineDTO completeItem(String slug, Long studentId) {
         ItemOnline model = itemOnlineRepository.findBySlug(slug);
         if (model == null) {
@@ -54,15 +51,6 @@ public class ItemOnlineService implements IItemOnlineService {
         if (courseOnlineStudent == null){
             throw new RuntimeException("Not Found");
         }
-        ItemOnlineStudent itemOnlineStudentExisting = itemOnlineStudentRepository.findByItemOnlineAndStudent(model, student.get());
-        if (itemOnlineStudentExisting == null){
-            throw new RuntimeException("Not Found");
-        }
-
-        ItemOnlineStudent itemOnlineStudent = itemOnlineStudentRepository.findByItemOnline_OrderTopAndStudent(model.getOrderTop()+1, student.get());
-        if (itemOnlineStudent == null){
-            throw new RuntimeException("Not Found");
-        }
 
         ZoneId zoneId = ZoneId.of("Asia/Ho_Chi_Minh"); // Chỉ định múi giờ của bạn (ví dụ: Asia/Ho_Chi_Minh)
         ZonedDateTime zonedDateTime = ZonedDateTime.ofInstant(Instant.now(), zoneId);
@@ -74,5 +62,5 @@ public class ItemOnlineService implements IItemOnlineService {
         itemOnlineStudentRepository.save(itemOnlineStudent);
 
         return itemOnlineMapper.toItemOnlineStudentDTO(model, student.get());
-    }
+    }*/
 }

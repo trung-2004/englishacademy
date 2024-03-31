@@ -1,11 +1,14 @@
 package com.englishacademy.EnglishAcademy.mappers;
 
 import com.englishacademy.EnglishAcademy.dtos.itemOnline.ItemOnlineDTO;
+import com.englishacademy.EnglishAcademy.dtos.itemOnline.ItemOnlineDetail;
+import com.englishacademy.EnglishAcademy.dtos.testOnline.TestOnlineDTO;
+import com.englishacademy.EnglishAcademy.dtos.testOnline.TestOnlineResponseDTO;
 import com.englishacademy.EnglishAcademy.dtos.topicOnline.TopicOnlineDTO;
 import com.englishacademy.EnglishAcademy.dtos.topicOnline.TopicOnlineDetail;
-import com.englishacademy.EnglishAcademy.entities.ItemOnline;
-import com.englishacademy.EnglishAcademy.entities.Student;
-import com.englishacademy.EnglishAcademy.entities.TopicOnline;
+import com.englishacademy.EnglishAcademy.dtos.topicOnline.TopicOnlineDetailResponse;
+import com.englishacademy.EnglishAcademy.entities.*;
+import com.englishacademy.EnglishAcademy.repositories.TestOnlineStudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -18,6 +21,11 @@ import java.util.stream.Collectors;
 public class TopicOnlineMapper {
     @Autowired
     private ItemOnlineMapper itemOnlineMapper;
+    @Autowired
+    private TestOnlineMapper testOnlineMapper;
+    @Autowired
+    private TestOnlineStudentRepository testOnlineStudentRepository;
+
     public TopicOnlineDTO toTopicOnlineDTO(TopicOnline model){
         if (model == null) {
             throw new RuntimeException("Not Found");
@@ -42,7 +50,7 @@ public class TopicOnlineMapper {
 
         List<ItemOnlineDTO> itemOnlineDTOS = model.getItemOnlines().stream().map(itemOnlineMapper::toItemOnlineDTO).collect(Collectors.toList());
 
-
+        List<TestOnlineDTO> testOnlineDTOList = model.getTestOnlines().stream().map(testOnlineMapper::toTestOnlineDTO).collect(Collectors.toList());
 
         itemOnlineDTOS.sort(Comparator.comparingInt(ItemOnlineDTO::getOrderTop));
 
@@ -53,6 +61,7 @@ public class TopicOnlineMapper {
                 .orderTop(model.getOrderTop())
                 .createdBy(model.getCreatedBy())
                 .itemOnlineDTOList(itemOnlineDTOS)
+                .testOnlineDTOList(testOnlineDTOList)
                 .createdDate(model.getCreatedDate())
                 .modifiedBy(model.getModifiedBy())
                 .modifiedDate(model.getModifiedDate())
@@ -60,7 +69,7 @@ public class TopicOnlineMapper {
         return topicOnlineDetail;
     }
 
-    public TopicOnlineDetail toTopicOnlineAndStudentDetail(TopicOnline model, Student student){
+    /*public TopicOnlineDetail toTopicOnlineAndStudentDetail(TopicOnline model, Student student){
         if (model == null) {
             throw new RuntimeException("Not Found");
         }
@@ -81,6 +90,42 @@ public class TopicOnlineMapper {
                 .orderTop(model.getOrderTop())
                 .createdBy(model.getCreatedBy())
                 .itemOnlineDTOList(itemOnlineDTOS)
+                .createdDate(model.getCreatedDate())
+                .modifiedBy(model.getModifiedBy())
+                .modifiedDate(model.getModifiedDate())
+                .build();
+        return topicOnlineDetail;
+    }*/
+
+    public TopicOnlineDetailResponse toTopicOnlineAndStudentDetailResponse(TopicOnline model, Student student){
+        if (model == null) {
+            throw new RuntimeException("Not Found");
+        }
+
+        List<ItemOnlineDetail> itemOnlineDTOSDetailList = model.getItemOnlines().stream().map(itemOnlineMapper::toItemOnlineDetail).collect(Collectors.toList());
+        itemOnlineDTOSDetailList.sort(Comparator.comparingInt(ItemOnlineDetail::getOrderTop));
+
+        List<TestOnlineResponseDTO> testOnlineResponseDTOS = new ArrayList<>();
+        for (TestOnline testOnline: model.getTestOnlines()) {
+            boolean status;
+            TestOnlineStudent testOnlineStudent = testOnlineStudentRepository.findByTestOnlineAndStudentAndStatus(testOnline, student, true);
+            if (testOnlineStudent != null){
+                status = testOnlineStudent.isStatus();
+            }
+            status = false;
+            TestOnlineResponseDTO testOnlineResponseDTO = testOnlineMapper.toTestOnlineResponseDTO(testOnline, status);
+            testOnlineResponseDTOS.add(testOnlineResponseDTO);
+        }
+
+
+        TopicOnlineDetailResponse topicOnlineDetail = TopicOnlineDetailResponse.builder()
+                .id(model.getId())
+                .name(model.getName())
+                .slug(model.getSlug())
+                .orderTop(model.getOrderTop())
+                .createdBy(model.getCreatedBy())
+                .itemOnlineDetailList(itemOnlineDTOSDetailList)
+                .testOnlineResponseDTOList(testOnlineResponseDTOS)
                 .createdDate(model.getCreatedDate())
                 .modifiedBy(model.getModifiedBy())
                 .modifiedDate(model.getModifiedDate())
