@@ -20,11 +20,11 @@ public class ItemOnlineController {
         try {
             ItemOnlineDetail itemOnlineDetail = itemOnlineService.getItemOnlineDetail(slug);
             return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject(true, "ok", itemOnlineDetail)
+                    new ResponseObject(true, 200, "ok", itemOnlineDetail)
             );
         } catch (Exception e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    new ResponseObject(false, e.getMessage(), "")
+                    new ResponseObject(false, 404, e.getMessage(), "")
             );
         }
     }

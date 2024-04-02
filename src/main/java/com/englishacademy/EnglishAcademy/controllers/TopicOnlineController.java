@@ -25,11 +25,11 @@ public class TopicOnlineController {
         try {
             List<TopicOnlineDetailResponse> list = topicOnlineService.findAllByCourseSlug(slug, userId);
             return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject(true, "ok", list)
+                    new ResponseObject(true, 200, "ok", list)
             );
         } catch (Exception e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    new ResponseObject(false, e.getMessage(), "")
+                    new ResponseObject(false, 200, e.getMessage(), "")
             );
         }
     }

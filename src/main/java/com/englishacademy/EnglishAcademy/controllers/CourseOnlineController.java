@@ -28,11 +28,11 @@ public class CourseOnlineController {
         try {
             List<CourseOnlineDTO> list = courseOnlineService.findAll();
             return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject(true, "ok", list)
+                    new ResponseObject(true, 200, "ok", list)
             );
         } catch (Exception e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    new ResponseObject(false, e.getMessage(), "")
+                    new ResponseObject(false, 404, e.getMessage(), "")
             );
         }
     }
@@ -42,11 +42,11 @@ public class CourseOnlineController {
         try {
             List<CourseOnlineDTO> list = courseOnlineService.findAllByStudent(studentId);
             return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject(true, "ok", list)
+                    new ResponseObject(true, 200, "ok", list)
             );
         } catch (Exception e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    new ResponseObject(false, e.getMessage(), "")
+                    new ResponseObject(false, 404, e.getMessage(), "")
             );
         }
     }
@@ -56,27 +56,31 @@ public class CourseOnlineController {
         try {
             CourseOnlineDTO courseOnlineDTO = courseOnlineService.findBySlug(slug);
             return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject(true, "ok", courseOnlineDTO)
+                    new ResponseObject(true, 200, "ok", courseOnlineDTO)
             );
         } catch (Exception e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    new ResponseObject(false, "Can't not find product with slug: "+slug, "")
+                    new ResponseObject(false, 400, "Can't not find product with slug: "+slug, "")
             );
         }
     }
 
     @PostMapping("")
     ResponseEntity<ResponseObject> createCourseOnline(@ModelAttribute CreateCourseOnline model) {
-        try {
+        /*try {
             CourseOnlineDTO courseOnlineDTO = courseOnlineService.create(model);
             return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject(true, "ok", courseOnlineDTO)
+                    new ResponseObject(true, 200, "ok", courseOnlineDTO)
             );
         } catch (Exception e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                    new ResponseObject(false, e.getMessage(), "")
+                    new ResponseObject(false, e., e.getMessage(), "")
             );
-        }
+        }*/
+        CourseOnlineDTO courseOnlineDTO = courseOnlineService.create(model);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "ok", courseOnlineDTO)
+        );
     }
 
     @PutMapping("")
@@ -84,11 +88,11 @@ public class CourseOnlineController {
         try {
             CourseOnlineDTO courseOnlineDTO = courseOnlineService.edit(model);
             return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject(true, "ok", courseOnlineDTO)
+                    new ResponseObject(true, 200, "ok", courseOnlineDTO)
             );
         } catch (Exception e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                    new ResponseObject(false, e.getMessage(), "")
+                    new ResponseObject(false, 400, e.getMessage(), "")
             );
         }
     }
@@ -98,11 +102,11 @@ public class CourseOnlineController {
         try {
             courseOnlineService.delete(ids);
             return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject(true, "ok", "")
+                    new ResponseObject(true, 200, "ok", "")
             );
         } catch (Exception e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                    new ResponseObject(false, e.getMessage(), "")
+                    new ResponseObject(false, 400, e.getMessage(), "")
             );
         }
     }
@@ -112,11 +116,11 @@ public class CourseOnlineController {
         try {
             CourseOnlineDetail courseOnlineDetail = courseOnlineService.getDetail(slug);
             return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject(true, "ok", courseOnlineDetail)
+                    new ResponseObject(true, 200, "ok", courseOnlineDetail)
             );
         } catch (Exception e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    new ResponseObject(false, "Can't not find product with slug: "+slug, "")
+                    new ResponseObject(false, 400, "Can't not find product with slug: "+slug, "")
             );
         }
     }

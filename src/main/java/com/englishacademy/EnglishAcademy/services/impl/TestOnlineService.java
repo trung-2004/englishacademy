@@ -20,6 +20,7 @@ import com.englishacademy.EnglishAcademy.services.ITestOnlineService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -96,7 +97,7 @@ public class TestOnlineService implements ITestOnlineService {
                     .sessionName(testOnlineSession.getSession().getTitle())
                     .totalQuestion(testOnlineSession.getTotalQuestion())
                     .orderTop(testOnlineSession.getOrderTop())
-                    .testOnlineDTOList(questionTestOnlineDTOS)
+                    .questionTestOnlineDTOS(questionTestOnlineDTOS)
                     .createdBy(testOnlineSession.getCreatedBy())
                     .createdDate(testOnlineSession.getCreatedDate())
                     .modifiedBy(testOnlineSession.getModifiedBy())
@@ -228,6 +229,12 @@ public class TestOnlineService implements ITestOnlineService {
         } else {
             testOnlineStudent.setStatus(false);
         }
+
+
+        testOnlineStudent.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+        testOnlineStudent.setCreatedBy("Demo");
+        testOnlineStudent.setModifiedBy("Demo");
+        testOnlineStudent.setModifiedDate(new Timestamp(System.currentTimeMillis()));
 
         testOnlineStudentRepository.save(testOnlineStudent);
     }

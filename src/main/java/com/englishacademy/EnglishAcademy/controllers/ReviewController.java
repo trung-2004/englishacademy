@@ -25,11 +25,11 @@ public class ReviewController {
         try {
             ReviewDTO reviewDTO = reviewService.create(model);
             return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject(true, "ok", reviewDTO)
+                    new ResponseObject(true, 200, "ok", reviewDTO)
             );
         } catch (Exception e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    new ResponseObject(false, e.getMessage(), "")
+                    new ResponseObject(false, 404, e.getMessage(), "")
             );
         }
     }

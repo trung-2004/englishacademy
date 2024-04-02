@@ -2,7 +2,9 @@ package com.englishacademy.EnglishAcademy.controllers;
 
 import com.englishacademy.EnglishAcademy.dtos.ResponseObject;
 import com.englishacademy.EnglishAcademy.dtos.testInput.TestInputDetail;
+import com.englishacademy.EnglishAcademy.dtos.testInputStudent.TestInputStudentDTO;
 import com.englishacademy.EnglishAcademy.dtos.testOnline.TestOnlineDetail;
+import com.englishacademy.EnglishAcademy.dtos.testOnlineStudent.TestOnlineStudentDTO;
 import com.englishacademy.EnglishAcademy.models.answerStudent.CreateAnswerStudent;
 import com.englishacademy.EnglishAcademy.services.ITestOnlineService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,11 +28,11 @@ public class TestOnlineController {
         try {
             TestOnlineDetail testInputDetail = testOnlineService.getdetailTest(slug, studentId);
             return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject(true, "ok", testInputDetail)
+                    new ResponseObject(true, 200, "ok", testInputDetail)
             );
         } catch (Exception e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    new ResponseObject(false, e.getMessage(), "")
+                    new ResponseObject(false, 200, e.getMessage(), "")
             );
         }
     }
@@ -44,11 +46,25 @@ public class TestOnlineController {
         try {
             testOnlineService.submitTest(slug, studentId, answersForStudents);
             return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject(true, "ok", "")
+                    new ResponseObject(true, 200, "ok", "")
             );
         } catch (Exception e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    new ResponseObject(false, e.getMessage(), "")
+                    new ResponseObject(false, 200, e.getMessage(), "")
+            );
+        }
+    }
+
+    @GetMapping("/result/{code}")
+    ResponseEntity<ResponseObject> getResultTest(@PathVariable("code") String code) {
+        try {
+            TestOnlineStudentDTO testOnlineStudentDTO = testOnlineService.getresultTest(code);
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject(true, 200, "ok", testOnlineStudentDTO)
+            );
+        } catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new ResponseObject(false, 200, e.getMessage(), "")
             );
         }
     }

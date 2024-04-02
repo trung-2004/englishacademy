@@ -28,7 +28,7 @@ public class TestInput extends BaseEntity{
     @Column(name = "type", nullable = false)// 0 = toeic ; 1 = ielts
     private Integer type;
 
-    @Column(name = "description", nullable = false)
+    @Column(name = "description", nullable = false, columnDefinition = "TEXT")
     private String description;
 
     @Column(name = "totalQuestion", nullable = false)

@@ -27,7 +27,7 @@ public class TestOnline extends BaseEntity{
     @Column(name = "totalMark", nullable = false)
     private Integer totalMark;
 
-    @Column(name = "description", nullable = false)
+    @Column(name = "description", nullable = false, columnDefinition = "TEXT")
     private String description;
 
     @Column(name = "totalQuestion", nullable = false)

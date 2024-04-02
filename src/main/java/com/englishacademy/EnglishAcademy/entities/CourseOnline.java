@@ -31,7 +31,7 @@ public class CourseOnline extends BaseEntity{
     @Column(name = "star", nullable = false)
     private Double star;
 
-    @Column(name = "description")
+    @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
     @Column(name = "level", nullable = false)

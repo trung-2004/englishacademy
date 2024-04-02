@@ -7,6 +7,8 @@ import com.englishacademy.EnglishAcademy.entities.CourseOnline;
 import com.englishacademy.EnglishAcademy.entities.CourseOnlineStudent;
 import com.englishacademy.EnglishAcademy.entities.Student;
 import com.englishacademy.EnglishAcademy.entities.TopicOnline;
+import com.englishacademy.EnglishAcademy.exceptions.AppException;
+import com.englishacademy.EnglishAcademy.exceptions.ErrorCode;
 import com.englishacademy.EnglishAcademy.mappers.CourseOnlineMapper;
 import com.englishacademy.EnglishAcademy.mappers.TopicOnlineMapper;
 import com.englishacademy.EnglishAcademy.models.courseOnline.CreateCourseOnline;
@@ -62,6 +64,10 @@ public class CourseOnlineService implements ICourseOnlineService {
 
     @Override
     public CourseOnlineDTO create(CreateCourseOnline model) {
+        CourseOnline courseOnlineExist = courseOnlineRepository.findBySlug(model.getName().toLowerCase().replace(" ", "-"));
+        if (courseOnlineExist != null) {
+            throw new AppException(ErrorCode.COURSE_EXISTED);
+        }
         String generatedFileName = storageService.storeFile(model.getImage());
         CourseOnline courseOnline = CourseOnline.builder()
                 .name(model.getName())

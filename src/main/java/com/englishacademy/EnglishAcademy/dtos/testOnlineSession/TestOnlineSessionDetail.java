@@ -26,7 +26,7 @@ public class TestOnlineSessionDetail {
 
     private Integer orderTop;
 
-    private List<QuestionTestOnlineDTO> testOnlineDTOList;
+    private List<QuestionTestOnlineDTO> questionTestOnlineDTOS;
     private Timestamp createdDate;
 
     private Timestamp modifiedDate;

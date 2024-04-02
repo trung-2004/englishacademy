@@ -25,11 +25,11 @@ public class TestInputController {
         try {
             List<TestInputDTO> list = testInputService.findAll();
             return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject(true, "ok", list)
+                    new ResponseObject(true, 200, "ok", list)
             );
         } catch (Exception e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    new ResponseObject(false, e.getMessage(), "")
+                    new ResponseObject(false, 404, e.getMessage(), "")
             );
         }
     }
@@ -40,11 +40,11 @@ public class TestInputController {
         try {
             TestInputDetail testInputDetail = testInputService.getdetailTest(slug);
             return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject(true, "ok", testInputDetail)
+                    new ResponseObject(true, 200, "ok", testInputDetail)
             );
         } catch (Exception e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    new ResponseObject(false, e.getMessage(), "")
+                    new ResponseObject(false, 200, e.getMessage(), "")
             );
         }
     }
@@ -58,11 +58,11 @@ public class TestInputController {
         try {
             testInputService.submitTest(slug, studentId, answersForStudents);
             return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject(true, "ok", "")
+                    new ResponseObject(true, 200, "ok", "")
             );
         } catch (Exception e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    new ResponseObject(false, e.getMessage(), "")
+                    new ResponseObject(false, 200, e.getMessage(), "")
             );
         }
     }
@@ -72,11 +72,11 @@ public class TestInputController {
         try {
             TestInputStudentDTO testInputStudentDTO = testInputService.getresultTest(code);
             return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject(true, "ok", testInputStudentDTO)
+                    new ResponseObject(true, 200, "ok", testInputStudentDTO)
             );
         } catch (Exception e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    new ResponseObject(false, e.getMessage(), "")
+                    new ResponseObject(false, 200, e.getMessage(), "")
             );
         }
     }
@@ -86,11 +86,11 @@ public class TestInputController {
         try {
             List<QuestionTestInputDetailResult> questionTestInputDetailResults = testInputService.getresultDetailTest(code);
             return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject(true, "ok", questionTestInputDetailResults)
+                    new ResponseObject(true, 200, "ok", questionTestInputDetailResults)
             );
         } catch (Exception e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    new ResponseObject(false, e.getMessage(), "")
+                    new ResponseObject(false, 200, e.getMessage(), "")
             );
         }
     }

@@ -20,11 +20,11 @@ public class CourseOnlineStudentController {
         try {
             CourseOnlineStudentDTO courseOnlineStudentDTO = courseOnlineStudentService.buyCourse(model);
             return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject(true, "ok", courseOnlineStudentDTO)
+                    new ResponseObject(true, 200, "ok", courseOnlineStudentDTO)
             );
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                    new ResponseObject(false, e.getMessage(), "")
+                    new ResponseObject(false, 400, e.getMessage(), "")
             );
         }
     }

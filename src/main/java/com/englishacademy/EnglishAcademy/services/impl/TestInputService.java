@@ -14,6 +14,7 @@ import com.englishacademy.EnglishAcademy.services.ITestInputService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -211,6 +212,11 @@ public class TestInputService implements ITestInputService {
         }
         totalScore = roundToNearestHalf(totalScore);
         testInputStudent.setScore(totalScore);
+
+        testInputStudent.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+        testInputStudent.setCreatedBy("Demo");
+        testInputStudent.setModifiedBy("Demo");
+        testInputStudent.setModifiedDate(new Timestamp(System.currentTimeMillis()));
 
         testInputStudentRepository.save(testInputStudent);
     }
