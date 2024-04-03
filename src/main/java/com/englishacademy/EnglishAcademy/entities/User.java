@@ -1,12 +1,14 @@
 package com.englishacademy.EnglishAcademy.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 @Entity
@@ -36,4 +38,8 @@ public class User extends BaseEntity{
     @Column(name = "resetTokenExpiry")
     private Date resetTokenExpiry;
     private Role role;
+
+    @OneToMany(mappedBy = "teacher")
+    @JsonIgnore
+    private List<Classes> classes;
 }

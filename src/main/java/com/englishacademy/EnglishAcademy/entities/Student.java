@@ -1,10 +1,7 @@
 package com.englishacademy.EnglishAcademy.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -59,5 +56,13 @@ public class Student extends BaseEntity{
     @OneToMany(mappedBy = "student")
     @JsonIgnore
     private List<TestInputStudent> testInputStudents;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "classId")
+    private Classes classes;
+
+    @OneToMany(mappedBy = "student")
+    @JsonIgnore
+    private List<AnswerStudentItemSlot> answerStudentItemSlots;
 
 }

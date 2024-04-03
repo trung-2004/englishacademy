@@ -20,9 +20,6 @@ public class CourseOnlineController {
     @Autowired
     private ICourseOnlineService courseOnlineService;
 
-    @Autowired
-    private CourseOnlineRepository courseOnlineRepository;
-
     @GetMapping("")
     ResponseEntity<ResponseObject> getAll() {
         try {
