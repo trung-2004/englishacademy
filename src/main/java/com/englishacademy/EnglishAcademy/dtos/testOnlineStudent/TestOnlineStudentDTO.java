@@ -24,7 +24,7 @@ public class TestOnlineStudentDTO {
     private Integer totalQuestionVocabulary;
     private Integer totalQuestionGrammar;
     private Double score;
-    private Double time;
+    private Integer time;
     private boolean status;
     private Timestamp createdDate;
     private Timestamp modifiedDate;

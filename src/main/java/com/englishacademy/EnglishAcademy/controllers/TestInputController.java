@@ -6,6 +6,7 @@ import com.englishacademy.EnglishAcademy.dtos.testInput.TestInputDTO;
 import com.englishacademy.EnglishAcademy.dtos.testInput.TestInputDetail;
 import com.englishacademy.EnglishAcademy.dtos.testInputStudent.TestInputStudentDTO;
 import com.englishacademy.EnglishAcademy.models.answerStudent.CreateAnswerStudent;
+import com.englishacademy.EnglishAcademy.models.answerStudent.SubmitTest;
 import com.englishacademy.EnglishAcademy.services.ITestInputService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -51,12 +52,12 @@ public class TestInputController {
 
     @PostMapping("/detail/{slug}/{studentId}")
     ResponseEntity<ResponseObject> submitTest(
-            @RequestBody List<CreateAnswerStudent> answersForStudents,
+            @RequestBody SubmitTest submitTest,
             @PathVariable("slug") String slug,
             @PathVariable("studentId") Long studentId
     ) {
         try {
-            testInputService.submitTest(slug, studentId, answersForStudents);
+            testInputService.submitTest(slug, studentId, submitTest);
             return ResponseEntity.status(HttpStatus.OK).body(
                     new ResponseObject(true, 200, "ok", "")
             );

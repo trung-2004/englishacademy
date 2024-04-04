@@ -29,7 +29,7 @@ public class TestOnlineStudent extends BaseEntity{
     @Column(name = "score")
     private Double score;
     @Column(name = "time")
-    private Double time;
+    private Integer time;
     @Column(name = "status")
     private boolean status;
 

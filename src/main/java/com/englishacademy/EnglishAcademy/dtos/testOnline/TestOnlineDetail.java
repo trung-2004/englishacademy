@@ -20,6 +20,7 @@ public class TestOnlineDetail {
     private String slug;
     private Integer type;
     private String description;
+    private Integer time;
     private Integer totalQuestion;
     private List<TestOnlineSessionDetail> testOnlineSessionDetails;
     private Timestamp createdDate;

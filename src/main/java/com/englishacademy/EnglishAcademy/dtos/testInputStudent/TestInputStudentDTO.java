@@ -24,7 +24,7 @@ public class TestInputStudentDTO {
     private Integer totalQuestionVocabulary;
     private Integer totalQuestionGrammar;
     private Double score;
-    private Double time;
+    private Integer time;
     private Timestamp createdDate;
     private Timestamp modifiedDate;
     private String createdBy;

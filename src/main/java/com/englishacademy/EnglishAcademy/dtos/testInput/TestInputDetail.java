@@ -20,6 +20,7 @@ public class TestInputDetail {
     private Integer type;
     private String description;
     private Integer totalQuestion;
+    private Integer time;
     private List<TestInputSessionDetail> testInputSessionDetails;
     private Timestamp createdDate;
     private Timestamp modifiedDate;

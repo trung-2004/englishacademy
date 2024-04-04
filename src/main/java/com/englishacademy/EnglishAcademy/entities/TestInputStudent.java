@@ -29,7 +29,7 @@ public class TestInputStudent extends BaseEntity{
     @Column(name = "score")
     private Double score;
     @Column(name = "time")
-    private Double time;
+    private Integer time;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "studentId")

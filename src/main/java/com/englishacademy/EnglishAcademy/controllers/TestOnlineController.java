@@ -6,6 +6,7 @@ import com.englishacademy.EnglishAcademy.dtos.testInputStudent.TestInputStudentD
 import com.englishacademy.EnglishAcademy.dtos.testOnline.TestOnlineDetail;
 import com.englishacademy.EnglishAcademy.dtos.testOnlineStudent.TestOnlineStudentDTO;
 import com.englishacademy.EnglishAcademy.models.answerStudent.CreateAnswerStudent;
+import com.englishacademy.EnglishAcademy.models.answerStudent.SubmitTest;
 import com.englishacademy.EnglishAcademy.services.ITestOnlineService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -39,14 +40,14 @@ public class TestOnlineController {
 
     @PostMapping("/detail/{slug}/{studentId}")
     ResponseEntity<ResponseObject> submitTest(
-            @RequestBody List<CreateAnswerStudent> answersForStudents,
+            @RequestBody SubmitTest submitTest,
             @PathVariable("slug") String slug,
             @PathVariable("studentId") Long studentId
     ) {
         try {
-            testOnlineService.submitTest(slug, studentId, answersForStudents);
+            String code = testOnlineService.submitTest(slug, studentId, submitTest);
             return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject(true, 200, "ok", "")
+                    new ResponseObject(true, 200, "ok", code)
             );
         } catch (Exception e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(

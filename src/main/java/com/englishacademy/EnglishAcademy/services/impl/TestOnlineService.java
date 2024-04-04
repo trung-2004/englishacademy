@@ -11,9 +11,12 @@ import com.englishacademy.EnglishAcademy.dtos.testOnline.TestOnlineDetail;
 import com.englishacademy.EnglishAcademy.dtos.testOnlineSession.TestOnlineSessionDetail;
 import com.englishacademy.EnglishAcademy.dtos.testOnlineStudent.TestOnlineStudentDTO;
 import com.englishacademy.EnglishAcademy.entities.*;
+import com.englishacademy.EnglishAcademy.exceptions.AppException;
+import com.englishacademy.EnglishAcademy.exceptions.ErrorCode;
 import com.englishacademy.EnglishAcademy.mappers.TestInputMapper;
 import com.englishacademy.EnglishAcademy.mappers.TestOnlineMapper;
 import com.englishacademy.EnglishAcademy.models.answerStudent.CreateAnswerStudent;
+import com.englishacademy.EnglishAcademy.models.answerStudent.SubmitTest;
 import com.englishacademy.EnglishAcademy.repositories.*;
 import com.englishacademy.EnglishAcademy.services.ITestInputService;
 import com.englishacademy.EnglishAcademy.services.ITestOnlineService;
@@ -61,6 +64,9 @@ public class TestOnlineService implements ITestOnlineService {
         if (courseOnlineStudent == null) {
             throw new RuntimeException("Not Found");
         }
+
+        TestOnlineStudent testOnlineStudent = testOnlineStudentRepository.findByTestOnlineAndStudentAndStatus(testOnline, student, true);
+        if (testOnlineStudent != null) throw new AppException(ErrorCode.NOTFOUND);
 
         List<TestOnlineSessionDetail> testOnlineSessionDetailList = new ArrayList<>();
         for (TestOnlineSession testOnlineSession : testOnline.getTestOnlineSessions()) {
@@ -114,6 +120,7 @@ public class TestOnlineService implements ITestOnlineService {
                 .slug(testOnline.getSlug())
                 .type(testOnline.getType())
                 .totalQuestion(testOnline.getTotalQuestion())
+                .time(testOnline.getTime())
                 .description(testOnline.getDescription())
                 .testOnlineSessionDetails(testOnlineSessionDetailList)
                 .createdDate(testOnline.getCreatedDate())
@@ -126,23 +133,24 @@ public class TestOnlineService implements ITestOnlineService {
     }
 
     @Override
-    public void submitTest(String slug, Long studentId, List<CreateAnswerStudent> answersForStudents) {
+    public String submitTest(String slug, Long studentId, SubmitTest submitTest) {
 
         // Tìm testOnline theo slug
         TestOnline testOnline = testOnlineRepository.findBySlug(slug);
-        if (testOnline == null){
-            throw new RuntimeException("Test Input Not Found");
-        }
+        if (testOnline == null) throw new AppException(ErrorCode.TESTINPUT_NOTFOUND);
 
         // Tìm sinh viên theo studentId
         Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new RuntimeException("Student Not Found"));
 
+        TestOnlineStudent testOnlineStudentExsiting = testOnlineStudentRepository.findByTestOnlineAndStudentAndStatus(testOnline, student, true);
+        if (testOnlineStudentExsiting != null) throw new AppException(ErrorCode.NOTFOUND);
+
         // Tạo đối tượng TestOnlineStudent mới
         TestOnlineStudent testOnlineStudent = TestOnlineStudent.builder()
                 .code(generateRandomString(8))
                 .student(student)
-                .time(30.0)
+                .time(submitTest.getTime())
                 .testOnline(testOnline)
                 .build();
         testOnlineStudentRepository.save(testOnlineStudent);
@@ -155,7 +163,7 @@ public class TestOnlineService implements ITestOnlineService {
 
         // Lưu câu trả lời của sinh viên
         List<AnswerStudentOnline> answerStudentOnlineList = new ArrayList<>();
-        for (CreateAnswerStudent createAnswerStudent: answersForStudents) {
+        for (CreateAnswerStudent createAnswerStudent: submitTest.getCreateAnswerStudentList()) {
             QuestionTestOnline questionTestOnline = questionTestOnlineRepository.findById(createAnswerStudent.getQuestionId())
                     .orElseThrow(() -> new RuntimeException("Question Not Found"));
 
@@ -237,6 +245,8 @@ public class TestOnlineService implements ITestOnlineService {
         testOnlineStudent.setModifiedDate(new Timestamp(System.currentTimeMillis()));
 
         testOnlineStudentRepository.save(testOnlineStudent);
+
+        return testOnlineStudent.getCode();
     }
 
 

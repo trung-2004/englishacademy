@@ -7,8 +7,11 @@ import com.englishacademy.EnglishAcademy.dtos.testInput.TestInputDetail;
 import com.englishacademy.EnglishAcademy.dtos.testInputSession.TestInputSessionDetail;
 import com.englishacademy.EnglishAcademy.dtos.testInputStudent.TestInputStudentDTO;
 import com.englishacademy.EnglishAcademy.entities.*;
+import com.englishacademy.EnglishAcademy.exceptions.AppException;
+import com.englishacademy.EnglishAcademy.exceptions.ErrorCode;
 import com.englishacademy.EnglishAcademy.mappers.TestInputMapper;
 import com.englishacademy.EnglishAcademy.models.answerStudent.CreateAnswerStudent;
+import com.englishacademy.EnglishAcademy.models.answerStudent.SubmitTest;
 import com.englishacademy.EnglishAcademy.repositories.*;
 import com.englishacademy.EnglishAcademy.services.ITestInputService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,9 +49,7 @@ public class TestInputService implements ITestInputService {
     @Override
     public TestInputDetail getdetailTest(String slug) {
         TestInput testInput = testInputRepository.findBySlug(slug);
-        if (testInput == null){
-            throw new RuntimeException("Not Found");
-        }
+        if (testInput == null) throw new AppException(ErrorCode.NOTFOUND);
 
         List<TestInputSessionDetail> testInputSessionDetailList = new ArrayList<>();
         for (TestInputSession testInputSession : testInput.getTestInputSessions()) {
@@ -102,6 +103,7 @@ public class TestInputService implements ITestInputService {
                 .slug(testInput.getSlug())
                 .type(testInput.getType())
                 .totalQuestion(testInput.getTotalQuestion())
+                .time(testInput.getTime())
                 .description(testInput.getDescription())
                 .testInputSessionDetails(testInputSessionDetailList)
                 .createdDate(testInput.getCreatedDate())
@@ -114,7 +116,7 @@ public class TestInputService implements ITestInputService {
     }
 
     @Override
-    public void submitTest(String slug, Long studentId, List<CreateAnswerStudent> answersForStudents) {
+    public void submitTest(String slug, Long studentId, SubmitTest submitTest) {
 
         // Tìm testInput theo slug
         TestInput testInput = testInputRepository.findBySlug(slug);
@@ -130,7 +132,7 @@ public class TestInputService implements ITestInputService {
         TestInputStudent testInputStudent = TestInputStudent.builder()
                 .code(generateRandomString(8))
                 .student(student)
-                .time(30.0)
+                .time(submitTest.getTime())
                 .testInput(testInput)
                 .build();
         testInputStudentRepository.save(testInputStudent);
@@ -143,7 +145,7 @@ public class TestInputService implements ITestInputService {
 
         // Lưu câu trả lời của sinh viên
         List<AnswerStudent> answerStudentList = new ArrayList<>();
-        for (CreateAnswerStudent createAnswerStudent: answersForStudents) {
+        for (CreateAnswerStudent createAnswerStudent: submitTest.getCreateAnswerStudentList()) {
             QuestionTestInput questionTestInput = questionTestInputRepository.findById(createAnswerStudent.getQuestionId())
                     .orElseThrow(() -> new RuntimeException("Question Not Found"));
 

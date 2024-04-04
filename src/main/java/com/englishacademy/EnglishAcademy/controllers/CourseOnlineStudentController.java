@@ -28,4 +28,15 @@ public class CourseOnlineStudentController {
             );
         }
     }
+
+    @GetMapping("/check/{slug}/{studentId}")
+    ResponseEntity<ResponseObject> checkSubCourse(
+            @PathVariable("slug") String slug,
+            @PathVariable("studentId") Long studentId
+    ) {
+        boolean checked = courseOnlineStudentService.checkCourseOnlineRegistered(slug, studentId);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "ok", checked)
+        );
+    }
 }
