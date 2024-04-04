@@ -3,8 +3,6 @@ package com.englishacademy.EnglishAcademy.controllers;
 import com.englishacademy.EnglishAcademy.dtos.ResponseObject;
 import com.englishacademy.EnglishAcademy.dtos.courseOffline.CourseOfflineDTO;
 import com.englishacademy.EnglishAcademy.dtos.courseOffline.CourseOfflineDetail;
-import com.englishacademy.EnglishAcademy.dtos.courseOnline.CourseOnlineDTO;
-import com.englishacademy.EnglishAcademy.entities.Student;
 import com.englishacademy.EnglishAcademy.services.ICourseOfflineService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
