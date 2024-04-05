@@ -1,5 +1,4 @@
-package com.englishacademy.EnglishAcademy.dtos.courseOnline;
-
+package com.englishacademy.EnglishAcademy.dtos.category;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,29 +11,11 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CourseOnlineDTO {
-
+public class CategoryDTO {
     private Long id;
     private String name;
 
     private String slug;
-
-    private String image;
-
-    private Double price;
-    private Double star;
-    private Integer totalReview;
-
-    private String description;
-
-    private Integer level;
-
-    private String language;
-
-    private Integer status;
-
-    private String trailer;
-    private Long category_id;
 
     private Timestamp createdDate;
 

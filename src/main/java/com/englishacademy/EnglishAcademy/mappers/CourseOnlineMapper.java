@@ -39,6 +39,7 @@ public class CourseOnlineMapper {
                 .star(model.getStar())
                 .totalReview(reviewRepository.findAllByCourseOnline(model).size())
                 .trailer(model.getTrailer())
+                .category_id(model.getCategory().getId())
                 .createdBy(model.getCreatedBy())
                 .createdDate(model.getCreatedDate())
                 .modifiedBy(model.getModifiedBy())

@@ -1,10 +1,7 @@
 package com.englishacademy.EnglishAcademy.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
@@ -45,6 +42,10 @@ public class CourseOnline extends BaseEntity{
 
     @Column(name = "trailer", nullable = false)
     private String trailer;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private Category category;
 
     @OneToMany(mappedBy = "courseOnline")
     @JsonIgnore
