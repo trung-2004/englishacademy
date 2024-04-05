@@ -2,10 +2,14 @@ package com.englishacademy.EnglishAcademy.services.impl;
 
 import com.englishacademy.EnglishAcademy.dtos.topicOnline.TopicOnlineDetailResponse;
 import com.englishacademy.EnglishAcademy.entities.CourseOnline;
+import com.englishacademy.EnglishAcademy.entities.CourseOnlineStudent;
 import com.englishacademy.EnglishAcademy.entities.Student;
 import com.englishacademy.EnglishAcademy.entities.TopicOnline;
+import com.englishacademy.EnglishAcademy.exceptions.AppException;
+import com.englishacademy.EnglishAcademy.exceptions.ErrorCode;
 import com.englishacademy.EnglishAcademy.mappers.TopicOnlineMapper;
 import com.englishacademy.EnglishAcademy.repositories.CourseOnlineRepository;
+import com.englishacademy.EnglishAcademy.repositories.CourseOnlineStudentRepository;
 import com.englishacademy.EnglishAcademy.repositories.StudentRepository;
 import com.englishacademy.EnglishAcademy.repositories.TopicOnlineRepository;
 import com.englishacademy.EnglishAcademy.services.ITopicOnlineService;
@@ -26,25 +30,26 @@ public class TopicOnlineService implements ITopicOnlineService {
     @Autowired
     private CourseOnlineRepository courseOnlineRepository;
     @Autowired
+    private CourseOnlineStudentRepository courseOnlineStudentRepository;
+    @Autowired
     private TopicOnlineMapper topicOnlineMapper;
 
     @Override
     public List<TopicOnlineDetailResponse> findAllByCourseSlug(String slug, Long userId) {
         CourseOnline courseOnline = courseOnlineRepository.findBySlug(slug);
-        if (courseOnline == null) {
-            throw new RuntimeException("Not Found");
-        }
-        Optional<Student> student = studentRepository.findById(userId);
-        if (!student.isPresent()){
-            throw new RuntimeException("User Not Found");
-        }
+        if (courseOnline == null) throw new AppException(ErrorCode.COURSE_NOTFOUND);
+        Student student = studentRepository.findById(userId)
+                .orElseThrow(() -> new AppException(ErrorCode.STUDENT_NOTFOUND));
+
+        CourseOnlineStudent courseOnlineStudent = courseOnlineStudentRepository.findByCourseOnlineAndStudent(courseOnline, student);
+        if (courseOnlineStudent == null) throw new AppException(ErrorCode.COURSE_NOTPURCHASED);
 
         List<TopicOnline> topicOnlineList = topicOnlineRepository.findAllByCourseOnline(courseOnline);
 
         List<TopicOnlineDetailResponse> topicOnlineDetailList = new ArrayList<>();
 
         for (TopicOnline topicOnline: topicOnlineList) {
-            TopicOnlineDetailResponse TopicOnlineDetailResponse = topicOnlineMapper.toTopicOnlineAndStudentDetailResponse(topicOnline, student.get());
+            TopicOnlineDetailResponse TopicOnlineDetailResponse = topicOnlineMapper.toTopicOnlineAndStudentDetailResponse(topicOnline, student);
             topicOnlineDetailList.add(TopicOnlineDetailResponse);
         }
 

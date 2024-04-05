@@ -28,6 +28,9 @@ public class ItemOnline extends BaseEntity{
     @Column(name = "itemType", nullable = false)
     private Integer itemType;
 
+    @Column(name = "duration", nullable = false)
+    private Integer duration;
+
     @Column(name = "orderTop", nullable = false)
     private Integer orderTop;
 
@@ -41,5 +44,9 @@ public class ItemOnline extends BaseEntity{
     @OneToMany(mappedBy = "itemOnline")
     @JsonIgnore
     private List<QuestionItemOnline> questionItemOnlines;
+
+    @OneToMany(mappedBy = "itemOnline")
+    @JsonIgnore
+    private List<ItemOnlineStudent> itemOnlineStudents;
 
 }

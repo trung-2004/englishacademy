@@ -4,7 +4,11 @@ import com.englishacademy.EnglishAcademy.dtos.itemOnline.ItemOnlineDTO;
 import com.englishacademy.EnglishAcademy.dtos.itemOnline.ItemOnlineDetail;
 import com.englishacademy.EnglishAcademy.dtos.questionItemOnline.QuestionItemOnlineDTO;
 import com.englishacademy.EnglishAcademy.entities.ItemOnline;
+import com.englishacademy.EnglishAcademy.entities.ItemOnlineStudent;
 import com.englishacademy.EnglishAcademy.entities.Student;
+import com.englishacademy.EnglishAcademy.exceptions.AppException;
+import com.englishacademy.EnglishAcademy.exceptions.ErrorCode;
+import com.englishacademy.EnglishAcademy.repositories.ItemOnlineStudentRepository;
 import com.englishacademy.EnglishAcademy.repositories.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -18,7 +22,7 @@ public class ItemOnlineMapper {
     @Autowired
     private QuestionItemOnlineMapper questionItemOnlineMapper;
     @Autowired
-    private StudentRepository studentRepository;
+    private ItemOnlineStudentRepository itemOnlineStudentRepository;
 
     public ItemOnlineDTO toItemOnlineDTO(ItemOnline model){
         if (model == null) {
@@ -41,14 +45,16 @@ public class ItemOnlineMapper {
         return itemOnlineDTO;
     }
 
-    /*public ItemOnlineDTO toItemOnlineStudentDTO(ItemOnline model, Student student){
-        if (model == null) {
-            throw new RuntimeException("Not Found");
-        }
+    public ItemOnlineDetail toItemOnlineStudentDetail(ItemOnline model, Student student){
+        if (model == null) throw new AppException(ErrorCode.NOTFOUND);
+
+        List<QuestionItemOnlineDTO> questionItemOnlineDTOList = model.getQuestionItemOnlines().stream().map(questionItemOnlineMapper::toQuestionItemOnlineDTO).collect(Collectors.toList());
+
+        questionItemOnlineDTOList.sort(Comparator.comparingInt(QuestionItemOnlineDTO::getOrderTop));
 
         ItemOnlineStudent itemOnlineStudent = itemOnlineStudentRepository.findByItemOnlineAndStudent(model, student);
 
-        ItemOnlineDTO itemOnlineDTO = ItemOnlineDTO.builder()
+        ItemOnlineDetail itemOnlineDetail = ItemOnlineDetail.builder()
                 .id(model.getId())
                 .title(model.getTitle())
                 .slug(model.getSlug())
@@ -56,6 +62,7 @@ public class ItemOnlineMapper {
                 .itemType(model.getItemType())
                 .orderTop(model.getOrderTop())
                 .pathUrl(model.getPathUrl())
+                .questionItemOnlineDTOList(questionItemOnlineDTOList)
                 .createdBy(model.getCreatedBy())
                 .createdDate(model.getCreatedDate())
                 .modifiedBy(model.getModifiedBy())
@@ -63,17 +70,14 @@ public class ItemOnlineMapper {
                 .build();
 
         if (itemOnlineStudent != null){
-            itemOnlineDTO.setStatus(itemOnlineStudent.isStatus());
-            itemOnlineDTO.setLastAccessed(itemOnlineStudent.getLastAccessed());
+            itemOnlineDetail.setStatus(itemOnlineStudent.isStatus());
         }
 
-        return itemOnlineDTO;
+        return itemOnlineDetail;
     }
-*/
+
     public ItemOnlineDetail toItemOnlineDetail(ItemOnline model){
-        if (model == null) {
-            throw new RuntimeException("Not Found");
-        }
+        if (model == null) throw new AppException(ErrorCode.NOTFOUND);
 
         List<QuestionItemOnlineDTO> questionItemOnlineDTOList = model.getQuestionItemOnlines().stream().map(questionItemOnlineMapper::toQuestionItemOnlineDTO).collect(Collectors.toList());
 

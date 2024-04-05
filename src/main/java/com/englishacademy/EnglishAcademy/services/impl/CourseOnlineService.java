@@ -1,21 +1,20 @@
 package com.englishacademy.EnglishAcademy.services.impl;
 
+import com.englishacademy.EnglishAcademy.dtos.courseOffline.CourseOnlineResponse;
 import com.englishacademy.EnglishAcademy.dtos.courseOnline.CourseOnlineDTO;
 import com.englishacademy.EnglishAcademy.dtos.courseOnline.CourseOnlineDetail;
+import com.englishacademy.EnglishAcademy.dtos.review.ReviewDTO;
 import com.englishacademy.EnglishAcademy.dtos.topicOnline.TopicOnlineDTO;
-import com.englishacademy.EnglishAcademy.entities.CourseOnline;
-import com.englishacademy.EnglishAcademy.entities.CourseOnlineStudent;
-import com.englishacademy.EnglishAcademy.entities.Student;
-import com.englishacademy.EnglishAcademy.entities.TopicOnline;
+import com.englishacademy.EnglishAcademy.dtos.topicOnline.TopicOnlineDetail;
+import com.englishacademy.EnglishAcademy.entities.*;
 import com.englishacademy.EnglishAcademy.exceptions.AppException;
 import com.englishacademy.EnglishAcademy.exceptions.ErrorCode;
 import com.englishacademy.EnglishAcademy.mappers.CourseOnlineMapper;
+import com.englishacademy.EnglishAcademy.mappers.ReviewMapper;
 import com.englishacademy.EnglishAcademy.mappers.TopicOnlineMapper;
 import com.englishacademy.EnglishAcademy.models.courseOnline.CreateCourseOnline;
 import com.englishacademy.EnglishAcademy.models.courseOnline.EditCourseOnline;
-import com.englishacademy.EnglishAcademy.repositories.CourseOnlineRepository;
-import com.englishacademy.EnglishAcademy.repositories.CourseOnlineStudentRepository;
-import com.englishacademy.EnglishAcademy.repositories.StudentRepository;
+import com.englishacademy.EnglishAcademy.repositories.*;
 import com.englishacademy.EnglishAcademy.services.ICourseOnlineService;
 import com.englishacademy.EnglishAcademy.services.IStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +23,9 @@ import org.springframework.stereotype.Service;
 import java.sql.Timestamp;
 import java.time.*;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CourseOnlineService implements ICourseOnlineService {
@@ -37,7 +38,19 @@ public class CourseOnlineService implements ICourseOnlineService {
     @Autowired
     private StudentRepository studentRepository;
     @Autowired
+    private ReviewRepository reviewRepository;
+    @Autowired
     private CourseOnlineStudentRepository courseOnlineStudentRepository;
+    @Autowired
+    private TestOnlineStudentRepository testOnlineStudentRepository;
+    @Autowired
+    private ItemOnlineStudentRepository itemOnlineStudentRepository;
+
+    @Autowired
+    private ReviewMapper reviewMapper;
+    @Autowired
+    private TopicOnlineMapper topicOnlineMapper;
+
 
 
     @Override
@@ -46,11 +59,50 @@ public class CourseOnlineService implements ICourseOnlineService {
     }
 
     @Override
-    public List<CourseOnlineDTO> findAllByStudent(Long studentId) {
+    public List<CourseOnlineResponse> findAllByStudent(Long studentId) {
         Student student = studentRepository.findById(studentId)
-                .orElseThrow(() -> new RuntimeException("Not Found"));
-        List<CourseOnline> courseOnlineStudentList = student.getCourseOnlineStudents().stream().map(CourseOnlineStudent::getCourseOnline).toList();
-        return courseOnlineStudentList.stream().map(courseOnlineMapper::toCourseOnlineDTO).toList();
+                .orElseThrow(() -> new AppException(ErrorCode.STUDENT_NOTFOUND));
+
+        List<CourseOnline> courseOnlineStudentList = student.getCourseOnlineStudents()
+                .stream().map(CourseOnlineStudent::getCourseOnline).toList();
+
+        List<CourseOnlineResponse> courseOnlineResponseList = new ArrayList<>();
+        for (CourseOnline courseOnline: courseOnlineStudentList) {
+            Long Totalduration = getTotalDurationCourse(courseOnline);
+            Long Realduration = getRealDurationCourse(courseOnline, student);
+
+            double percentage = (double) Realduration / Totalduration * 100;
+            // Làm tròn phần trăm thành một số nguyên
+            int roundedPercentage = (int) Math.round(percentage);
+
+            boolean check = true;
+            for (TopicOnline topicOnline: courseOnline.getTopicOnlines()) {
+                for (TestOnline testOnline: topicOnline.getTestOnlines()) {
+                    TestOnlineStudent testOnlineStudent = testOnlineStudentRepository.findByTestOnlineAndStudentAndStatus(testOnline, student, true);
+                    if (testOnlineStudent == null){
+                        check = false;
+                    }
+                }
+            }
+
+            // create
+            CourseOnlineResponse courseOnlineResponse = CourseOnlineResponse.builder()
+                    .id(courseOnline.getId())
+                    .name(courseOnline.getName())
+                    .slug(courseOnline.getSlug())
+                    .image(courseOnline.getImage())
+                    .price(courseOnline.getPrice())
+                    .level(courseOnline.getLevel())
+                    .progress(roundedPercentage)
+                    .status(check)
+                    .language(courseOnline.getLanguage())
+                    .createdDate(courseOnline.getCreatedDate())
+                    .build();
+            // add
+            courseOnlineResponseList.add(courseOnlineResponse);
+        }
+
+        return courseOnlineResponseList;
     }
 
     @Override
@@ -129,9 +181,82 @@ public class CourseOnlineService implements ICourseOnlineService {
     @Override
     public CourseOnlineDetail getDetail(String slug) {
         CourseOnline model = courseOnlineRepository.findBySlug(slug);
-        if (model == null) {
-            throw new RuntimeException("Not Found");
+        if (model == null) throw new AppException(ErrorCode.COURSE_NOTFOUND);
+
+        // Map từ topicOnlines sang TopicOnlineDetail và lưu vào danh sách
+        List<TopicOnlineDetail> topicOnlineDetails = model.getTopicOnlines().stream()
+                .map(topicOnlineMapper::toTopicOnlineDetail)
+                .collect(Collectors.toList());
+
+        // Sắp xếp danh sách theo thứ tự mong muốn (ví dụ: theo id)
+        topicOnlineDetails.sort(Comparator.comparingInt(TopicOnlineDetail::getOrderTop));
+
+        List<ReviewDTO> reviewDTOS = reviewRepository.findAllByCourseOnline(model).stream()
+                .map(reviewMapper::toReviewDTO)
+                .collect(Collectors.toList());
+
+        reviewDTOS.sort(Comparator.comparingLong(ReviewDTO::getId));
+
+        Long duration = 0L;
+        for (TopicOnline topicOnline: model.getTopicOnlines()) {
+            for (ItemOnline itemOnline: topicOnline.getItemOnlines()) {
+                duration += itemOnline.getDuration();
+            }
         }
-        return courseOnlineMapper.toCourseOnlineDetail(model);
+
+
+        CourseOnlineDetail courseOnlineDetail = CourseOnlineDetail.builder()
+                .id(model.getId())
+                .name(model.getName())
+                .slug(model.getSlug())
+                .image(model.getImage())
+                .price(model.getPrice())
+                .description(model.getDescription())
+                .level(model.getLevel())
+                .language(model.getLanguage())
+                .status(model.getStatus())
+                .star(model.getStar())
+                .duration(convertSecondtoHour(duration))
+                .reviewList(reviewDTOS)
+                .trailer(model.getTrailer())
+                .createdBy(model.getCreatedBy())
+                .createdDate(model.getCreatedDate())
+                .modifiedBy(model.getModifiedBy())
+                .modifiedDate(model.getModifiedDate())
+                .topicOnlineDetailList(topicOnlineDetails)
+                .build();
+
+        return courseOnlineDetail;
+
+        //return courseOnlineMapper.toCourseOnlineDetail(model);
+    }
+    private String convertSecondtoHour(Long seconds){
+        int hours = (int) (seconds / 3600);
+        int minutes = (int) ((seconds % 3600) / 60);
+        return hours + " hours " + minutes + " minutes";
+    }
+    private Long getTotalDurationCourse(CourseOnline courseOnline) {
+        Long duration = 0L;
+        for (TopicOnline topicOnline: courseOnline.getTopicOnlines()) {
+            for (ItemOnline itemOnline: topicOnline.getItemOnlines()) {
+                duration += itemOnline.getDuration();
+            }
+        }
+        return duration;
+    }
+    private Long getRealDurationCourse(CourseOnline courseOnline, Student student) {
+        Long duration = 0L;
+        for (TopicOnline topicOnline: courseOnline.getTopicOnlines()) {
+            for (ItemOnline itemOnline: topicOnline.getItemOnlines()) {
+                ItemOnlineStudent itemOnlineStudent = itemOnlineStudentRepository.findByItemOnlineAndStudent(itemOnline, student);
+                if (itemOnlineStudent.isStatus()){
+                    duration+= itemOnline.getDuration();
+                }
+                else {
+
+                }
+            }
+        }
+        return duration;
     }
 }

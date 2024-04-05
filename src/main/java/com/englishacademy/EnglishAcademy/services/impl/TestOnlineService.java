@@ -141,7 +141,7 @@ public class TestOnlineService implements ITestOnlineService {
 
         // Tìm sinh viên theo studentId
         Student student = studentRepository.findById(studentId)
-                .orElseThrow(() -> new RuntimeException("Student Not Found"));
+                .orElseThrow(() -> new AppException(ErrorCode.STUDENT_NOTFOUND));
 
         TestOnlineStudent testOnlineStudentExsiting = testOnlineStudentRepository.findByTestOnlineAndStudentAndStatus(testOnline, student, true);
         if (testOnlineStudentExsiting != null) throw new AppException(ErrorCode.NOTFOUND);

@@ -8,6 +8,8 @@ import com.englishacademy.EnglishAcademy.dtos.topicOnline.TopicOnlineDTO;
 import com.englishacademy.EnglishAcademy.dtos.topicOnline.TopicOnlineDetail;
 import com.englishacademy.EnglishAcademy.dtos.topicOnline.TopicOnlineDetailResponse;
 import com.englishacademy.EnglishAcademy.entities.*;
+import com.englishacademy.EnglishAcademy.exceptions.AppException;
+import com.englishacademy.EnglishAcademy.exceptions.ErrorCode;
 import com.englishacademy.EnglishAcademy.repositories.TestOnlineStudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -98,11 +100,14 @@ public class TopicOnlineMapper {
     }*/
 
     public TopicOnlineDetailResponse toTopicOnlineAndStudentDetailResponse(TopicOnline model, Student student){
-        if (model == null) {
-            throw new RuntimeException("Not Found");
+        if (model == null) throw new AppException(ErrorCode.NOTFOUND);
+
+        List<ItemOnlineDetail> itemOnlineDTOSDetailList = new ArrayList<>();
+        for (ItemOnline itemOnline: model.getItemOnlines()) {
+            ItemOnlineDetail itemOnlineDetail = itemOnlineMapper.toItemOnlineStudentDetail(itemOnline, student);
+            itemOnlineDTOSDetailList.add(itemOnlineDetail);
         }
 
-        List<ItemOnlineDetail> itemOnlineDTOSDetailList = model.getItemOnlines().stream().map(itemOnlineMapper::toItemOnlineDetail).collect(Collectors.toList());
         itemOnlineDTOSDetailList.sort(Comparator.comparingInt(ItemOnlineDetail::getOrderTop));
 
         List<TestOnlineResponseDTO> testOnlineResponseDTOS = new ArrayList<>();

@@ -45,5 +45,4 @@ public class CourseOfflineController {
                 new ResponseObject(true, 200, "ok", courseOfflineDetail)
         );
     }
-
 }

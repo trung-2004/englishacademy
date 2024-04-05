@@ -16,6 +16,5 @@ public class CourseOnlineStudentDTO {
     private StudentDTO student;
     private CourseOnlineDTO courseOnline;
     private Double totalPrice;
-
     private String paymentMethod;
 }

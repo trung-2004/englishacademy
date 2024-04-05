@@ -5,6 +5,10 @@ import com.englishacademy.EnglishAcademy.dtos.courseOnline.CourseOnlineDetail;
 import com.englishacademy.EnglishAcademy.dtos.review.ReviewDTO;
 import com.englishacademy.EnglishAcademy.dtos.topicOnline.TopicOnlineDetail;
 import com.englishacademy.EnglishAcademy.entities.CourseOnline;
+import com.englishacademy.EnglishAcademy.entities.ItemOnline;
+import com.englishacademy.EnglishAcademy.entities.TopicOnline;
+import com.englishacademy.EnglishAcademy.exceptions.AppException;
+import com.englishacademy.EnglishAcademy.exceptions.ErrorCode;
 import com.englishacademy.EnglishAcademy.repositories.ReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -48,10 +52,9 @@ public class CourseOnlineMapper {
         return courseOnlineDTO;
     }
 
-    public CourseOnlineDetail toCourseOnlineDetail(CourseOnline model){
-        if (model == null) {
-            throw new RuntimeException("Not Found");
-        }
+    /*public CourseOnlineDetail toCourseOnlineDetail(CourseOnline model){
+        if (model == null) throw new AppException(ErrorCode.NOTFOUND);
+
         // Map từ topicOnlines sang TopicOnlineDetail và lưu vào danh sách
         List<TopicOnlineDetail> topicOnlineDetails = model.getTopicOnlines().stream()
                 .map(topicOnlineMapper::toTopicOnlineDetail)
@@ -65,6 +68,13 @@ public class CourseOnlineMapper {
                 .collect(Collectors.toList());
 
         reviewDTOS.sort(Comparator.comparingLong(ReviewDTO::getId));
+
+        Long duration = 0L;
+        for (TopicOnline topicOnline: model.getTopicOnlines()) {
+            for (ItemOnline itemOnline: topicOnline.getItemOnlines()) {
+
+            }
+        }
 
 
         CourseOnlineDetail courseOnlineDetail = CourseOnlineDetail.builder()
@@ -88,5 +98,5 @@ public class CourseOnlineMapper {
                 .build();
 
         return courseOnlineDetail;
-    }
+    }*/
 }

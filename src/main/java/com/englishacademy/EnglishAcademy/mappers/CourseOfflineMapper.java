@@ -1,26 +1,16 @@
 package com.englishacademy.EnglishAcademy.mappers;
 
 import com.englishacademy.EnglishAcademy.dtos.courseOffline.CourseOfflineDTO;
-import com.englishacademy.EnglishAcademy.dtos.courseOnline.CourseOnlineDTO;
-import com.englishacademy.EnglishAcademy.dtos.courseOnline.CourseOnlineDetail;
-import com.englishacademy.EnglishAcademy.dtos.review.ReviewDTO;
-import com.englishacademy.EnglishAcademy.dtos.topicOnline.TopicOnlineDetail;
 import com.englishacademy.EnglishAcademy.entities.CourseOffline;
-import com.englishacademy.EnglishAcademy.entities.CourseOnline;
-import com.englishacademy.EnglishAcademy.repositories.ReviewRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.englishacademy.EnglishAcademy.exceptions.AppException;
+import com.englishacademy.EnglishAcademy.exceptions.ErrorCode;
 import org.springframework.stereotype.Component;
-
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class CourseOfflineMapper {
     public CourseOfflineDTO toCourseOfflineDTO(CourseOffline model){
-        if (model == null) {
-            throw new RuntimeException("Not Found");
-        }
+        if (model == null) throw new AppException(ErrorCode.NOTFOUND);
+
         CourseOfflineDTO courseOfflineDTO = CourseOfflineDTO.builder()
                 .id(model.getId())
                 .name(model.getName())

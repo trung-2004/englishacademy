@@ -3,9 +3,12 @@ package com.englishacademy.EnglishAcademy.services.impl;
 import com.englishacademy.EnglishAcademy.dtos.itemOnline.ItemOnlineDTO;
 import com.englishacademy.EnglishAcademy.dtos.itemOnline.ItemOnlineDetail;
 import com.englishacademy.EnglishAcademy.entities.*;
+import com.englishacademy.EnglishAcademy.exceptions.AppException;
+import com.englishacademy.EnglishAcademy.exceptions.ErrorCode;
 import com.englishacademy.EnglishAcademy.mappers.ItemOnlineMapper;
 import com.englishacademy.EnglishAcademy.repositories.CourseOnlineStudentRepository;
 import com.englishacademy.EnglishAcademy.repositories.ItemOnlineRepository;
+import com.englishacademy.EnglishAcademy.repositories.ItemOnlineStudentRepository;
 import com.englishacademy.EnglishAcademy.repositories.StudentRepository;
 import com.englishacademy.EnglishAcademy.services.IItemOnlineService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +30,8 @@ public class ItemOnlineService implements IItemOnlineService {
     private StudentRepository studentRepository;
     @Autowired
     private CourseOnlineStudentRepository courseOnlineStudentRepository;
+    @Autowired
+    private ItemOnlineStudentRepository itemOnlineStudentRepository;
 
     @Override
     public ItemOnlineDetail getItemOnlineDetail(String slug) {
@@ -37,30 +42,25 @@ public class ItemOnlineService implements IItemOnlineService {
         return itemOnlineMapper.toItemOnlineDetail(model);
     }
 
-    /*@Override
-    public ItemOnlineDTO completeItem(String slug, Long studentId) {
+    @Override
+    public void completeItem(String slug, Long studentId) {
         ItemOnline model = itemOnlineRepository.findBySlug(slug);
-        if (model == null) {
-            throw new RuntimeException("Not Found");
+        if (model == null) throw new AppException(ErrorCode.ITEMONLINE_NOTFOUND);
+
+        Student student = studentRepository.findById(studentId)
+                .orElseThrow(() -> new AppException(ErrorCode.STUDENT_NOTFOUND));
+
+        CourseOnlineStudent courseOnlineStudent = courseOnlineStudentRepository.findByCourseOnlineAndStudent(model.getTopicOnline().getCourseOnline(), student);
+        if (courseOnlineStudent == null) throw new AppException(ErrorCode.COURSE_NOTPURCHASED);
+
+        ItemOnlineStudent itemOnlineStudentExsiting = itemOnlineStudentRepository.findByItemOnlineAndStudent(model, student);
+        if (itemOnlineStudentExsiting == null) throw new AppException(ErrorCode.NOTFOUND);
+
+        if (itemOnlineStudentExsiting.isStatus()) {
+            return;
         }
-        Optional<Student> student = studentRepository.findById(studentId);
-        if (!student.isPresent()){
-            throw new RuntimeException("User Not Found");
-        }
-        CourseOnlineStudent courseOnlineStudent = courseOnlineStudentRepository.findByCourseOnlineAndStudent(model.getTopicOnline().getCourseOnline(), student.get());
-        if (courseOnlineStudent == null){
-            throw new RuntimeException("Not Found");
-        }
 
-        ZoneId zoneId = ZoneId.of("Asia/Ho_Chi_Minh"); // Chỉ định múi giờ của bạn (ví dụ: Asia/Ho_Chi_Minh)
-        ZonedDateTime zonedDateTime = ZonedDateTime.ofInstant(Instant.now(), zoneId);
-        Timestamp timestamp = Timestamp.from(zonedDateTime.toInstant());
-
-        itemOnlineStudent.setStatus(true);
-        itemOnlineStudent.setLastAccessed(timestamp);
-
-        itemOnlineStudentRepository.save(itemOnlineStudent);
-
-        return itemOnlineMapper.toItemOnlineStudentDTO(model, student.get());
-    }*/
+        itemOnlineStudentExsiting.setStatus(true);
+        itemOnlineStudentRepository.save(itemOnlineStudentExsiting);
+    }
 }

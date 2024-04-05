@@ -1,5 +1,6 @@
 package com.englishacademy.EnglishAcademy.controllers;
 
+import com.englishacademy.EnglishAcademy.dtos.courseOffline.CourseOnlineResponse;
 import com.englishacademy.EnglishAcademy.dtos.courseOnline.CourseOnlineDTO;
 import com.englishacademy.EnglishAcademy.dtos.ResponseObject;
 import com.englishacademy.EnglishAcademy.dtos.courseOnline.CourseOnlineDetail;
@@ -37,7 +38,7 @@ public class CourseOnlineController {
     @GetMapping("/student/{studentId}")
     ResponseEntity<ResponseObject> getAllByStudent(@PathVariable("studentId") Long studentId) {
         try {
-            List<CourseOnlineDTO> list = courseOnlineService.findAllByStudent(studentId);
+            List<CourseOnlineResponse> list = courseOnlineService.findAllByStudent(studentId);
             return ResponseEntity.status(HttpStatus.OK).body(
                     new ResponseObject(true, 200, "ok", list)
             );
@@ -121,5 +122,4 @@ public class CourseOnlineController {
             );
         }
     }
-
 }

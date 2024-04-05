@@ -1,9 +1,7 @@
 package com.englishacademy.EnglishAcademy.dtos.courseOnline;
 
 import com.englishacademy.EnglishAcademy.dtos.review.ReviewDTO;
-import com.englishacademy.EnglishAcademy.dtos.topicOnline.TopicOnlineDTO;
 import com.englishacademy.EnglishAcademy.dtos.topicOnline.TopicOnlineDetail;
-import com.englishacademy.EnglishAcademy.entities.Review;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -37,6 +35,8 @@ public class CourseOnlineDetail {
     private Double star;
 
     private List<ReviewDTO> reviewList;
+
+    private String duration;
 
     private String trailer;
 

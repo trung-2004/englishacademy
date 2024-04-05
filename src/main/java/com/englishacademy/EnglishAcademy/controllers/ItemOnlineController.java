@@ -29,17 +29,11 @@ public class ItemOnlineController {
         }
     }
 
-    /*@PutMapping("/{slug}/{userId}")
+    @PutMapping("/{slug}/{userId}")
     ResponseEntity<ResponseObject> completeItem(@PathVariable("slug") String slug, @PathVariable("userId") Long userId) {
-        try {
-            ItemOnlineDTO itemOnlineDTO = itemOnlineService.completeItem(slug, userId);
-            return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject(true, "ok", itemOnlineDTO)
-            );
-        } catch (Exception e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    new ResponseObject(false, e.getMessage(), "")
-            );
-        }
-    }*/
+        itemOnlineService.completeItem(slug, userId);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "ok", "")
+        );
+    }
 }

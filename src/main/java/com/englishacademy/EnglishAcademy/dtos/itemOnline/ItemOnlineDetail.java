@@ -25,6 +25,7 @@ public class ItemOnlineDetail {
     private Integer orderTop;
 
     private String pathUrl;
+    private boolean status;
 
     private List<QuestionItemOnlineDTO> questionItemOnlineDTOList;
 
