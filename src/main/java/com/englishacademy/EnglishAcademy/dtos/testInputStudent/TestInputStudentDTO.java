@@ -1,12 +1,14 @@
 package com.englishacademy.EnglishAcademy.dtos.testInputStudent;
 
 
+import com.englishacademy.EnglishAcademy.dtos.courseOnline.CourseOnlineDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -25,6 +27,7 @@ public class TestInputStudentDTO {
     private Integer totalQuestionGrammar;
     private Double score;
     private Integer time;
+    private List<CourseOnlineDTO> courseOnlineList;
     private Timestamp createdDate;
     private Timestamp modifiedDate;
     private String createdBy;

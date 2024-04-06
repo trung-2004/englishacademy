@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface CourseOnlineRepository extends JpaRepository<CourseOnline, Long> {
     CourseOnline findBySlug(String slug);
+    List<CourseOnline> findAllByCategoryIdAndLevelIn(Long id, List<Integer> levels);
 }

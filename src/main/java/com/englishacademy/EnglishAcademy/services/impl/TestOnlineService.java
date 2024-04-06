@@ -1,24 +1,16 @@
 package com.englishacademy.EnglishAcademy.services.impl;
 
-import com.englishacademy.EnglishAcademy.dtos.questionTestInput.QuestionTestInputDTO;
-import com.englishacademy.EnglishAcademy.dtos.questionTestInput.QuestionTestInputDetailResult;
 import com.englishacademy.EnglishAcademy.dtos.questionTestOnline.QuestionTestOnlineDTO;
-import com.englishacademy.EnglishAcademy.dtos.testInput.TestInputDTO;
-import com.englishacademy.EnglishAcademy.dtos.testInput.TestInputDetail;
-import com.englishacademy.EnglishAcademy.dtos.testInputSession.TestInputSessionDetail;
-import com.englishacademy.EnglishAcademy.dtos.testInputStudent.TestInputStudentDTO;
 import com.englishacademy.EnglishAcademy.dtos.testOnline.TestOnlineDetail;
 import com.englishacademy.EnglishAcademy.dtos.testOnlineSession.TestOnlineSessionDetail;
 import com.englishacademy.EnglishAcademy.dtos.testOnlineStudent.TestOnlineStudentDTO;
 import com.englishacademy.EnglishAcademy.entities.*;
 import com.englishacademy.EnglishAcademy.exceptions.AppException;
 import com.englishacademy.EnglishAcademy.exceptions.ErrorCode;
-import com.englishacademy.EnglishAcademy.mappers.TestInputMapper;
 import com.englishacademy.EnglishAcademy.mappers.TestOnlineMapper;
 import com.englishacademy.EnglishAcademy.models.answerStudent.CreateAnswerStudent;
 import com.englishacademy.EnglishAcademy.models.answerStudent.SubmitTest;
 import com.englishacademy.EnglishAcademy.repositories.*;
-import com.englishacademy.EnglishAcademy.services.ITestInputService;
 import com.englishacademy.EnglishAcademy.services.ITestOnlineService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -253,9 +245,8 @@ public class TestOnlineService implements ITestOnlineService {
     @Override
     public TestOnlineStudentDTO getresultTest(String code) {
         TestOnlineStudent testOnlineStudent = testOnlineStudentRepository.findByCode(code);
-        if (testOnlineStudent == null){
-            throw  new RuntimeException("Student Not Found");
-        }
+        if (testOnlineStudent == null) throw  new AppException(ErrorCode.NOTFOUND);
+
         TestOnlineStudentDTO testOnlineStudentDTO = TestOnlineStudentDTO.builder()
                 .id(testOnlineStudent.getId())
                 .code(testOnlineStudent.getCode())

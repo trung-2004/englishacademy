@@ -1,5 +1,6 @@
 package com.englishacademy.EnglishAcademy.services.impl;
 
+import com.englishacademy.EnglishAcademy.dtos.courseOnline.CourseOnlineDTO;
 import com.englishacademy.EnglishAcademy.dtos.questionTestInput.QuestionTestInputDTO;
 import com.englishacademy.EnglishAcademy.dtos.questionTestInput.QuestionTestInputDetailResult;
 import com.englishacademy.EnglishAcademy.dtos.testInput.TestInputDTO;
@@ -9,6 +10,7 @@ import com.englishacademy.EnglishAcademy.dtos.testInputStudent.TestInputStudentD
 import com.englishacademy.EnglishAcademy.entities.*;
 import com.englishacademy.EnglishAcademy.exceptions.AppException;
 import com.englishacademy.EnglishAcademy.exceptions.ErrorCode;
+import com.englishacademy.EnglishAcademy.mappers.CourseOnlineMapper;
 import com.englishacademy.EnglishAcademy.mappers.TestInputMapper;
 import com.englishacademy.EnglishAcademy.models.answerStudent.CreateAnswerStudent;
 import com.englishacademy.EnglishAcademy.models.answerStudent.SubmitTest;
@@ -38,7 +40,11 @@ public class TestInputService implements ITestInputService {
     @Autowired
     private QuestionTestInputRepository questionTestInputRepository;
     @Autowired
+    private CourseOnlineRepository courseOnlineRepository;
+    @Autowired
     private TestInputMapper testInputMapper;
+    @Autowired
+    private CourseOnlineMapper courseOnlineMapper;
 
     @Override
     public List<TestInputDTO> findAll() {
@@ -226,9 +232,8 @@ public class TestInputService implements ITestInputService {
     @Override
     public TestInputStudentDTO getresultTest(String code) {
         TestInputStudent testInputStudent = testInputStudentRepository.findByCode(code);
-        if (testInputStudent == null){
-            throw  new RuntimeException("Student Not Found");
-        }
+        if (testInputStudent == null) throw  new AppException(ErrorCode.STUDENT_NOTFOUND);
+
         TestInputStudentDTO testInputStudentDTO = TestInputStudentDTO.builder()
                 .id(testInputStudent.getId())
                 .code(testInputStudent.getCode())
@@ -256,15 +261,74 @@ public class TestInputService implements ITestInputService {
             }
         }
 
+        List<Integer> level = new ArrayList<>();
+        if (testInputStudent.getTestInput().getType() == 0) { // toeic
+            if (testInputStudent.getScore() >= 0 && testInputStudent.getScore() < 300){
+                level.add(0);level.add(1);level.add(2);level.add(3);
+                List<CourseOnline> courseOnlines = courseOnlineRepository.findAllByCategoryIdAndLevelIn(3L, level);
+                courseOnlines.sort(Comparator.comparingInt(CourseOnline::getLevel));
+                List<CourseOnlineDTO>  courseOnlineDTOList = courseOnlines.stream().map(courseOnlineMapper::toCourseOnlineDTO).collect(Collectors.toList());
+                testInputStudentDTO.setCourseOnlineList(courseOnlineDTOList);
+            } else if (testInputStudent.getScore() >= 300 && testInputStudent.getScore() < 600) {
+                level.add(1);level.add(2);level.add(3);
+                List<CourseOnline> courseOnlines = courseOnlineRepository.findAllByCategoryIdAndLevelIn(3L, level);
+                courseOnlines.sort(Comparator.comparingInt(CourseOnline::getLevel));
+                List<CourseOnlineDTO>  courseOnlineDTOList = courseOnlines.stream().map(courseOnlineMapper::toCourseOnlineDTO).collect(Collectors.toList());
+                testInputStudentDTO.setCourseOnlineList(courseOnlineDTOList);
+            }else if (testInputStudent.getScore() >= 600 && testInputStudent.getScore() < 800) {
+                level.add(2);level.add(3);
+                List<CourseOnline> courseOnlines = courseOnlineRepository.findAllByCategoryIdAndLevelIn(3L, level);
+                courseOnlines.sort(Comparator.comparingInt(CourseOnline::getLevel));
+                List<CourseOnlineDTO>  courseOnlineDTOList = courseOnlines.stream().map(courseOnlineMapper::toCourseOnlineDTO).collect(Collectors.toList());
+                testInputStudentDTO.setCourseOnlineList(courseOnlineDTOList);
+            }else if (testInputStudent.getScore() >= 800 && testInputStudent.getScore() < 990) {
+                level.add(3);
+                List<CourseOnline> courseOnlines = courseOnlineRepository.findAllByCategoryIdAndLevelIn(3L, level);
+                courseOnlines.sort(Comparator.comparingInt(CourseOnline::getLevel));
+                List<CourseOnlineDTO>  courseOnlineDTOList = courseOnlines.stream().map(courseOnlineMapper::toCourseOnlineDTO).collect(Collectors.toList());
+                testInputStudentDTO.setCourseOnlineList(courseOnlineDTOList);
+            } else {
+
+            }
+        } else if (testInputStudent.getTestInput().getType() == 1){
+            if (testInputStudent.getScore() >= 0 && testInputStudent.getScore() < 4){
+                level.add(0);level.add(1);level.add(2);level.add(3);
+                List<CourseOnline> courseOnlines = courseOnlineRepository.findAllByCategoryIdAndLevelIn(4L, level);
+                courseOnlines.sort(Comparator.comparingInt(CourseOnline::getLevel));
+                List<CourseOnlineDTO>  courseOnlineDTOList = courseOnlines.stream().map(courseOnlineMapper::toCourseOnlineDTO).collect(Collectors.toList());
+                testInputStudentDTO.setCourseOnlineList(courseOnlineDTOList);
+            } else if (testInputStudent.getScore() >= 4 && testInputStudent.getScore() < 6) {
+                level.add(1);level.add(2);level.add(3);
+                List<CourseOnline> courseOnlines = courseOnlineRepository.findAllByCategoryIdAndLevelIn(4L, level);
+                courseOnlines.sort(Comparator.comparingInt(CourseOnline::getLevel));
+                List<CourseOnlineDTO>  courseOnlineDTOList = courseOnlines.stream().map(courseOnlineMapper::toCourseOnlineDTO).collect(Collectors.toList());
+                testInputStudentDTO.setCourseOnlineList(courseOnlineDTOList);
+            }else if (testInputStudent.getScore() >= 6 && testInputStudent.getScore() < 7) {
+                level.add(2);level.add(3);
+                List<CourseOnline> courseOnlines = courseOnlineRepository.findAllByCategoryIdAndLevelIn(4L, level);
+                courseOnlines.sort(Comparator.comparingInt(CourseOnline::getLevel));
+                List<CourseOnlineDTO>  courseOnlineDTOList = courseOnlines.stream().map(courseOnlineMapper::toCourseOnlineDTO).collect(Collectors.toList());
+                testInputStudentDTO.setCourseOnlineList(courseOnlineDTOList);
+            }else if (testInputStudent.getScore() >= 7 && testInputStudent.getScore() < 9) {
+                level.add(3);
+                List<CourseOnline> courseOnlines = courseOnlineRepository.findAllByCategoryIdAndLevelIn(4L, level);
+                courseOnlines.sort(Comparator.comparingInt(CourseOnline::getLevel));
+                List<CourseOnlineDTO>  courseOnlineDTOList = courseOnlines.stream().map(courseOnlineMapper::toCourseOnlineDTO).collect(Collectors.toList());
+                testInputStudentDTO.setCourseOnlineList(courseOnlineDTOList);
+            } else {
+
+            }
+        } else {
+            throw new AppException(ErrorCode.NOTFOUND);
+        }
+
         return testInputStudentDTO;
     }
 
     @Override
     public List<QuestionTestInputDetailResult> getresultDetailTest(String code) {
         TestInputStudent testInputStudent = testInputStudentRepository.findByCode(code);
-        if (testInputStudent == null){
-            throw  new RuntimeException("Student Not Found");
-        }
+        if (testInputStudent == null) throw  new AppException(ErrorCode.STUDENT_NOTFOUND);
 
         List<QuestionTestInput> questionTestInputList = testInputStudent.getTestInput().getTestInputSessions()
                 .stream()
@@ -277,9 +341,7 @@ public class TestInputService implements ITestInputService {
         for (QuestionTestInput questionTestInput: questionTestInputList) {
             AnswerStudent answerStudent = answerStudentRepository.findByQuestionTestInputAndTestInputStudent(questionTestInput, testInputStudent);
 
-            if (answerStudent == null){
-                throw new RuntimeException("Not Found");
-            }
+            if (answerStudent == null) throw new AppException(ErrorCode.NOTFOUND);
 
             QuestionTestInputDetailResult questionTestInputDetailResult = QuestionTestInputDetailResult.builder()
                     .id(questionTestInput.getId())
