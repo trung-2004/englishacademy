@@ -2,6 +2,7 @@ package com.englishacademy.EnglishAcademy.controllers;
 
 
 import com.englishacademy.EnglishAcademy.dtos.ResponseObject;
+import com.englishacademy.EnglishAcademy.dtos.topicOnline.CourseOnlineTopicDetailResponse;
 import com.englishacademy.EnglishAcademy.dtos.topicOnline.TopicOnlineDetailResponse;
 import com.englishacademy.EnglishAcademy.services.ITopicOnlineService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ public class TopicOnlineController {
     @GetMapping("/{slug}/{userId}")
     ResponseEntity<ResponseObject> getDetailSlug(@PathVariable("slug") String slug, @PathVariable("userId") Long userId) {
         try {
-            List<TopicOnlineDetailResponse> list = topicOnlineService.findAllByCourseSlug(slug, userId);
+            CourseOnlineTopicDetailResponse list = topicOnlineService.findAllByCourseSlug(slug, userId);
             return ResponseEntity.status(HttpStatus.OK).body(
                     new ResponseObject(true, 200, "ok", list)
             );

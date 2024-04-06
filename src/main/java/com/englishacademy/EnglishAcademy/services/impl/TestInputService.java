@@ -319,7 +319,7 @@ public class TestInputService implements ITestInputService {
 
             }
         } else {
-            throw new AppException(ErrorCode.NOTFOUND);
+
         }
 
         return testInputStudentDTO;

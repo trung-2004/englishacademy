@@ -1,4 +1,4 @@
-package com.englishacademy.EnglishAcademy.dtos.courseOffline;
+package com.englishacademy.EnglishAcademy.dtos.courseOnline;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,12 +1,11 @@
 package com.englishacademy.EnglishAcademy.controllers;
 
-import com.englishacademy.EnglishAcademy.dtos.courseOffline.CourseOnlineResponse;
+import com.englishacademy.EnglishAcademy.dtos.courseOnline.CourseOnlineResponse;
 import com.englishacademy.EnglishAcademy.dtos.courseOnline.CourseOnlineDTO;
 import com.englishacademy.EnglishAcademy.dtos.ResponseObject;
 import com.englishacademy.EnglishAcademy.dtos.courseOnline.CourseOnlineDetail;
 import com.englishacademy.EnglishAcademy.models.courseOnline.CreateCourseOnline;
 import com.englishacademy.EnglishAcademy.models.courseOnline.EditCourseOnline;
-import com.englishacademy.EnglishAcademy.repositories.CourseOnlineRepository;
 import com.englishacademy.EnglishAcademy.services.ICourseOnlineService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

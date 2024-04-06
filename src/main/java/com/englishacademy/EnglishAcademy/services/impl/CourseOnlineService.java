@@ -1,10 +1,9 @@
 package com.englishacademy.EnglishAcademy.services.impl;
 
-import com.englishacademy.EnglishAcademy.dtos.courseOffline.CourseOnlineResponse;
+import com.englishacademy.EnglishAcademy.dtos.courseOnline.CourseOnlineResponse;
 import com.englishacademy.EnglishAcademy.dtos.courseOnline.CourseOnlineDTO;
 import com.englishacademy.EnglishAcademy.dtos.courseOnline.CourseOnlineDetail;
 import com.englishacademy.EnglishAcademy.dtos.review.ReviewDTO;
-import com.englishacademy.EnglishAcademy.dtos.topicOnline.TopicOnlineDTO;
 import com.englishacademy.EnglishAcademy.dtos.topicOnline.TopicOnlineDetail;
 import com.englishacademy.EnglishAcademy.entities.*;
 import com.englishacademy.EnglishAcademy.exceptions.AppException;

@@ -1,6 +1,6 @@
 package com.englishacademy.EnglishAcademy.services;
 
-import com.englishacademy.EnglishAcademy.dtos.courseOffline.CourseOnlineResponse;
+import com.englishacademy.EnglishAcademy.dtos.courseOnline.CourseOnlineResponse;
 import com.englishacademy.EnglishAcademy.dtos.courseOnline.CourseOnlineDTO;
 import com.englishacademy.EnglishAcademy.dtos.courseOnline.CourseOnlineDetail;
 import com.englishacademy.EnglishAcademy.models.courseOnline.CreateCourseOnline;
