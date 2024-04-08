@@ -27,6 +27,7 @@ public class TestInputStudentDTO {
     private Integer totalQuestionGrammar;
     private Double score;
     private Integer time;
+    private Integer type;
     private List<CourseOnlineDTO> courseOnlineList;
     private Timestamp createdDate;
     private Timestamp modifiedDate;

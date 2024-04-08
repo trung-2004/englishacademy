@@ -243,6 +243,7 @@ public class TestInputService implements ITestInputService {
                 .correctVocabulary(testInputStudent.getCorrectVocabulary())
                 .score(testInputStudent.getScore())
                 .time(testInputStudent.getTime())
+                .type(testInputStudent.getTestInput().getType())
                 .createdBy(testInputStudent.getCreatedBy())
                 .createdDate(testInputStudent.getCreatedDate())
                 .modifiedBy(testInputStudent.getModifiedBy())
