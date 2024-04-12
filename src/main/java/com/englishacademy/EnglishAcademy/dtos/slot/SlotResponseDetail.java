@@ -1,6 +1,7 @@
-package com.englishacademy.EnglishAcademy.dtos.subject;
+package com.englishacademy.EnglishAcademy.dtos.slot;
 
-import com.englishacademy.EnglishAcademy.dtos.slot.SlotResponseDetail;
+import com.englishacademy.EnglishAcademy.dtos.itemSlot.ItemSlotDTO;
+import com.englishacademy.EnglishAcademy.dtos.itemSlot.ItemSlotResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,15 +14,20 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class SubjectDetail {
+public class SlotResponseDetail {
     private Long id;
     private String name;
+
     private String slug;
+
     private Integer orderTop;
-    private Integer totalSlot;
-    private List<SlotResponseDetail> slotResponseDetailList;
+    private String time;
+    private List<ItemSlotResponse> itemSlotResponseList;
     private Timestamp createdDate;
+
     private Timestamp modifiedDate;
+
     private String createdBy;
+
     private String modifiedBy;
 }

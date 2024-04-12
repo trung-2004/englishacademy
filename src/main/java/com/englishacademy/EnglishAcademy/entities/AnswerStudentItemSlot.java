@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -26,6 +28,9 @@ public class AnswerStudentItemSlot extends BaseEntity{
 
     @Column(name = "star", nullable = false)
     private Integer star;
+
+    @Column(name = "date", nullable = false)
+    private Date time;
 
     @Column(name = "star3Count", nullable = false)
     private Integer star3Count;

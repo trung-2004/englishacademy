@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -27,6 +28,12 @@ public class ItemSlot extends BaseEntity{
 
     @Column(name = "itemType", nullable = false)
     private Integer itemType;
+
+    @Column(name = "startDate")
+    private Date startDate;
+
+    @Column(name = "endDate")
+    private Date endDate;
 
     @Column(name = "orderTop", nullable = false)
     private Integer orderTop;

@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatusCode;
 public enum ErrorCode {
     UNCATEGORIZED_EXCEPTION(9999, "Uncategorized error", HttpStatus.INTERNAL_SERVER_ERROR),
     INVALID_KEY(1001, "Uncategorized error", HttpStatus.BAD_REQUEST),
+    EXPIRES(400, "Expires", HttpStatus.BAD_REQUEST),
     // Course
     COURSE_NOTFOUND(404, "Course Not Found", HttpStatus.NOT_FOUND),
     COURSE_EXISTED(400, "User existed", HttpStatus.BAD_REQUEST),
@@ -24,7 +25,15 @@ public enum ErrorCode {
     TESTINPUT_NOTFOUND(404, "Test Input Not Found", HttpStatus.NOT_FOUND),
 
     NOTFOUND(404, "Not Found", HttpStatus.NOT_FOUND),
+    // Student
     STUDENT_NOTFOUND(404, "Student Not Found", HttpStatus.NOT_FOUND),
+    // ItemSlot
+    ITEMSLOT_NOTFOUND(404, "ItemSlot Not Found", HttpStatus.NOT_FOUND),
+
+    // Answer Item Slot
+    ANSWERITEMSLOTEXISTING(404, "Answer existed", HttpStatus.NOT_FOUND),
+
+
     USERNAME_INVALID(1003, "Username must be at least 3 characters", HttpStatus.BAD_REQUEST),
     INVALID_PASSWORD(1004, "Password must be at least 8 characters", HttpStatus.BAD_REQUEST),
     USER_NOT_EXISTED(1005, "User not existed", HttpStatus.NOT_FOUND),
