@@ -31,8 +31,8 @@ public enum ErrorCode {
     ITEMSLOT_NOTFOUND(404, "ItemSlot Not Found", HttpStatus.NOT_FOUND),
 
     // Answer Item Slot
-    ANSWERITEMSLOTEXISTING(404, "Answer existed", HttpStatus.NOT_FOUND),
-
+    ANSWERITEMSLOT_EXISTING(404, "Answer existed", HttpStatus.BAD_REQUEST),
+    ANSWERITEMSLOT_NOTFOUND(404, "Answer Not Found", HttpStatus.NOT_FOUND),
 
     USERNAME_INVALID(1003, "Username must be at least 3 characters", HttpStatus.BAD_REQUEST),
     INVALID_PASSWORD(1004, "Password must be at least 8 characters", HttpStatus.BAD_REQUEST),

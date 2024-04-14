@@ -6,6 +6,7 @@ import com.englishacademy.EnglishAcademy.entities.Student;
 import com.englishacademy.EnglishAcademy.exceptions.AppException;
 import com.englishacademy.EnglishAcademy.exceptions.ErrorCode;
 import com.englishacademy.EnglishAcademy.models.answerStudent.CreateAnswerStudentItemSlot;
+import com.englishacademy.EnglishAcademy.models.answerStudent.ScoreAnswerStudentItemSlot;
 import com.englishacademy.EnglishAcademy.repositories.AnswerStudentItemSlotRepository;
 import com.englishacademy.EnglishAcademy.repositories.ItemSlotRepository;
 import com.englishacademy.EnglishAcademy.repositories.StudentRepository;
@@ -39,7 +40,7 @@ public class AnswerStudentItemSlotService implements IAnswerStudentItemSlotServi
         Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new AppException(ErrorCode.STUDENT_NOTFOUND));
         AnswerStudentItemSlot answerStudentItemSlotExsting = answerStudentItemSlotRepository.findByStudentAndItemSlot(student, itemSlot);
-        if (answerStudentItemSlotExsting != null) throw new AppException(ErrorCode.ANSWERITEMSLOTEXISTING);
+        if (answerStudentItemSlotExsting != null) throw new AppException(ErrorCode.ANSWERITEMSLOT_EXISTING);
         Date now = new Timestamp(System.currentTimeMillis());
         /*System.out.println(now);
         System.out.println(itemSlot.getStartDate());
@@ -62,5 +63,34 @@ public class AnswerStudentItemSlotService implements IAnswerStudentItemSlotServi
         answerStudentItemSlot.setModifiedDate((Timestamp) now);
 
         answerStudentItemSlotRepository.save(answerStudentItemSlot);
+    }
+
+    @Override
+    public void scoreAnswer(ScoreAnswerStudentItemSlot scoreAnswerStudentItemSlot, Long studentId) {
+        // check
+        AnswerStudentItemSlot answerStudentItemSlot = answerStudentItemSlotRepository.findById(scoreAnswerStudentItemSlot.getAnswerStudentItemSlotId())
+                .orElseThrow(()-> new AppException(ErrorCode.ANSWERITEMSLOT_NOTFOUND));
+        Student student = studentRepository.findById(studentId)
+                .orElseThrow(() -> new AppException(ErrorCode.STUDENT_NOTFOUND));
+        AnswerStudentItemSlot answerStudentItemSlotExsting = answerStudentItemSlotRepository.findByStudentAndItemSlot(student, answerStudentItemSlot.getItemSlot());
+        if (answerStudentItemSlotExsting != null) throw new AppException(ErrorCode.ANSWERITEMSLOT_EXISTING);
+        Date now = new Timestamp(System.currentTimeMillis());
+        // logic
+        if (now.after(answerStudentItemSlot.getItemSlot().getEndDate()) || now.before(answerStudentItemSlot.getItemSlot().getStartDate())) throw new AppException(ErrorCode.EXPIRES);
+        if (scoreAnswerStudentItemSlot.getStar() == 1 && answerStudentItemSlotExsting.getStar1Count() > 0) {
+            answerStudentItemSlot.setStar(answerStudentItemSlot.getStar()+scoreAnswerStudentItemSlot.getStar());
+            answerStudentItemSlotExsting.setStar1Count(answerStudentItemSlotExsting.getStar1Count() - 1);
+        } else if (scoreAnswerStudentItemSlot.getStar() == 2 && answerStudentItemSlotExsting.getStar2Count() > 0) {
+            answerStudentItemSlot.setStar(answerStudentItemSlot.getStar()+scoreAnswerStudentItemSlot.getStar());
+            answerStudentItemSlotExsting.setStar1Count(answerStudentItemSlotExsting.getStar2Count() - 1);
+        } else if (scoreAnswerStudentItemSlot.getStar() == 3 && answerStudentItemSlotExsting.getStar3Count() > 0) {
+            answerStudentItemSlot.setStar(answerStudentItemSlot.getStar()+scoreAnswerStudentItemSlot.getStar());
+            answerStudentItemSlotExsting.setStar1Count(answerStudentItemSlotExsting.getStar3Count() - 1);
+        } else {
+            throw new AppException(ErrorCode.NOTFOUND);
+        }
+        // save
+        answerStudentItemSlotRepository.save(answerStudentItemSlot);
+        answerStudentItemSlotRepository.save(answerStudentItemSlotExsting);
     }
 }

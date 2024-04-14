@@ -35,6 +35,7 @@ public class CourseOnlineDTO {
 
     private String trailer;
     private Long category_id;
+    private String categoryName;
 
     private Timestamp createdDate;
 
