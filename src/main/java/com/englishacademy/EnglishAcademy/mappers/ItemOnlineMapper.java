@@ -87,6 +87,7 @@ public class ItemOnlineMapper {
                 .id(model.getId())
                 .title(model.getTitle())
                 .slug(model.getSlug())
+                .courseSlug(model.getTopicOnline().getCourseOnline().getSlug())
                 .content(model.getContent())
                 .itemType(model.getItemType())
                 .orderTop(model.getOrderTop())
