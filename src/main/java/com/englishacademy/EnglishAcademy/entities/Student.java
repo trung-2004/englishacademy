@@ -69,4 +69,12 @@ public class Student extends BaseEntity{
     @JsonIgnore
     private List<ItemOnlineStudent> itemOnlineStudents;
 
+    @OneToMany(mappedBy = "student")
+    @JsonIgnore
+    private List<TestOfflineStudent> testOfflineStudents;
+
+    @OneToMany(mappedBy = "student")
+    @JsonIgnore
+    private List<TestOnlineStudent> testOnlineStudents;
+
 }

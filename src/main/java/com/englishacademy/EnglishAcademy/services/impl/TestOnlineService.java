@@ -2,7 +2,7 @@ package com.englishacademy.EnglishAcademy.services.impl;
 
 import com.englishacademy.EnglishAcademy.dtos.questionTestOnline.QuestionTestOnlineDTO;
 import com.englishacademy.EnglishAcademy.dtos.testOnline.TestOnlineDetail;
-import com.englishacademy.EnglishAcademy.dtos.testOnlineSession.TestOnlineSessionDetail;
+import com.englishacademy.EnglishAcademy.dtos.testSession.TestOnlineSessionDetail;
 import com.englishacademy.EnglishAcademy.dtos.testOnlineStudent.TestOnlineStudentDTO;
 import com.englishacademy.EnglishAcademy.entities.*;
 import com.englishacademy.EnglishAcademy.exceptions.AppException;

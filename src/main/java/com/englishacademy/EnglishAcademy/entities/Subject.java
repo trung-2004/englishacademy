@@ -33,4 +33,8 @@ public class Subject extends BaseEntity{
     @JsonIgnore
     private List<Slot> slots;
 
+    @OneToMany(mappedBy = "subject")
+    @JsonIgnore
+    private List<TestOffline> testOfflines;
+
 }

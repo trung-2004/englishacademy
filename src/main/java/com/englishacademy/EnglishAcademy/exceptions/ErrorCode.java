@@ -34,6 +34,9 @@ public enum ErrorCode {
     ANSWERITEMSLOT_EXISTING(404, "Answer existed", HttpStatus.BAD_REQUEST),
     ANSWERITEMSLOT_NOTFOUND(404, "Answer Not Found", HttpStatus.NOT_FOUND),
 
+    // Test Offline
+    ITNOTTIME(404, "It's not time to do it yet", HttpStatus.NOT_FOUND),
+
     USERNAME_INVALID(1003, "Username must be at least 3 characters", HttpStatus.BAD_REQUEST),
     INVALID_PASSWORD(1004, "Password must be at least 8 characters", HttpStatus.BAD_REQUEST),
     USER_NOT_EXISTED(1005, "User not existed", HttpStatus.NOT_FOUND),

@@ -1,6 +1,6 @@
-package com.englishacademy.EnglishAcademy.dtos.testOnline;
+package com.englishacademy.EnglishAcademy.dtos.testSession;
 
-import com.englishacademy.EnglishAcademy.dtos.testSession.TestOnlineSessionDetail;
+import com.englishacademy.EnglishAcademy.dtos.questionTestOnline.QuestionTestOnlineDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,17 +13,24 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class TestOnlineDetail {
+public class TestOnlineSessionDetail {
     private Long id;
-    private String title;
-    private String slug;
-    private Integer type;
-    private String description;
-    private Integer time;
+    private Long testInputId;
+
+    private Long sessionId;
+
+    private String sessionName;
+
     private Integer totalQuestion;
-    private List<TestOnlineSessionDetail> testOnlineSessionDetails;
+
+    private Integer orderTop;
+
+    private List<QuestionTestOnlineDTO> questionTestOnlineDTOS;
     private Timestamp createdDate;
+
     private Timestamp modifiedDate;
+
     private String createdBy;
+
     private String modifiedBy;
 }

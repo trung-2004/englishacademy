@@ -1,27 +1,29 @@
-package com.englishacademy.EnglishAcademy.dtos.testOnline;
+package com.englishacademy.EnglishAcademy.dtos.questionTestOffline;
 
-import com.englishacademy.EnglishAcademy.dtos.testSession.TestOnlineSessionDetail;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
-import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class TestOnlineDetail {
+public class QuestionTestOfflineDTO {
     private Long id;
     private String title;
-    private String slug;
+    private String audiomp3;
+    private String image;
+    private String paragraph;
+    private String option1;
+    private String option2;
+    private String option3;
+    private String option4;
     private Integer type;
-    private String description;
-    private Integer time;
-    private Integer totalQuestion;
-    private List<TestOnlineSessionDetail> testOnlineSessionDetails;
+    private Integer part;
+    private Integer orderTop;
     private Timestamp createdDate;
     private Timestamp modifiedDate;
     private String createdBy;

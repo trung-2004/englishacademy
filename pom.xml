@@ -52,6 +52,13 @@
 			<scope>test</scope>
 		</dependency>
 
+		<!-- firebase -->
+		<dependency>
+			<groupId>com.google.firebase</groupId>
+			<artifactId>firebase-admin</artifactId>
+			<version>9.2.0</version>
+		</dependency>
+
 
 		<!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
 		<dependency>
