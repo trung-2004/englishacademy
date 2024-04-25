@@ -33,7 +33,7 @@ public class FileAudioService {
             // config connect for project:
             FirebaseOptions options = new FirebaseOptions.Builder()
                     .setCredentials(GoogleCredentials.fromStream(serviceAccount)) // config credentials contains data.
-                    .setStorageBucket("")// config storage contains files.
+                    .setStorageBucket("english-academy-79e1b.appspot.com")// config storage contains files.
                     .build();
 
             FirebaseApp.initializeApp(options);
