@@ -1,6 +1,5 @@
 package com.englishacademy.EnglishAcademy.services.impl;
 
-import com.englishacademy.EnglishAcademy.dtos.itemOnline.ItemOnlineDTO;
 import com.englishacademy.EnglishAcademy.dtos.itemOnline.ItemOnlineDetail;
 import com.englishacademy.EnglishAcademy.entities.*;
 import com.englishacademy.EnglishAcademy.exceptions.AppException;
@@ -11,33 +10,24 @@ import com.englishacademy.EnglishAcademy.repositories.ItemOnlineRepository;
 import com.englishacademy.EnglishAcademy.repositories.ItemOnlineStudentRepository;
 import com.englishacademy.EnglishAcademy.repositories.StudentRepository;
 import com.englishacademy.EnglishAcademy.services.IItemOnlineService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class ItemOnlineService implements IItemOnlineService {
-    @Autowired
-    private ItemOnlineRepository itemOnlineRepository;
-    @Autowired
-    private ItemOnlineMapper itemOnlineMapper;
-    @Autowired
-    private StudentRepository studentRepository;
-    @Autowired
-    private CourseOnlineStudentRepository courseOnlineStudentRepository;
-    @Autowired
-    private ItemOnlineStudentRepository itemOnlineStudentRepository;
+    private final ItemOnlineRepository itemOnlineRepository;
+    private final ItemOnlineMapper itemOnlineMapper;
+    private final StudentRepository studentRepository;
+    private final CourseOnlineStudentRepository courseOnlineStudentRepository;
+    private final ItemOnlineStudentRepository itemOnlineStudentRepository;
 
     @Override
     public ItemOnlineDetail getItemOnlineDetail(String slug) {
         ItemOnline model = itemOnlineRepository.findBySlug(slug);
         if (model == null) {
-            throw new RuntimeException("Not Found");
+            throw new AppException(ErrorCode.NOTFOUND);
         }
         return itemOnlineMapper.toItemOnlineDetail(model);
     }

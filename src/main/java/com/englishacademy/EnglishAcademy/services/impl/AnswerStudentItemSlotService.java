@@ -33,7 +33,7 @@ public class AnswerStudentItemSlotService implements IAnswerStudentItemSlotServi
     }
 
     @Override
-    public void save(CreateAnswerStudentItemSlot model, Long studentId) {
+    public AnswerStudentItemSlot save(CreateAnswerStudentItemSlot model, Long studentId) {
         // check
         ItemSlot itemSlot = itemSlotRepository.findById(model.getItemSlotId())
                 .orElseThrow(()-> new AppException(ErrorCode.ITEMSLOT_NOTFOUND));
@@ -63,10 +63,11 @@ public class AnswerStudentItemSlotService implements IAnswerStudentItemSlotServi
         answerStudentItemSlot.setModifiedDate((Timestamp) now);
 
         answerStudentItemSlotRepository.save(answerStudentItemSlot);
+        return answerStudentItemSlot;
     }
 
     @Override
-    public void scoreAnswer(ScoreAnswerStudentItemSlot scoreAnswerStudentItemSlot, Long studentId) {
+    public AnswerStudentItemSlot scoreAnswer(ScoreAnswerStudentItemSlot scoreAnswerStudentItemSlot, Long studentId) {
         // check
         AnswerStudentItemSlot answerStudentItemSlot = answerStudentItemSlotRepository.findById(scoreAnswerStudentItemSlot.getAnswerStudentItemSlotId())
                 .orElseThrow(()-> new AppException(ErrorCode.ANSWERITEMSLOT_NOTFOUND));
@@ -92,5 +93,6 @@ public class AnswerStudentItemSlotService implements IAnswerStudentItemSlotServi
         // save
         answerStudentItemSlotRepository.save(answerStudentItemSlot);
         answerStudentItemSlotRepository.save(answerStudentItemSlotExsting);
+        return answerStudentItemSlot;
     }
 }

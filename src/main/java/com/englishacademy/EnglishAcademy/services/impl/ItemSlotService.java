@@ -10,7 +10,7 @@ import com.englishacademy.EnglishAcademy.mappers.AnswerStudentItemSlotMapper;
 import com.englishacademy.EnglishAcademy.repositories.ItemSlotRepository;
 import com.englishacademy.EnglishAcademy.repositories.StudentRepository;
 import com.englishacademy.EnglishAcademy.services.IItemSlotService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
@@ -18,13 +18,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class ItemSlotService implements IItemSlotService {
-    @Autowired
-    private ItemSlotRepository itemSlotRepository;
-    @Autowired
-    private StudentRepository studentRepository;
-    @Autowired
-    private AnswerStudentItemSlotMapper answerStudentItemSlotMapper;
+    private final ItemSlotRepository itemSlotRepository;
+    private final StudentRepository studentRepository;
+    private final AnswerStudentItemSlotMapper answerStudentItemSlotMapper;
+
     @Override
     public ItemSlotDetail getDetail(String slug, Long studentId) {
         // check

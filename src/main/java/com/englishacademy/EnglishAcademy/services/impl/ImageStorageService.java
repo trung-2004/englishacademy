@@ -1,5 +1,7 @@
 package com.englishacademy.EnglishAcademy.services.impl;
 
+import com.englishacademy.EnglishAcademy.exceptions.AppException;
+import com.englishacademy.EnglishAcademy.exceptions.ErrorCode;
 import com.englishacademy.EnglishAcademy.services.IStorageService;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.core.io.Resource;
@@ -26,7 +28,7 @@ public class ImageStorageService implements IStorageService {
         try {
             Files.createDirectories(storageFolder);
         } catch (IOException e){
-            throw new RuntimeException("Cannot initialize storage", e);
+            throw new AppException(ErrorCode.INITIALIZE);
         }
     }
 

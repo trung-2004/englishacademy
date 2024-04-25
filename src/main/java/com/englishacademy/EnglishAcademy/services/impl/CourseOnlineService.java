@@ -16,41 +16,27 @@ import com.englishacademy.EnglishAcademy.models.courseOnline.EditCourseOnline;
 import com.englishacademy.EnglishAcademy.repositories.*;
 import com.englishacademy.EnglishAcademy.services.ICourseOnlineService;
 import com.englishacademy.EnglishAcademy.services.IStorageService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
-import java.time.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class CourseOnlineService implements ICourseOnlineService {
-    @Autowired
-    private CourseOnlineMapper courseOnlineMapper;
-    @Autowired
-    private CourseOnlineRepository courseOnlineRepository;
-    @Autowired
-    private IStorageService storageService;
-    @Autowired
-    private StudentRepository studentRepository;
-    @Autowired
-    private ReviewRepository reviewRepository;
-    @Autowired
-    private CourseOnlineStudentRepository courseOnlineStudentRepository;
-    @Autowired
-    private TestOnlineStudentRepository testOnlineStudentRepository;
-    @Autowired
-    private ItemOnlineStudentRepository itemOnlineStudentRepository;
-
-    @Autowired
-    private ReviewMapper reviewMapper;
-    @Autowired
-    private TopicOnlineMapper topicOnlineMapper;
-
-
+    private final CourseOnlineMapper courseOnlineMapper;
+    private final CourseOnlineRepository courseOnlineRepository;
+    private final IStorageService storageService;
+    private final StudentRepository studentRepository;
+    private final ReviewRepository reviewRepository;
+    private final TestOnlineStudentRepository testOnlineStudentRepository;
+    private final ItemOnlineStudentRepository itemOnlineStudentRepository;
+    private final ReviewMapper reviewMapper;
+    private final TopicOnlineMapper topicOnlineMapper;
 
     @Override
     public List<CourseOnlineDTO> findAll() {
@@ -108,7 +94,7 @@ public class CourseOnlineService implements ICourseOnlineService {
     public CourseOnlineDTO findBySlug(String slug) {
         CourseOnline courseOnline = courseOnlineRepository.findBySlug(slug);
         if (courseOnline == null) {
-            throw new RuntimeException("Not Found");
+            throw new AppException(ErrorCode.NOTFOUND);
         }
         return courseOnlineMapper.toCourseOnlineDTO(courseOnline);
     }
@@ -133,25 +119,17 @@ public class CourseOnlineService implements ICourseOnlineService {
                 .trailer(model.getTrailer())
                 .build();
 
-        ZoneId zoneId = ZoneId.of("Asia/Ho_Chi_Minh"); // Chỉ định múi giờ của bạn (ví dụ: Asia/Ho_Chi_Minh)
-        ZonedDateTime zonedDateTime = ZonedDateTime.ofInstant(Instant.now(), zoneId);
-        Timestamp timestamp = Timestamp.from(zonedDateTime.toInstant());
-
         courseOnline.setCreatedBy("Demo");
-        courseOnline.setCreatedDate(timestamp);
+        courseOnline.setCreatedDate(new Timestamp(System.currentTimeMillis()));
         courseOnline.setModifiedBy("Demo");
-        courseOnline.setModifiedDate(timestamp);
+        courseOnline.setModifiedDate(new Timestamp(System.currentTimeMillis()));
         return courseOnlineMapper.toCourseOnlineDTO(courseOnlineRepository.save(courseOnline));
     }
 
     @Override
     public CourseOnlineDTO edit(EditCourseOnline model) {
         CourseOnline courseOnline = courseOnlineRepository.findById(model.getId())
-                .orElseThrow(() -> new RuntimeException("Not Found"));
-
-        ZoneId zoneId = ZoneId.of("Asia/Ho_Chi_Minh"); // Chỉ định múi giờ của bạn (ví dụ: Asia/Ho_Chi_Minh)
-        ZonedDateTime zonedDateTime = ZonedDateTime.ofInstant(Instant.now(), zoneId);
-        Timestamp timestamp = Timestamp.from(zonedDateTime.toInstant());
+                .orElseThrow(() -> new AppException(ErrorCode.NOTFOUND));
 
         courseOnline.setName(model.getName());
         courseOnline.setSlug(model.getName().toLowerCase().replace(" ", "-"));
@@ -160,7 +138,7 @@ public class CourseOnlineService implements ICourseOnlineService {
         courseOnline.setLevel(model.getLevel());
         courseOnline.setLanguage(model.getLanguage());
         courseOnline.setTrailer(model.getTrailer());
-        courseOnline.setModifiedDate(timestamp);
+        courseOnline.setModifiedDate(new Timestamp(System.currentTimeMillis()));
 
         if (model.getImage().isEmpty()){
 
@@ -193,7 +171,6 @@ public class CourseOnlineService implements ICourseOnlineService {
         List<ReviewDTO> reviewDTOS = reviewRepository.findAllByCourseOnline(model).stream()
                 .map(reviewMapper::toReviewDTO)
                 .collect(Collectors.toList());
-
         reviewDTOS.sort(Comparator.comparingLong(ReviewDTO::getId));
 
         Long duration = 0L;
@@ -202,7 +179,6 @@ public class CourseOnlineService implements ICourseOnlineService {
                 duration += itemOnline.getDuration();
             }
         }
-
 
         CourseOnlineDetail courseOnlineDetail = CourseOnlineDetail.builder()
                 .id(model.getId())
@@ -226,8 +202,6 @@ public class CourseOnlineService implements ICourseOnlineService {
                 .build();
 
         return courseOnlineDetail;
-
-        //return courseOnlineMapper.toCourseOnlineDetail(model);
     }
     private String convertSecondtoHour(Long seconds){
         int hours = (int) (seconds / 3600);

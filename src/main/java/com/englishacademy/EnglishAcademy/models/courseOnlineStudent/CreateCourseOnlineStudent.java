@@ -4,8 +4,6 @@ package com.englishacademy.EnglishAcademy.models.courseOnlineStudent;
 
 @Data
 public class CreateCourseOnlineStudent {
-    private Long studentId;
-
     private Long courseOnlineId;
 
     private String paymentMethod;

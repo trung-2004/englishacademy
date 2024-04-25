@@ -132,7 +132,7 @@ public class TestInputService implements ITestInputService {
 
         // Tìm sinh viên theo studentId
         Student student = studentRepository.findById(studentId)
-                .orElseThrow(() -> new RuntimeException("Student Not Found"));
+                .orElseThrow(() -> new AppException(ErrorCode.STUDENT_NOTFOUND));
 
         // Tạo đối tượng TestInputStudent mới
         TestInputStudent testInputStudent = TestInputStudent.builder()

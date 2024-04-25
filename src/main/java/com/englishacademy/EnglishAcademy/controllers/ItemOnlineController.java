@@ -3,17 +3,25 @@ package com.englishacademy.EnglishAcademy.controllers;
 import com.englishacademy.EnglishAcademy.dtos.ResponseObject;
 import com.englishacademy.EnglishAcademy.dtos.itemOnline.ItemOnlineDTO;
 import com.englishacademy.EnglishAcademy.dtos.itemOnline.ItemOnlineDetail;
+import com.englishacademy.EnglishAcademy.entities.Student;
+import com.englishacademy.EnglishAcademy.exceptions.AppException;
+import com.englishacademy.EnglishAcademy.exceptions.ErrorCode;
 import com.englishacademy.EnglishAcademy.services.IItemOnlineService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/item-online")
 public class ItemOnlineController {
-    @Autowired
-    private IItemOnlineService itemOnlineService;
+    private final IItemOnlineService itemOnlineService;
+
+    public ItemOnlineController(IItemOnlineService itemOnlineService) {
+        this.itemOnlineService = itemOnlineService;
+    }
 
     @GetMapping("/{slug}")
     ResponseEntity<ResponseObject> getDetailSlug(@PathVariable("slug") String slug) {
@@ -29,9 +37,18 @@ public class ItemOnlineController {
         }
     }
 
-    @PutMapping("/{slug}/{userId}")
-    ResponseEntity<ResponseObject> completeItem(@PathVariable("slug") String slug, @PathVariable("userId") Long userId) {
-        itemOnlineService.completeItem(slug, userId);
+    @PutMapping("/{slug}")
+    ResponseEntity<ResponseObject> completeItem(
+            @PathVariable("slug") String slug
+    ) {
+        Authentication auth = SecurityContextHolder.getContext()
+                .getAuthentication();
+        if (!(auth.getPrincipal() instanceof Student)) {
+            throw new AppException(ErrorCode.NOTFOUND);
+        }
+        if (auth == null) throw new AppException(ErrorCode.UNAUTHENTICATED);
+        Student currentStudent = (Student) auth.getPrincipal();
+        itemOnlineService.completeItem(slug, currentStudent.getId());
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(true, 200, "ok", "")
         );

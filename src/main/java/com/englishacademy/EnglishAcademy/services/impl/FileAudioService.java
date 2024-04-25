@@ -1,5 +1,6 @@
 package com.englishacademy.EnglishAcademy.services.impl;
 
+import com.englishacademy.EnglishAcademy.EnglishAcademyApplication;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.storage.Blob;
 import com.google.firebase.FirebaseApp;
@@ -26,20 +27,20 @@ public class FileAudioService {
     public void init(ApplicationReadyEvent event) {
 
         // initialize Firebase
-        /*InputStream serviceAccount = FirebaseTutorialApplication.class.getClassLoader().getResourceAsStream("serviceAccountKey.json");
+        InputStream serviceAccount = EnglishAcademyApplication.class.getClassLoader().getResourceAsStream("serviceAccountKey.json");
 
         try {
             // config connect for project:
             FirebaseOptions options = new FirebaseOptions.Builder()
                     .setCredentials(GoogleCredentials.fromStream(serviceAccount)) // config credentials contains data.
-                    .setStorageBucket("fir-tutorial-db-dc5e4.appspot.com")// config storage contains files.
+                    .setStorageBucket("")// config storage contains files.
                     .build();
 
             FirebaseApp.initializeApp(options);
 
         }catch (Exception e){
             throw new RuntimeException(e.getMessage());
-        }*/
+        }
     }
 
     private boolean isImageFile(MultipartFile file) {

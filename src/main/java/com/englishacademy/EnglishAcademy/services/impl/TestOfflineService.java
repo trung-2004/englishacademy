@@ -23,19 +23,22 @@ public class TestOfflineService implements ITestOfflineService {
     private final TestOfflineStudentRepository testOfflineStudentRepository;
     private final QuestionTestOfflineRepository questionTestOfflineRepository;
     private final AnswerStudentOfflineRepository answerStudentOfflineRepository;
+    private final FileAudioService fileAudioService;
 
     public TestOfflineService(
             TestOfflineRepository testOfflineRepository,
             StudentRepository studentRepository,
             TestOfflineStudentRepository testOfflineStudentRepository,
             QuestionTestOfflineRepository questionTestOfflineRepository,
-            AnswerStudentOfflineRepository answerStudentOfflineRepository
+            AnswerStudentOfflineRepository answerStudentOfflineRepository,
+            FileAudioService fileAudioService
     ) {
         this.testOfflineRepository = testOfflineRepository;
         this.studentRepository = studentRepository;
         this.testOfflineStudentRepository = testOfflineStudentRepository;
         this.questionTestOfflineRepository = questionTestOfflineRepository;
         this.answerStudentOfflineRepository = answerStudentOfflineRepository;
+        this.fileAudioService = fileAudioService;
     }
 
     @Override
@@ -148,9 +151,9 @@ public class TestOfflineService implements ITestOfflineService {
 
             if (createAnswerOfflineStudent.getFile() != null) {
                 // handle file
-
+                String path = fileAudioService.storeFile(createAnswerOfflineStudent.getFile());
                 // create answer student
-                answerStudentOffline.setContent("dkk");
+                answerStudentOffline.setContent(path);
             } else {
                 answerStudentOffline.setContent(createAnswerOfflineStudent.getContent());
             }

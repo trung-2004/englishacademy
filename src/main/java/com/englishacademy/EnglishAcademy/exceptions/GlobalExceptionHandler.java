@@ -1,8 +1,11 @@
 package com.englishacademy.EnglishAcademy.exceptions;
 
 import com.englishacademy.EnglishAcademy.dtos.ResponseObject;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -12,13 +15,25 @@ import java.nio.file.AccessDeniedException;
 @ControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
-    @ExceptionHandler(value = Exception.class)
+    /*@ExceptionHandler(value = Exception.class)
     ResponseEntity<ResponseObject> handlingRuntimeException(RuntimeException exception){
         log.error("Exception: ", exception);
         ResponseObject apiResponse = new ResponseObject();
 
         apiResponse.setStatusCode(ErrorCode.UNCATEGORIZED_EXCEPTION.getCode());
-        apiResponse.setMessage(ErrorCode.UNCATEGORIZED_EXCEPTION.getMessage());
+        apiResponse.setMessage(exception.getMessage());
+        apiResponse.setStatus(false);
+
+        return ResponseEntity.badRequest().body(apiResponse);
+    }*/
+
+    @ExceptionHandler(value = RuntimeException.class)
+    ResponseEntity<ResponseObject> handlingRuntimeException(RuntimeException exception){
+        log.error("Exception: ", exception);
+        ResponseObject apiResponse = new ResponseObject();
+
+        apiResponse.setStatusCode(ErrorCode.UNCATEGORIZED_EXCEPTION.getCode());
+        apiResponse.setMessage(exception.getMessage());
         apiResponse.setStatus(false);
 
         return ResponseEntity.badRequest().body(apiResponse);
@@ -39,8 +54,8 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(value = AccessDeniedException.class)
-    ResponseEntity<ResponseObject> handlingAccessDeniedException(AccessDeniedException exception){
-        ErrorCode errorCode = ErrorCode.UNAUTHORIZED;
+    ResponseEntity<ResponseObject> handleAccessDeniedException(AccessDeniedException exception){
+        ErrorCode errorCode = ErrorCode.FORBIDDEN;
 
         return ResponseEntity.status(errorCode.getStatusCode()).body(
                 ResponseObject.builder()
@@ -49,6 +64,30 @@ public class GlobalExceptionHandler {
                         .build()
         );
     }
+
+    @ExceptionHandler(value = AuthenticationException.class)
+    ResponseEntity<ResponseObject> handleAuthenticationException(AuthenticationException exception){
+        ErrorCode errorCode = ErrorCode.INVALIDEMAILORPASSWORD;
+
+        return ResponseEntity.status(errorCode.getStatusCode()).body(
+                ResponseObject.builder()
+                        .statusCode(errorCode.getCode())
+                        .message(errorCode.getMessage())
+                        .build()
+        );
+    }
+
+    /*@ExceptionHandler(value = AccessDeniedException.class)
+    ResponseEntity<ResponseObject> handlingAccessDeniedException(AccessDeniedException exception){
+        ErrorCode errorCode = ErrorCode.UNAUTHENTICATED;
+
+        return ResponseEntity.status(errorCode.getStatusCode()).body(
+                ResponseObject.builder()
+                        .statusCode(errorCode.getCode())
+                        .message(errorCode.getMessage())
+                        .build()
+        );
+    }*/
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     ResponseEntity<ResponseObject> handlingValidation(MethodArgumentNotValidException exception){

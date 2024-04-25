@@ -4,6 +4,6 @@ import com.englishacademy.EnglishAcademy.dtos.courseOnlineStudent.CourseOnlineSt
 import com.englishacademy.EnglishAcademy.models.courseOnlineStudent.CreateCourseOnlineStudent;
 
 public interface ICourseOnlineStudentService {
-    CourseOnlineStudentDTO buyCourse(CreateCourseOnlineStudent model);
+    CourseOnlineStudentDTO buyCourse(CreateCourseOnlineStudent model, Long studentId);
     boolean checkCourseOnlineRegistered(String slug, Long studentId);
 }

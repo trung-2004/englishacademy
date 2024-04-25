@@ -12,33 +12,25 @@ import com.englishacademy.EnglishAcademy.repositories.CourseOnlineStudentReposit
 import com.englishacademy.EnglishAcademy.repositories.ItemOnlineStudentRepository;
 import com.englishacademy.EnglishAcademy.repositories.StudentRepository;
 import com.englishacademy.EnglishAcademy.services.ICourseOnlineStudentService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class CourseOnlineStudentService implements ICourseOnlineStudentService {
-    @Autowired
-    private CourseOnlineRepository courseOnlineRepository;
-    @Autowired
-    private StudentRepository studentRepository;
-    @Autowired
-    private ItemOnlineStudentRepository itemOnlineStudentRepository;
-    @Autowired
-    private CourseOnlineStudentRepository courseOnlineStudentRepository;
-    @Autowired
-    private CourseOnlineMapper courseOnlineMapper;
-    @Autowired
-    private StudentMapper studentMapper;
+    private final CourseOnlineRepository courseOnlineRepository;
+    private final StudentRepository studentRepository;
+    private final ItemOnlineStudentRepository itemOnlineStudentRepository;
+    private final CourseOnlineStudentRepository courseOnlineStudentRepository;
+    private final CourseOnlineMapper courseOnlineMapper;
+    private final StudentMapper studentMapper;
 
     @Override
-    public CourseOnlineStudentDTO buyCourse(CreateCourseOnlineStudent model) {
-        Optional<Student> studentOptional  = studentRepository.findById(model.getStudentId());
+    public CourseOnlineStudentDTO buyCourse(CreateCourseOnlineStudent model, Long studentId) {
+        Optional<Student> studentOptional  = studentRepository.findById(studentId);
         Optional<CourseOnline> courseOnlineOptional = courseOnlineRepository.findById(model.getCourseOnlineId());
         if (!studentOptional.isPresent() || !courseOnlineOptional.isPresent()) throw new AppException(ErrorCode.NOTFOUND);
 
@@ -54,9 +46,9 @@ public class CourseOnlineStudentService implements ICourseOnlineStudentService {
         courseOnlineStudent.setStudent(student);
         courseOnlineStudent.setPaymentMethod(model.getPaymentMethod());
         courseOnlineStudent.setTotalPrice(courseOnline.getPrice());
-        courseOnlineStudent.setCreatedBy("Demo");
+        courseOnlineStudent.setCreatedBy(student.getFullName());
         courseOnlineStudent.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-        courseOnlineStudent.setModifiedBy("Demo");
+        courseOnlineStudent.setModifiedBy(student.getFullName());
         courseOnlineStudent.setModifiedDate(new Timestamp(System.currentTimeMillis()));
 
         courseOnlineStudentRepository.save(courseOnlineStudent);

@@ -5,12 +5,17 @@ import com.englishacademy.EnglishAcademy.dtos.questionTestInput.QuestionTestInpu
 import com.englishacademy.EnglishAcademy.dtos.testInput.TestInputDTO;
 import com.englishacademy.EnglishAcademy.dtos.testInput.TestInputDetail;
 import com.englishacademy.EnglishAcademy.dtos.testInputStudent.TestInputStudentDTO;
+import com.englishacademy.EnglishAcademy.entities.Student;
+import com.englishacademy.EnglishAcademy.exceptions.AppException;
+import com.englishacademy.EnglishAcademy.exceptions.ErrorCode;
 import com.englishacademy.EnglishAcademy.models.answerStudent.CreateAnswerStudent;
 import com.englishacademy.EnglishAcademy.models.answerStudent.SubmitTest;
 import com.englishacademy.EnglishAcademy.services.ITestInputService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,82 +23,61 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/test-input")
 public class TestInputController {
-    @Autowired
-    private ITestInputService testInputService;
+    private final ITestInputService testInputService;
+
+    public TestInputController(ITestInputService testInputService) {
+        this.testInputService = testInputService;
+    }
 
     @GetMapping("")
     ResponseEntity<ResponseObject> getAllToiec() {
-        try {
-            List<TestInputDTO> list = testInputService.findAll();
-            return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject(true, 200, "ok", list)
-            );
-        } catch (Exception e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    new ResponseObject(false, 404, e.getMessage(), "")
-            );
-        }
+        List<TestInputDTO> list = testInputService.findAll();
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "ok", list)
+        );
     }
 
 
     @GetMapping("/detail/{slug}")
     ResponseEntity<ResponseObject> getDetailTest(@PathVariable("slug") String slug) {
-        try {
-            TestInputDetail testInputDetail = testInputService.getdetailTest(slug);
-            return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject(true, 200, "ok", testInputDetail)
-            );
-        } catch (Exception e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    new ResponseObject(false, 200, e.getMessage(), "")
-            );
-        }
+        TestInputDetail testInputDetail = testInputService.getdetailTest(slug);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "ok", testInputDetail)
+        );
     }
 
-    @PostMapping("/detail/{slug}/{studentId}")
+    @PostMapping("/detail/{slug}")
     ResponseEntity<ResponseObject> submitTest(
             @RequestBody SubmitTest submitTest,
-            @PathVariable("slug") String slug,
-            @PathVariable("studentId") Long studentId
+            @PathVariable("slug") String slug
     ) {
-        try {
-            testInputService.submitTest(slug, studentId, submitTest);
-            return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject(true, 200, "ok", "")
-            );
-        } catch (Exception e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    new ResponseObject(false, 200, e.getMessage(), "")
-            );
+        Authentication auth = SecurityContextHolder.getContext()
+                .getAuthentication();
+        if (!(auth.getPrincipal() instanceof Student)) {
+            throw new AppException(ErrorCode.NOTFOUND);
         }
+        if (auth == null) throw new AppException(ErrorCode.UNAUTHENTICATED);
+        Student currentStudent = (Student) auth.getPrincipal();
+        testInputService.submitTest(slug, currentStudent.getId(), submitTest);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "ok", "")
+        );
     }
 
     @GetMapping("/result/{code}")
     ResponseEntity<ResponseObject> getResultTest(@PathVariable("code") String code) {
-        try {
-            TestInputStudentDTO testInputStudentDTO = testInputService.getresultTest(code);
-            return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject(true, 200, "ok", testInputStudentDTO)
-            );
-        } catch (Exception e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    new ResponseObject(false, 200, e.getMessage(), "")
-            );
-        }
+        TestInputStudentDTO testInputStudentDTO = testInputService.getresultTest(code);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "ok", testInputStudentDTO)
+        );
     }
 
     @GetMapping("/result-detail/{code}")
     ResponseEntity<ResponseObject> getResultDetailTest(@PathVariable("code") String code) {
-        try {
-            List<QuestionTestInputDetailResult> questionTestInputDetailResults = testInputService.getresultDetailTest(code);
-            return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject(true, 200, "ok", questionTestInputDetailResults)
-            );
-        } catch (Exception e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    new ResponseObject(false, 200, e.getMessage(), "")
-            );
-        }
+        List<QuestionTestInputDetailResult> questionTestInputDetailResults = testInputService.getresultDetailTest(code);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "ok", questionTestInputDetailResults)
+        );
     }
 
 

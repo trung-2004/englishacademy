@@ -5,6 +5,8 @@ import com.englishacademy.EnglishAcademy.entities.CourseOnline;
 import com.englishacademy.EnglishAcademy.entities.CourseOnlineStudent;
 import com.englishacademy.EnglishAcademy.entities.Review;
 import com.englishacademy.EnglishAcademy.entities.Student;
+import com.englishacademy.EnglishAcademy.exceptions.AppException;
+import com.englishacademy.EnglishAcademy.exceptions.ErrorCode;
 import com.englishacademy.EnglishAcademy.mappers.ReviewMapper;
 import com.englishacademy.EnglishAcademy.models.review.CreateReview;
 import com.englishacademy.EnglishAcademy.repositories.CourseOnlineRepository;
@@ -12,35 +14,28 @@ import com.englishacademy.EnglishAcademy.repositories.CourseOnlineStudentReposit
 import com.englishacademy.EnglishAcademy.repositories.ReviewRepository;
 import com.englishacademy.EnglishAcademy.repositories.StudentRepository;
 import com.englishacademy.EnglishAcademy.services.IReviewService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class ReviewService implements IReviewService {
-    @Autowired
-    private StudentRepository studentRepository;
-    @Autowired
-    private CourseOnlineRepository courseOnlineRepository;
-    @Autowired
-    private CourseOnlineStudentRepository courseOnlineStudentRepository;
-    @Autowired
-    private ReviewRepository reviewRepository;
-    @Autowired
-    private ReviewMapper reviewMapper;
+    private final StudentRepository studentRepository;
+    private final CourseOnlineRepository courseOnlineRepository;
+    private final CourseOnlineStudentRepository courseOnlineStudentRepository;
+    private final ReviewRepository reviewRepository;
+    private final ReviewMapper reviewMapper;
 
     @Override
-    public ReviewDTO create(CreateReview model) {
-        Optional<Student> studentOptional  = studentRepository.findById(model.getStudentId());
+    public ReviewDTO create(CreateReview model, Long studentId) {
+        Optional<Student> studentOptional  = studentRepository.findById(studentId);
         Optional<CourseOnline> courseOnlineOptional = courseOnlineRepository.findById(model.getCourseOnlineId());
         if (!studentOptional.isPresent() || !courseOnlineOptional.isPresent()){
-            throw new  RuntimeException("Not found");
+            throw new AppException(ErrorCode.NOTFOUND);
         }
 
         Student student = studentOptional.get();
@@ -49,7 +44,7 @@ public class ReviewService implements IReviewService {
         CourseOnlineStudent courseOnlineStudentExsiting = courseOnlineStudentRepository.findByCourseOnlineAndStudent(courseOnline, student);
 
         if (courseOnlineStudentExsiting == null){
-            throw new  RuntimeException("This course hasn't been purchased");
+            throw new AppException(ErrorCode.COURSE_NOTPURCHASED);
         }
 
         Review review = Review.builder()
@@ -59,15 +54,10 @@ public class ReviewService implements IReviewService {
                 .message(model.getMessage())
                 .build();
 
-        ZoneId zoneId = ZoneId.of("Asia/Ho_Chi_Minh"); // Chỉ định múi giờ của bạn (ví dụ: Asia/Ho_Chi_Minh)
-        ZonedDateTime zonedDateTime = ZonedDateTime.ofInstant(Instant.now(), zoneId);
-        Timestamp timestamp = Timestamp.from(zonedDateTime.toInstant());
-
-        review.setCreatedBy("Demo");
-        review.setCreatedDate(timestamp);
-        review.setModifiedBy("Demo");
-        review .setModifiedDate(timestamp);
-
+        review.setCreatedBy(student.getFullName());
+        review.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+        review.setModifiedBy(student.getFullName());
+        review .setModifiedDate(new Timestamp(System.currentTimeMillis()));
         reviewRepository.save(review);
 
         List<Review> reviews = reviewRepository.findAllByCourseOnline(courseOnline);
@@ -80,8 +70,6 @@ public class ReviewService implements IReviewService {
         courseOnline.setStar((double) Math.round(star * 10) / 10);
 
         courseOnlineRepository.save(courseOnline);
-
         return reviewMapper.toReviewDTO(review);
-
     }
 }

@@ -4,7 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -12,7 +16,7 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "student")
-public class Student extends BaseEntity{
+public class Student extends BaseEntity implements UserDetails {
     @Column(name = "code", nullable = false, length = 12)
     private String code;
 
@@ -49,6 +53,9 @@ public class Student extends BaseEntity{
     @Column(name = "startDate")
     private Date startDate;
 
+    private Role role;
+    private String userType;
+
     @OneToMany(mappedBy = "student")
     @JsonIgnore
     private List<CourseOnlineStudent> courseOnlineStudents;
@@ -76,5 +83,35 @@ public class Student extends BaseEntity{
     @OneToMany(mappedBy = "student")
     @JsonIgnore
     private List<TestOnlineStudent> testOnlineStudents;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(role.name()));
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 
 }

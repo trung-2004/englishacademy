@@ -6,5 +6,5 @@ import com.englishacademy.EnglishAcademy.models.courseOnline.CreateCourseOnline;
 import com.englishacademy.EnglishAcademy.models.review.CreateReview;
 
 public interface IReviewService {
-    ReviewDTO create(CreateReview model);
+    ReviewDTO create(CreateReview model, Long studentId);
 }
