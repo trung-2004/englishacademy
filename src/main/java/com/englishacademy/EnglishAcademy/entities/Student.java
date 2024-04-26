@@ -114,4 +114,8 @@ public class Student extends BaseEntity implements UserDetails {
         return true;
     }
 
+    public Long getUserId() {
+        return super.getId(); // Giả sử getId() là phương thức trong lớp BaseEntity để lấy id
+    }
+
 }

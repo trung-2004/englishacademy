@@ -1,5 +1,7 @@
 package com.englishacademy.EnglishAcademy.services.impl;
 
+import com.englishacademy.EnglishAcademy.entities.Student;
+import com.englishacademy.EnglishAcademy.entities.User;
 import com.englishacademy.EnglishAcademy.services.IJWTService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -19,11 +21,26 @@ import java.util.function.Function;
 @RequiredArgsConstructor
 public class JWTService implements IJWTService {
     public String generateToken(UserDetails userDetails){
+        User user = (User) userDetails;
         return Jwts.builder().setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
                 .signWith(getSiginKey(), SignatureAlgorithm.HS256)
                 .claim("Role", userDetails.getAuthorities())
+                .claim("Id", user.getId())
+                .claim("Fullname", user.getFullName())
+                .compact();
+    }
+
+    public String generateToken2(UserDetails userDetails){
+        Student student = (Student) userDetails;
+        return Jwts.builder().setSubject(userDetails.getUsername())
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
+                .signWith(getSiginKey(), SignatureAlgorithm.HS256)
+                .claim("Role", userDetails.getAuthorities())
+                .claim("Id", student.getId())
+                .claim("Fullname", student.getFullName())
                 .compact();
     }
 

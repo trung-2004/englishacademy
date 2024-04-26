@@ -8,5 +8,6 @@ public interface IJWTService {
     String extractUsername(String token);
     String generateRefreshToken(Map<String, Object> extraClaims, UserDetails userDetails);
     String generateToken(UserDetails userDetails);
+    String generateToken2(UserDetails userDetails);
     boolean isTokenValid(String token, UserDetails userDetails);
 }

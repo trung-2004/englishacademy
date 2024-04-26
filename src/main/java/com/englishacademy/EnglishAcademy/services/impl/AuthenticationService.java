@@ -121,7 +121,7 @@ public class AuthenticationService implements IAuthenticationService {
                     signInRequest.getPassword()));
 
             var student = studentRepository.findByEmail(signInRequest.getEmail()).orElseThrow(() -> new AppException(ErrorCode.INVALIDEMAILORPASSWORD));
-            var jwt = jwtService.generateToken(student);
+            var jwt = jwtService.generateToken2(student);
 
             var refreshToken = jwtService.generateRefreshToken(new HashMap<>(), student);
 
