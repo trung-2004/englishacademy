@@ -44,20 +44,21 @@ public class SecurityConfiguration {
                         .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
                         .accessDeniedHandler(new CustomAccessDeniedHandler())
                 )
-                .cors(cors -> cors.configurationSource(request -> {
+                /*.cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration configuration = new CorsConfiguration();
                     configuration.setAllowedOrigins(Arrays.asList("*"));
                     configuration.setAllowedMethods(Arrays.asList("*"));
                     configuration.setAllowedHeaders(Arrays.asList("*"));
                     return configuration;
-                }))
+                }))*/
                 .authorizeHttpRequests(request -> request.requestMatchers("/api/v1/auth/**")
                         .permitAll()
                         .requestMatchers("/api/v1/any/**").permitAll()
+                        //.requestMatchers("http://localhost:8080/ws/**").permitAll()
                         //.requestMatchers("/api/v1/admin/**").hasAnyAuthority(Role.ADMIN.name())
                         //.requestMatchers("/api/v1/user/**").hasAnyAuthority(Role.USER.name())
-                        .anyRequest().authenticated())
-                .httpBasic(Customizer.withDefaults())
+                        .anyRequest().permitAll())
+                //.httpBasic(Customizer.withDefaults())
                 .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider()).addFilterBefore(
                         jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class
@@ -69,8 +70,8 @@ public class SecurityConfiguration {
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        //configuration.addAllowedOrigin("*");
-        configuration.addAllowedOriginPattern("*");
+        configuration.addAllowedOrigin("*");
+        //configuration.addAllowedOriginPattern("*");
         configuration.addAllowedMethod("*");
         configuration.addAllowedHeader("*");
         configuration.setAllowCredentials(false);

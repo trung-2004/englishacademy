@@ -30,30 +30,29 @@ public class ItemSlotController extends TextWebSocketHandler {
     @Autowired
     private IItemSlotService itemSlotService;
 
-    /*@MessageMapping("/{slug}")
-    @SendTo("/topic/{slug}")
+    @MessageMapping("/{slug}")
     public ResponseEntity<ResponseObject> getDetailWeb(@PathVariable("slug") String slug){
-        *//*Authentication auth = SecurityContextHolder.getContext()
+        Authentication auth = SecurityContextHolder.getContext()
                 .getAuthentication();
         if (!(auth.getPrincipal() instanceof Student)) {
             throw new AppException(ErrorCode.NOTFOUND);
         }
         if (auth == null) throw new AppException(ErrorCode.UNAUTHENTICATED);
-        Student currentStudent = (Student) auth.getPrincipal();*//*
+        Student currentStudent = (Student) auth.getPrincipal();
         ItemSlotDetail itemSlotDetail = itemSlotService.getDetail(slug, 1L);
         System.out.println(itemSlotDetail.getId());
-        //this.template.convertAndSend("/topic/"+ slug, itemSlotDetail);
+        this.template.convertAndSend("/topic/"+ slug, itemSlotDetail);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(true, 200, "ok", itemSlotDetail)
         );
-    }*/
+    }
 
-    @MessageMapping("/message")
+    /*@MessageMapping("/message")
     @SendTo("/chatroom/public")
     public ItemSlotDetail receivePublicMessage(@Payload ItemSlotDetail itemSlotDetail){
         System.out.println(itemSlotDetail.toString());
         return itemSlotDetail;
-    }
+    }*/
 
     @GetMapping("/api/v1/item-slot/{slug}")
     public ResponseEntity<ResponseObject> getDetail(@PathVariable("slug") String slug){
