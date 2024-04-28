@@ -11,7 +11,7 @@ import java.util.Date;
 @Controller
 public class WebSocketController {
 
-    private final SimpMessagingTemplate template;
+    /*private final SimpMessagingTemplate template;
 
     @Autowired
     WebSocketController(SimpMessagingTemplate template){
@@ -22,5 +22,5 @@ public class WebSocketController {
     public void sendMessage(String message){
         System.out.println(message);
         this.template.convertAndSend("/message",  new SimpleDateFormat("HH:mm:ss").format(new Date())+"- "+message);
-    }
+    }*/
 }

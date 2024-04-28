@@ -3,13 +3,16 @@ package com.englishacademy.EnglishAcademy.exceptions;
 import com.englishacademy.EnglishAcademy.dtos.ResponseObject;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.catalina.connector.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.multipart.MultipartException;
 
+import java.io.IOException;
 import java.nio.file.AccessDeniedException;
 
 @ControllerAdvice
@@ -37,6 +40,16 @@ public class GlobalExceptionHandler {
         apiResponse.setStatus(false);
 
         return ResponseEntity.badRequest().body(apiResponse);
+    }
+
+    @ExceptionHandler(value = MultipartException.class)
+    public void handleFileUploadingError(HttpServletResponse response, Exception exception) {
+        log.warn("Failed to upload attachment", exception);
+        try {
+            response.sendError(Response.SC_INTERNAL_SERVER_ERROR, exception.getMessage());
+        } catch (IOException e) {
+            log.error("Failed to send error response", e);
+        }
     }
 
     @ExceptionHandler(value = AppException.class)

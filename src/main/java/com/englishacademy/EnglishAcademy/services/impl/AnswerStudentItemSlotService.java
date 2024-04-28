@@ -74,7 +74,7 @@ public class AnswerStudentItemSlotService implements IAnswerStudentItemSlotServi
         Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new AppException(ErrorCode.STUDENT_NOTFOUND));
         AnswerStudentItemSlot answerStudentItemSlotExsting = answerStudentItemSlotRepository.findByStudentAndItemSlot(student, answerStudentItemSlot.getItemSlot());
-        if (answerStudentItemSlotExsting != null) throw new AppException(ErrorCode.ANSWERITEMSLOT_EXISTING);
+        if (answerStudentItemSlotExsting == null) throw new AppException(ErrorCode.ANSWERITEMSLOT_EXISTING);
         Date now = new Timestamp(System.currentTimeMillis());
         // logic
         if (now.after(answerStudentItemSlot.getItemSlot().getEndDate()) || now.before(answerStudentItemSlot.getItemSlot().getStartDate())) throw new AppException(ErrorCode.EXPIRES);

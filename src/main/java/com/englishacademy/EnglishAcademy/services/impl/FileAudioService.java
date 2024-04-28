@@ -9,6 +9,7 @@ import com.google.firebase.cloud.StorageClient;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -55,6 +56,7 @@ public class FileAudioService {
         return generatedFileName + fileExtension;
     }
 
+    //@Async("taskExecutor")
     public String storeFile(MultipartFile file) {
         try {
             if (file.isEmpty()){

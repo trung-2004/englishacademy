@@ -19,6 +19,7 @@ public class AnswerStudentItemSlotMapper {
                 .star1Count(model.getStar1Count())
                 .star2Count(model.getStar2Count())
                 .star3Count(model.getStar3Count())
+                .studentId(model.getStudent().getId())
                 .createdBy(model.getCreatedBy())
                 .createdDate(model.getCreatedDate())
                 .modifiedBy(model.getModifiedBy())

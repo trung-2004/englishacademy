@@ -20,6 +20,7 @@ public class AnswerStudentItemSlotResponse {
     private Integer star3Count;
     private Integer star2Count;
     private Integer star1Count;
+    private Long studentId;
     private Timestamp createdDate;
     private Timestamp modifiedDate;
     private String createdBy;

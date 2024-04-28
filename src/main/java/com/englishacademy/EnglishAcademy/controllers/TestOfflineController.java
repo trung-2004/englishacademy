@@ -11,12 +11,14 @@ import com.englishacademy.EnglishAcademy.models.answerStudent.CreateAnswerOfflin
 import com.englishacademy.EnglishAcademy.models.answerStudent.SubmitTest;
 import com.englishacademy.EnglishAcademy.services.ITestOfflineService;
 import com.englishacademy.EnglishAcademy.services.ITestOnlineService;
+import com.englishacademy.EnglishAcademy.services.impl.FileAudioService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -25,8 +27,10 @@ import java.util.List;
 @CrossOrigin("*")
 public class TestOfflineController {
     private final ITestOfflineService testOfflineService;
-    public TestOfflineController(ITestOfflineService testOfflineService) {
+    private final FileAudioService fileAudioService;
+    public TestOfflineController(ITestOfflineService testOfflineService, FileAudioService fileAudioService) {
         this.testOfflineService = testOfflineService;
+        this.fileAudioService = fileAudioService;
     }
 
     @GetMapping("/detail/{slug}")
@@ -44,10 +48,7 @@ public class TestOfflineController {
         );
     }
 
-    //@PostMapping("/detail/{slug}")
-    @RequestMapping(path = "/detail/{slug}",method = RequestMethod.POST,
-            consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE},
-            produces = {MediaType.APPLICATION_JSON_VALUE})
+    @PostMapping("/detail/{slug}")
     ResponseEntity<ResponseObject> submitTest(
             @RequestPart("submitTest") List<CreateAnswerOfflineStudent> submitTest,
             @PathVariable("slug") String slug
@@ -78,5 +79,16 @@ public class TestOfflineController {
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(true, 200, "ok", testOfflineDetail)
         );
+    }
+
+    @PostMapping("/file")
+    ResponseEntity<String> save(@RequestParam("file") MultipartFile file) {
+        try{
+            String image = fileAudioService.storeFile(file);
+            return ResponseEntity.ok().body(image);
+        } catch (Exception exception){
+            System.out.println(exception.getMessage());
+            return null;
+        }
     }
 }
