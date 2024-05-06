@@ -19,13 +19,13 @@ public class QuestionTestInput extends BaseEntity{
     @Column(name = "title", nullable = false)
     private String title;
 
-    @Column(name = "audiomp3")
+    @Column(name = "audiomp3", nullable = true)
     private String audiomp3;
 
-    @Column(name = "image")
+    @Column(name = "image", nullable = true)
     private String image;
 
-    @Column(name = "paragraph")
+    @Column(name = "paragraph", nullable = true)
     private String paragraph;
 
     @Column(name = "option1", nullable = false)

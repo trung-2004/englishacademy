@@ -10,6 +10,7 @@ import com.englishacademy.EnglishAcademy.exceptions.AppException;
 import com.englishacademy.EnglishAcademy.exceptions.ErrorCode;
 import com.englishacademy.EnglishAcademy.models.answerStudent.CreateAnswerStudent;
 import com.englishacademy.EnglishAcademy.models.answerStudent.SubmitTest;
+import com.englishacademy.EnglishAcademy.models.testInput.CreateTestInput;
 import com.englishacademy.EnglishAcademy.services.ITestInputService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -80,7 +81,12 @@ public class TestInputController {
         );
     }
 
-
-
+    @PostMapping("")
+    ResponseEntity<ResponseObject> insert(@ModelAttribute CreateTestInput createTestInput) {
+        testInputService.saveTestInput(createTestInput);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "ok", "")
+        );
+    }
 
 }

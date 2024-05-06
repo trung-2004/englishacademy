@@ -78,21 +78,25 @@ public class AnswerStudentItemSlotService implements IAnswerStudentItemSlotServi
         Date now = new Timestamp(System.currentTimeMillis());
         // logic
         if (now.after(answerStudentItemSlot.getItemSlot().getEndDate()) || now.before(answerStudentItemSlot.getItemSlot().getStartDate())) throw new AppException(ErrorCode.EXPIRES);
-        if (scoreAnswerStudentItemSlot.getStar() == 1 && answerStudentItemSlotExsting.getStar1Count() > 0) {
+        if (scoreAnswerStudentItemSlot.getStar().equals(1) && answerStudentItemSlotExsting.getStar1Count() > 0) {
             answerStudentItemSlot.setStar(answerStudentItemSlot.getStar()+scoreAnswerStudentItemSlot.getStar());
             answerStudentItemSlotExsting.setStar1Count(answerStudentItemSlotExsting.getStar1Count() - 1);
-        } else if (scoreAnswerStudentItemSlot.getStar() == 2 && answerStudentItemSlotExsting.getStar2Count() > 0) {
+            answerStudentItemSlotRepository.save(answerStudentItemSlot);
+            answerStudentItemSlotRepository.save(answerStudentItemSlotExsting);
+        } else if (scoreAnswerStudentItemSlot.getStar().equals(2) && answerStudentItemSlotExsting.getStar2Count() > 0) {
             answerStudentItemSlot.setStar(answerStudentItemSlot.getStar()+scoreAnswerStudentItemSlot.getStar());
-            answerStudentItemSlotExsting.setStar1Count(answerStudentItemSlotExsting.getStar2Count() - 1);
-        } else if (scoreAnswerStudentItemSlot.getStar() == 3 && answerStudentItemSlotExsting.getStar3Count() > 0) {
+            answerStudentItemSlotExsting.setStar2Count(answerStudentItemSlotExsting.getStar2Count() - 1);
+            answerStudentItemSlotRepository.save(answerStudentItemSlot);
+            answerStudentItemSlotRepository.save(answerStudentItemSlotExsting);
+        } else if (scoreAnswerStudentItemSlot.getStar().equals(3) && answerStudentItemSlotExsting.getStar3Count() > 0) {
             answerStudentItemSlot.setStar(answerStudentItemSlot.getStar()+scoreAnswerStudentItemSlot.getStar());
-            answerStudentItemSlotExsting.setStar1Count(answerStudentItemSlotExsting.getStar3Count() - 1);
+            answerStudentItemSlotExsting.setStar3Count(answerStudentItemSlotExsting.getStar3Count() - 1);
+            answerStudentItemSlotRepository.save(answerStudentItemSlot);
+            answerStudentItemSlotRepository.save(answerStudentItemSlotExsting);
         } else {
             throw new AppException(ErrorCode.NOTFOUND);
         }
         // save
-        answerStudentItemSlotRepository.save(answerStudentItemSlot);
-        answerStudentItemSlotRepository.save(answerStudentItemSlotExsting);
         return answerStudentItemSlot;
     }
 }

@@ -7,6 +7,7 @@ import com.englishacademy.EnglishAcademy.entities.Student;
 import com.englishacademy.EnglishAcademy.exceptions.AppException;
 import com.englishacademy.EnglishAcademy.exceptions.ErrorCode;
 import com.englishacademy.EnglishAcademy.mappers.AnswerStudentItemSlotMapper;
+import com.englishacademy.EnglishAcademy.repositories.AnswerStudentItemSlotRepository;
 import com.englishacademy.EnglishAcademy.repositories.ItemSlotRepository;
 import com.englishacademy.EnglishAcademy.repositories.StudentRepository;
 import com.englishacademy.EnglishAcademy.services.IItemSlotService;
@@ -23,6 +24,7 @@ public class ItemSlotService implements IItemSlotService {
     private final ItemSlotRepository itemSlotRepository;
     private final StudentRepository studentRepository;
     private final AnswerStudentItemSlotMapper answerStudentItemSlotMapper;
+    private final AnswerStudentItemSlotRepository answerStudentItemSlotRepository;
 
     @Override
     public ItemSlotDetail getDetail(String slug, Long studentId) {
@@ -34,11 +36,6 @@ public class ItemSlotService implements IItemSlotService {
                 .orElseThrow(() -> new AppException(ErrorCode.STUDENT_NOTFOUND));
         if (!student.getClasses().equals(itemSlot.getClassesSlot().getClasses())) throw new AppException(ErrorCode.NOTFOUND);
 
-        // logic
-        List<AnswerStudentItemSlotResponse> answerStudentItemSlotResponseList = itemSlot.getAnswerStudentItemSlots()
-                .stream().map(answerStudentItemSlotMapper::toAnswerStudentItemSlotResponse).collect(Collectors.toList());
-        answerStudentItemSlotResponseList.sort(Comparator.comparingLong(AnswerStudentItemSlotResponse::getId));
-
         ItemSlotDetail itemSlotDetail = ItemSlotDetail.builder()
                 .id(itemSlot.getId())
                 .itemType(itemSlot.getItemType())
@@ -49,12 +46,27 @@ public class ItemSlotService implements IItemSlotService {
                 .pathUrl(itemSlot.getPathUrl())
                 .startDate(itemSlot.getStartDate())
                 .endDate(itemSlot.getEndDate())
-                .answerStudentItemSlotResponseListList(answerStudentItemSlotResponseList)
+                //.answerStudentItemSlotResponseListList(answerStudentItemSlotResponseList)
                 .createdDate(itemSlot.getCreatedDate())
                 .createdBy(itemSlot.getCreatedBy())
                 .modifiedDate(itemSlot.getModifiedDate())
                 .modifiedBy(itemSlot.getModifiedBy())
                 .build();
+
+        if (itemSlot.getItemType() == 0) {
+            itemSlotDetail.setAnswerStudentItemSlotResponseListList(null);
+        } else if (itemSlot.getItemType() == 1) {
+            List<AnswerStudentItemSlotResponse> answerStudentItemSlotResponseList = itemSlot.getAnswerStudentItemSlots()
+                    .stream().map(answerStudentItemSlotMapper::toAnswerStudentItemSlotResponse).collect(Collectors.toList());
+            answerStudentItemSlotResponseList.sort(Comparator.comparingLong(AnswerStudentItemSlotResponse::getId));
+            itemSlotDetail.setAnswerStudentItemSlotResponseListList(answerStudentItemSlotResponseList);
+        } else if (itemSlot.getItemType() == 2) {
+            List<AnswerStudentItemSlotResponse> answerStudentItemSlotResponseList = answerStudentItemSlotRepository.findAllByStudentAndItemSlot(student, itemSlot)
+                    .stream().map(answerStudentItemSlotMapper::toAnswerStudentItemSlotResponse).collect(Collectors.toList());
+            itemSlotDetail.setAnswerStudentItemSlotResponseListList(answerStudentItemSlotResponseList);
+        } else {
+            itemSlotDetail.setAnswerStudentItemSlotResponseListList(null);
+        }
 
         return itemSlotDetail;
     }

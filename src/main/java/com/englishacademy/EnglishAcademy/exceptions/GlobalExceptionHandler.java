@@ -10,6 +10,9 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartException;
 
 import java.io.IOException;
@@ -42,7 +45,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(apiResponse);
     }
 
-    @ExceptionHandler(value = MultipartException.class)
+    /*@ExceptionHandler(value = MultipartException.class)
     public void handleFileUploadingError(HttpServletResponse response, Exception exception) {
         log.warn("Failed to upload attachment", exception);
         try {
@@ -50,6 +53,20 @@ public class GlobalExceptionHandler {
         } catch (IOException e) {
             log.error("Failed to send error response", e);
         }
+    }*/
+
+    @ExceptionHandler(value = MultipartException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseBody
+    public String handleFileUploadingError(MultipartException exception) {
+        log.warn("Failed to upload attachment", exception);
+        return exception.getMessage();
+    }
+
+    @ExceptionHandler(value = MaxUploadSizeExceededException.class)
+    public String handleFileSizeException(MaxUploadSizeExceededException exception){
+        log.warn("Failed to upload attachment", exception);
+        return exception.getMessage();
     }
 
     @ExceptionHandler(value = AppException.class)

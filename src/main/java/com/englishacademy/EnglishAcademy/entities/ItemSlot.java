@@ -26,7 +26,7 @@ public class ItemSlot extends BaseEntity{
     @Column(name = "content", nullable = false)
     private String content;
 
-    @Column(name = "itemType", nullable = false)
+    @Column(name = "itemType", nullable = false)// 0: document, 1:question, 2:tu luan
     private Integer itemType;
 
     @Column(name = "startDate")

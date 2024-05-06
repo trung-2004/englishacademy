@@ -14,11 +14,13 @@ import com.englishacademy.EnglishAcademy.mappers.CourseOnlineMapper;
 import com.englishacademy.EnglishAcademy.mappers.TestInputMapper;
 import com.englishacademy.EnglishAcademy.models.answerStudent.CreateAnswerStudent;
 import com.englishacademy.EnglishAcademy.models.answerStudent.SubmitTest;
+import com.englishacademy.EnglishAcademy.models.testInput.CreateTestInput;
 import com.englishacademy.EnglishAcademy.repositories.*;
 import com.englishacademy.EnglishAcademy.services.ITestInputService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -45,6 +47,8 @@ public class TestInputService implements ITestInputService {
     private TestInputMapper testInputMapper;
     @Autowired
     private CourseOnlineMapper courseOnlineMapper;
+    @Autowired
+    private ExcelUploadService excelUploadService;
 
     @Override
     public List<TestInputDTO> findAll() {
@@ -366,6 +370,32 @@ public class TestInputService implements ITestInputService {
         }
 
         return questionTestInputDetailResultList;
+    }
+
+    @Override
+    public void saveTestInput(CreateTestInput createTestInput) {
+        if(excelUploadService.isValidExcelFile(createTestInput.getFile())){
+            try {
+                TestInput testInput = TestInput.builder()
+                        .title(createTestInput.getTitle())
+                        .slug(createTestInput.getTitle().toLowerCase().replace(" ", "-"))
+                        .description(createTestInput.getDescription())
+                        .type(createTestInput.getType())
+                        .time(createTestInput.getTime())
+                        .totalQuestion(0)
+                        .build();
+                testInputRepository.save(testInput);
+
+                List<QuestionTestInput> questionTestInputList = excelUploadService.getCustomersDataFromExcel(createTestInput.getFile().getInputStream(), testInput);
+                this.questionTestInputRepository.saveAll(questionTestInputList);
+                testInput.setTotalQuestion(questionTestInputList.size());
+                testInputRepository.save(testInput);
+            } catch (IOException e) {
+                throw new IllegalArgumentException("The file is not a valid excel file");
+            }
+        } else {
+            throw new AppException(ErrorCode.NOTFOUND);
+        }
     }
 
     public static double roundToNearestHalf(double number) {

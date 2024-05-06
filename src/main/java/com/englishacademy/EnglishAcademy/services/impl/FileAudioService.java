@@ -44,7 +44,7 @@ public class FileAudioService {
         }
     }
 
-    private boolean isImageFile(MultipartFile file) {
+    private boolean isAudioFile(MultipartFile file) {
         String fileExtension = FilenameUtils.getExtension(file.getOriginalFilename());
         return Arrays.asList(new String[] {"mp3", "wav", "flac"})
                 .contains(fileExtension.trim().toLowerCase());
@@ -63,7 +63,7 @@ public class FileAudioService {
                 throw new RuntimeException("Failed to store empty file");
             }
             // check file is image?
-            if (!isImageFile(file)){
+            if (!isAudioFile(file)){
                 throw new RuntimeException("You can upload audio file");
             }
             // check <= 5Mb

@@ -6,6 +6,7 @@ import com.englishacademy.EnglishAcademy.dtos.testInput.TestInputDetail;
 import com.englishacademy.EnglishAcademy.dtos.testInputStudent.TestInputStudentDTO;
 import com.englishacademy.EnglishAcademy.models.answerStudent.CreateAnswerStudent;
 import com.englishacademy.EnglishAcademy.models.answerStudent.SubmitTest;
+import com.englishacademy.EnglishAcademy.models.testInput.CreateTestInput;
 
 import java.util.List;
 
@@ -17,4 +18,5 @@ public interface ITestInputService {
 
     TestInputStudentDTO getresultTest(String code);
     List<QuestionTestInputDetailResult> getresultDetailTest(String code);
+    void saveTestInput(CreateTestInput createTestInput);
 }

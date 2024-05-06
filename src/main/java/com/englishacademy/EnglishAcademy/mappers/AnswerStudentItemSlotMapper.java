@@ -2,13 +2,15 @@ package com.englishacademy.EnglishAcademy.mappers;
 
 import com.englishacademy.EnglishAcademy.dtos.answerStudentItemSlot.AnswerStudentItemSlotResponse;
 import com.englishacademy.EnglishAcademy.entities.AnswerStudentItemSlot;
+import com.englishacademy.EnglishAcademy.exceptions.AppException;
+import com.englishacademy.EnglishAcademy.exceptions.ErrorCode;
 import org.springframework.stereotype.Component;
 
 @Component
 public class AnswerStudentItemSlotMapper {
     public AnswerStudentItemSlotResponse toAnswerStudentItemSlotResponse(AnswerStudentItemSlot model){
         if (model == null) {
-            throw new RuntimeException("Not Found");
+            throw new AppException(ErrorCode.NOTFOUND);
         }
 
         AnswerStudentItemSlotResponse answerStudentItemSlotResponse = AnswerStudentItemSlotResponse.builder()

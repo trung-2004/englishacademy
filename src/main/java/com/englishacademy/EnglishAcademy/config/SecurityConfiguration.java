@@ -2,7 +2,9 @@ package com.englishacademy.EnglishAcademy.config;
 
 import com.englishacademy.EnglishAcademy.entities.Role;
 import com.englishacademy.EnglishAcademy.services.IUserService;
+import jakarta.servlet.MultipartConfigElement;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,6 +21,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.util.unit.DataSize;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -57,7 +60,7 @@ public class SecurityConfiguration {
                         .requestMatchers("/ws/**").permitAll()
                         //.requestMatchers("/api/v1/admin/**").hasAnyAuthority(Role.ADMIN.name())
                         //.requestMatchers("/api/v1/user/**").hasAnyAuthority(Role.USER.name())
-                        .anyRequest().authenticated())
+                        .anyRequest().permitAll())
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider()).addFilterBefore(
@@ -65,6 +68,15 @@ public class SecurityConfiguration {
                 );
         return http.build();
     }
+
+    @Bean
+    public MultipartConfigElement multipartConfigElement() {
+        MultipartConfigFactory factory = new MultipartConfigFactory();
+        factory.setMaxFileSize(DataSize.parse("10MB"));
+        factory.setMaxRequestSize(DataSize.parse("10MB"));
+        return factory.createMultipartConfig();
+    }
+
 
     @Bean
     public CorsConfigurationSource configurationSource(){
