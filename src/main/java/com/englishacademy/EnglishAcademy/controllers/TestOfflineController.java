@@ -48,9 +48,12 @@ public class TestOfflineController {
         );
     }
 
-    @PostMapping("/detail/{slug}")
+    @RequestMapping(
+            name = "/detail/{slug}",
+            consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_FORM_URLENCODED_VALUE},
+            method = {RequestMethod.GET, RequestMethod.POST})
     ResponseEntity<ResponseObject> submitTest(
-            @RequestPart("submitTest") List<CreateAnswerOfflineStudent> submitTest,
+            @ModelAttribute("submitTest") List<CreateAnswerOfflineStudent> submitTest,
             @PathVariable("slug") String slug
     ) {
         /*Authentication auth = SecurityContextHolder.getContext()

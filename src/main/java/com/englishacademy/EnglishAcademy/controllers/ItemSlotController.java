@@ -56,14 +56,14 @@ public class ItemSlotController extends TextWebSocketHandler {
 
     @GetMapping("/api/v1/item-slot/{slug}")
     public ResponseEntity<ResponseObject> getDetail(@PathVariable("slug") String slug){
-        /*Authentication auth = SecurityContextHolder.getContext()
+        Authentication auth = SecurityContextHolder.getContext()
                 .getAuthentication();
         if (!(auth.getPrincipal() instanceof Student)) {
             throw new AppException(ErrorCode.NOTFOUND);
         }
         if (auth == null) throw new AppException(ErrorCode.UNAUTHENTICATED);
-        Student currentStudent = (Student) auth.getPrincipal();*/
-        ItemSlotDetail itemSlotDetail = itemSlotService.getDetail(slug, 1L);
+        Student currentStudent = (Student) auth.getPrincipal();
+        ItemSlotDetail itemSlotDetail = itemSlotService.getDetail(slug, currentStudent.getId());
         this.template.convertAndSend("/topic/"+ slug, itemSlotDetail);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(true, 200, "ok", itemSlotDetail)

@@ -28,14 +28,14 @@ public class ScheduleController {
 
     @GetMapping("/student")
     ResponseEntity<ResponseObject> getScheduleStudent() {
-        /*Authentication auth = SecurityContextHolder.getContext()
+        Authentication auth = SecurityContextHolder.getContext()
                 .getAuthentication();
         if (!(auth.getPrincipal() instanceof Student)) {
             throw new AppException(ErrorCode.UNAUTHENTICATED);
         }
         if (auth == null) throw new AppException(ErrorCode.UNAUTHENTICATED);
-        Student currentStudent = (Student) auth.getPrincipal();*/
-        List<ScheduleStudent> scheduleStudentList = scheduleService.getScheduleStudent(1L);
+        Student currentStudent = (Student) auth.getPrincipal();
+        List<ScheduleStudent> scheduleStudentList = scheduleService.getScheduleStudent(currentStudent.getId());
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(true, 200, "ok", scheduleStudentList)
         );

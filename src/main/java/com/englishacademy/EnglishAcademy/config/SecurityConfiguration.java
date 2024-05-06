@@ -25,6 +25,7 @@ import org.springframework.util.unit.DataSize;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.multipart.MultipartResolver;
 
 import java.util.Arrays;
 import java.util.List;
@@ -76,6 +77,14 @@ public class SecurityConfiguration {
         factory.setMaxRequestSize(DataSize.parse("10MB"));
         return factory.createMultipartConfig();
     }
+
+
+
+    /*@Bean(name = "multipartResolver")
+    public CommonsMultipartResolver multipartResolver() {
+        CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
+        return multipartResolver;
+    }*/
 
 
     @Bean
