@@ -1,5 +1,6 @@
 package com.englishacademy.EnglishAcademy.services.impl;
 
+import com.englishacademy.EnglishAcademy.dtos.answerStudentItemSlot.ListScore;
 import com.englishacademy.EnglishAcademy.entities.AnswerStudentItemSlot;
 import com.englishacademy.EnglishAcademy.entities.ItemSlot;
 import com.englishacademy.EnglishAcademy.entities.Student;
@@ -98,5 +99,21 @@ public class AnswerStudentItemSlotService implements IAnswerStudentItemSlotServi
         }
         // save
         return answerStudentItemSlot;
+    }
+
+    @Override
+    public ListScore listScore(String slug, Long id) {
+        ItemSlot itemSlot = itemSlotRepository.findBySlug(slug);
+        if(itemSlot == null) throw  new AppException(ErrorCode.ITEMSLOT_NOTFOUND);
+        Student student = studentRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.STUDENT_NOTFOUND));
+        AnswerStudentItemSlot answerStudentItemSlotExsting = answerStudentItemSlotRepository.findByStudentAndItemSlot(student, itemSlot);
+        if (answerStudentItemSlotExsting == null) throw new AppException(ErrorCode.ANSWERITEMSLOT_NOTFOUND);
+        ListScore listScore = ListScore.builder()
+                .star1Count(answerStudentItemSlotExsting.getStar1Count())
+                .star2Count(answerStudentItemSlotExsting.getStar2Count())
+                .star3Count(answerStudentItemSlotExsting.getStar3Count())
+                .build();
+        return listScore;
     }
 }

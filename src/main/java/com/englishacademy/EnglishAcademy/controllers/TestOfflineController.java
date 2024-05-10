@@ -48,32 +48,22 @@ public class TestOfflineController {
         );
     }
 
-    @RequestMapping(
-            name = "/detail/{slug}",
-            consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_FORM_URLENCODED_VALUE},
-            method = {RequestMethod.GET, RequestMethod.POST})
+    @PostMapping("/detail/{slug}")
     ResponseEntity<ResponseObject> submitTest(
-            @ModelAttribute("submitTest") List<CreateAnswerOfflineStudent> submitTest,
+            @RequestBody List<CreateAnswerOfflineStudent> submitTest,
             @PathVariable("slug") String slug
     ) {
-        /*Authentication auth = SecurityContextHolder.getContext()
+        Authentication auth = SecurityContextHolder.getContext()
                 .getAuthentication();
         if (!(auth.getPrincipal() instanceof Student)) {
-            throw new AppException(ErrorCode.NOTFOUND);
+            throw new AppException(ErrorCode.UNAUTHENTICATED);
         }
         if (auth == null) throw new AppException(ErrorCode.UNAUTHENTICATED);
-        Student currentStudent = (Student) auth.getPrincipal();*/
-        try {
-            testOfflineService.submitTest(slug, 1L, submitTest);
-            return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject(true, 200, "ok", "")
-            );
-        } catch (Exception e){
-            System.out.println(e.getMessage());
-            return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject(true, 200, "ok", "")
-            );
-        }
+        Student currentStudent = (Student) auth.getPrincipal();
+        testOfflineService.submitTest(slug, currentStudent.getId(), submitTest);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "ok", "")
+        );
     }
 
     @GetMapping("detail-score/{code}")

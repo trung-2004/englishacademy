@@ -149,15 +149,11 @@ public class TestOfflineService implements ITestOfflineService {
                     .content(createAnswerOfflineStudent.getContent())
                     .isCorrect(false)
                     .build();
+            answerStudentOffline.setCreatedBy(student.getFullName());
+            answerStudentOffline.setModifiedBy(student.getFullName());
+            answerStudentOffline.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+            answerStudentOffline.setModifiedDate(new Timestamp(System.currentTimeMillis()));
 
-            if (createAnswerOfflineStudent.getFile() != null) {
-                // handle file
-                String path = fileAudioService.storeFile(createAnswerOfflineStudent.getFile());
-                // create answer student
-                answerStudentOffline.setContent(path);
-            } else {
-                answerStudentOffline.setContent(createAnswerOfflineStudent.getContent());
-            }
             answerStudentOfflineRepository.save(answerStudentOffline);
         }
     }

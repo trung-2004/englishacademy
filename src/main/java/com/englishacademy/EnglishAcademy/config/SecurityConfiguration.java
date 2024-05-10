@@ -4,6 +4,8 @@ import com.englishacademy.EnglishAcademy.entities.Role;
 import com.englishacademy.EnglishAcademy.services.IUserService;
 import jakarta.servlet.MultipartConfigElement;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.web.servlet.MultipartAutoConfiguration;
 import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,12 +30,12 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.multipart.MultipartResolver;
 
 import java.util.Arrays;
-import java.util.List;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 @EnableMethodSecurity(securedEnabled = true, prePostEnabled = true)
+@EnableAutoConfiguration(exclude = {MultipartAutoConfiguration.class})
 public class SecurityConfiguration {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final IUserService userService;
@@ -48,19 +50,19 @@ public class SecurityConfiguration {
                         .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
                         .accessDeniedHandler(new CustomAccessDeniedHandler())
                 )
-                /*.cors(cors -> cors.configurationSource(request -> {
+                .cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration configuration = new CorsConfiguration();
                     configuration.setAllowedOrigins(Arrays.asList("*"));
                     configuration.setAllowedMethods(Arrays.asList("*"));
                     configuration.setAllowedHeaders(Arrays.asList("*"));
                     return configuration;
-                }))*/
+                }))
                 .authorizeHttpRequests(request -> request.requestMatchers("/api/v1/auth/**")
                         .permitAll()
                         .requestMatchers("/api/v1/any/**").permitAll()
                         .requestMatchers("/ws/**").permitAll()
-                        //.requestMatchers("/api/v1/admin/**").hasAnyAuthority(Role.ADMIN.name())
-                        //.requestMatchers("/api/v1/user/**").hasAnyAuthority(Role.USER.name())
+                        .requestMatchers("/api/v1/admin/**").hasAnyAuthority(Role.ADMIN.name())
+                        .requestMatchers("/api/v1/user/**").hasAnyAuthority(Role.USER.name())
                         .anyRequest().permitAll())
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -77,6 +79,13 @@ public class SecurityConfiguration {
         factory.setMaxRequestSize(DataSize.parse("10MB"));
         return factory.createMultipartConfig();
     }
+
+    /*@Bean
+    public MultipartResolver multipartResolver() {
+        CommonsMultipartResolver resolver = new CommonsMultipartResolver();
+        resolver.setMaxUploadSize(1024 * 1024 * 5); // 5 MB
+        return resolver;
+    }*/
 
 
 

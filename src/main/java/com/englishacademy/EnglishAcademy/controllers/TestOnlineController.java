@@ -39,7 +39,7 @@ public class TestOnlineController {
         );
     }
 
-    @PostMapping("/detail/{slug}/{studentId}")
+    @PostMapping("/detail/{slug}")
     ResponseEntity<ResponseObject> submitTest(
             @RequestBody SubmitTest submitTest,
             @PathVariable("slug") String slug

@@ -1,6 +1,7 @@
 package com.englishacademy.EnglishAcademy.controllers;
 
 import com.englishacademy.EnglishAcademy.dtos.ResponseObject;
+import com.englishacademy.EnglishAcademy.dtos.answerStudentItemSlot.ListScore;
 import com.englishacademy.EnglishAcademy.dtos.itemSlot.ItemSlotDetail;
 import com.englishacademy.EnglishAcademy.entities.AnswerStudentItemSlot;
 import com.englishacademy.EnglishAcademy.entities.Student;
@@ -18,6 +19,8 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/answer-student-item-slot")
@@ -74,4 +77,20 @@ public class AnswerStudentItemSlotController {
                 new ResponseObject(true, 200, "ok", "")
         );
     }
+
+    @GetMapping("/list-score/{slug}")
+    ResponseEntity<ResponseObject> listScoreAnswer(@PathVariable("slug") String slug){
+        Authentication auth = SecurityContextHolder.getContext()
+                .getAuthentication();
+        if (!(auth.getPrincipal() instanceof Student)) {
+            throw new AppException(ErrorCode.UNAUTHENTICATED);
+        }
+        if (auth == null) throw new AppException(ErrorCode.UNAUTHENTICATED);
+        Student currentStudent = (Student) auth.getPrincipal();
+        ListScore listScore = answerStudentItemSlotService.listScore(slug, currentStudent.getId());
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "ok", listScore)
+        );
+    }
+
 }

@@ -1,13 +1,13 @@
 package com.englishacademy.EnglishAcademy.models.answerStudent;
 
-import lombok.Getter;
-import lombok.Setter;
-import org.springframework.web.multipart.MultipartFile;
+import lombok.*;
 
 @Getter
 @Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class CreateAnswerOfflineStudent {
     private String content;
     private Long questionId;
-    private MultipartFile file;
 }

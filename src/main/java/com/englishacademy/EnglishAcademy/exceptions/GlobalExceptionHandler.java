@@ -45,7 +45,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(apiResponse);
     }
 
-    /*@ExceptionHandler(value = MultipartException.class)
+    @ExceptionHandler(value = MultipartException.class)
     public void handleFileUploadingError(HttpServletResponse response, Exception exception) {
         log.warn("Failed to upload attachment", exception);
         try {
@@ -53,15 +53,15 @@ public class GlobalExceptionHandler {
         } catch (IOException e) {
             log.error("Failed to send error response", e);
         }
-    }*/
+    }
 
-    @ExceptionHandler(value = MultipartException.class)
+    /*@ExceptionHandler(value = MultipartException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ResponseBody
     public String handleFileUploadingError(MultipartException exception) {
         log.warn("Failed to upload attachment", exception);
         return exception.getMessage();
-    }
+    }*/
 
     @ExceptionHandler(value = MaxUploadSizeExceededException.class)
     public String handleFileSizeException(MaxUploadSizeExceededException exception){

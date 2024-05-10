@@ -12,7 +12,7 @@ import java.util.List;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
-    @Override
+    /*@Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
         converters.add(new MappingJackson2HttpMessageConverter());
         converters.add(new ByteArrayHttpMessageConverter());
@@ -21,5 +21,5 @@ public class WebConfig implements WebMvcConfigurer {
         converters.add(new FormHttpMessageConverter());
         converters.add(new SourceHttpMessageConverter<>());
         converters.add(new AllEncompassingFormHttpMessageConverter());
-    }
+    }*/
 }
