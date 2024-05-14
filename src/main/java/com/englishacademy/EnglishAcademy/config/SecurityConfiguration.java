@@ -27,9 +27,6 @@ import org.springframework.util.unit.DataSize;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.multipart.MultipartResolver;
-
-import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
@@ -50,13 +47,13 @@ public class SecurityConfiguration {
                         .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
                         .accessDeniedHandler(new CustomAccessDeniedHandler())
                 )
-                .cors(cors -> cors.configurationSource(request -> {
+                /*.cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration configuration = new CorsConfiguration();
                     configuration.setAllowedOrigins(Arrays.asList("*"));
                     configuration.setAllowedMethods(Arrays.asList("*"));
                     configuration.setAllowedHeaders(Arrays.asList("*"));
                     return configuration;
-                }))
+                }))*/
                 .authorizeHttpRequests(request -> request.requestMatchers("/api/v1/auth/**")
                         .permitAll()
                         .requestMatchers("/api/v1/any/**").permitAll()
@@ -79,21 +76,6 @@ public class SecurityConfiguration {
         factory.setMaxRequestSize(DataSize.parse("10MB"));
         return factory.createMultipartConfig();
     }
-
-    /*@Bean
-    public MultipartResolver multipartResolver() {
-        CommonsMultipartResolver resolver = new CommonsMultipartResolver();
-        resolver.setMaxUploadSize(1024 * 1024 * 5); // 5 MB
-        return resolver;
-    }*/
-
-
-
-    /*@Bean(name = "multipartResolver")
-    public CommonsMultipartResolver multipartResolver() {
-        CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
-        return multipartResolver;
-    }*/
 
 
     @Bean

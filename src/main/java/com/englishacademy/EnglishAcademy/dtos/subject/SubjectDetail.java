@@ -1,6 +1,7 @@
 package com.englishacademy.EnglishAcademy.dtos.subject;
 
 import com.englishacademy.EnglishAcademy.dtos.slot.SlotResponseDetail;
+import com.englishacademy.EnglishAcademy.dtos.testOffline.TestOfflineResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,6 +21,7 @@ public class SubjectDetail {
     private Integer orderTop;
     private Integer totalSlot;
     private List<SlotResponseDetail> slotResponseDetailList;
+    private List<TestOfflineResponse> testOfflineResponseList;
     private Timestamp createdDate;
     private Timestamp modifiedDate;
     private String createdBy;

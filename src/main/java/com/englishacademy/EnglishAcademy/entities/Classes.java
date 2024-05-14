@@ -39,5 +39,9 @@ public class Classes extends BaseEntity{
     @JsonIgnore
     private List<ClassesSlot> classesSlots;
 
+    @OneToMany(mappedBy = "classes")
+    @JsonIgnore
+    private List<ClassesTestOffline> classesTestOfflines;
+
 
 }

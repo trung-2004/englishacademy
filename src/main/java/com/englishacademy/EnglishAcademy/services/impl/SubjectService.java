@@ -5,12 +5,14 @@ import com.englishacademy.EnglishAcademy.dtos.itemSlot.ItemSlotResponse;
 import com.englishacademy.EnglishAcademy.dtos.slot.SlotResponseDTO;
 import com.englishacademy.EnglishAcademy.dtos.slot.SlotResponseDetail;
 import com.englishacademy.EnglishAcademy.dtos.subject.SubjectDetail;
+import com.englishacademy.EnglishAcademy.dtos.testOffline.TestOfflineResponse;
 import com.englishacademy.EnglishAcademy.entities.*;
 import com.englishacademy.EnglishAcademy.exceptions.AppException;
 import com.englishacademy.EnglishAcademy.exceptions.ErrorCode;
 import com.englishacademy.EnglishAcademy.mappers.ItemSlotMapper;
 import com.englishacademy.EnglishAcademy.repositories.*;
 import com.englishacademy.EnglishAcademy.services.ISubjectService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,20 +22,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class SubjectService implements ISubjectService {
-    @Autowired
-    private SubjectRepository subjectRepository;
-    @Autowired
-    private StudentRepository studentRepository;
-    @Autowired
-    private CourseOfflineStudentRepository courseOfflineStudentRepository;
-    @Autowired
-    private ClassesSlotRepository classesSlotRepository;
-    @Autowired
-    private ItemSlotRepository itemSlotRepository;
-
-    @Autowired
-    private ItemSlotMapper itemSlotMapper;
+    private final SubjectRepository subjectRepository;
+    private final StudentRepository studentRepository;
+    private final CourseOfflineStudentRepository courseOfflineStudentRepository;
+    private final ClassesSlotRepository classesSlotRepository;
+    private final ItemSlotRepository itemSlotRepository;
+    private final ClassesTestOfflineRepository classesTestOfflineRepository;
+    private final ItemSlotMapper itemSlotMapper;
 
 
     @Override
@@ -84,6 +81,31 @@ public class SubjectService implements ISubjectService {
         // sort
         slotResponseDetailList.sort(Comparator.comparingInt(SlotResponseDetail::getOrderTop));
 
+        // get list test offline
+        List<TestOfflineResponse> testOfflineResponseList = new ArrayList<>();
+        for (TestOffline testOffline: subject.getTestOfflines()) {
+            ClassesTestOffline classesTestOffline = classesTestOfflineRepository
+                    .findByTestOfflineAndClasses(testOffline, student.getClasses());
+            if (classesTestOffline != null) {
+                TestOfflineResponse testOfflineResponse = TestOfflineResponse.builder()
+                        .id(testOffline.getId())
+                        .title(testOffline.getName())
+                        .slug(testOffline.getSlug())
+                        .startDate(testOffline.getStartDate())
+                        .endtDate(testOffline.getEndDate())
+                        .retakeTestId(testOffline.getRetakeTestId())
+                        .totalQuestion(testOffline.getTotalQuestion())
+                        .pastMark(testOffline.getPastMark())
+                        .totalMark(testOffline.getTotalMark())
+                        .createdBy(testOffline.getCreatedBy())
+                        .createdDate(testOffline.getCreatedDate())
+                        .modifiedBy(testOffline.getModifiedBy())
+                        .modifiedDate(testOffline.getModifiedDate())
+                        .build();
+                testOfflineResponseList.add(testOfflineResponse);
+            }
+        }
+
         // create SubjectDeatail
         SubjectDetail subjectDetail = SubjectDetail.builder()
                 .id(subject.getId())
@@ -92,6 +114,7 @@ public class SubjectService implements ISubjectService {
                 .totalSlot(subject.getTotalSlot())
                 .orderTop(subject.getOrderTop())
                 .slotResponseDetailList(slotResponseDetailList)
+                .testOfflineResponseList(testOfflineResponseList)
                 .createdBy(subject.getCreatedBy())
                 .createdDate(subject.getCreatedDate())
                 .modifiedBy(subject.getModifiedBy())

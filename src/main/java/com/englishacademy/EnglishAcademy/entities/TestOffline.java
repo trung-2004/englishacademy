@@ -46,4 +46,8 @@ public class TestOffline extends BaseEntity{
     @OneToMany(mappedBy = "testOffline")
     @JsonIgnore
     private List<TestOfflineSession> testOfflineSessions;
+
+    @OneToMany(mappedBy = "testOffline")
+    @JsonIgnore
+    private List<ClassesTestOffline> classesTestOfflines;
 }

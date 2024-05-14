@@ -12,12 +12,15 @@ import com.englishacademy.EnglishAcademy.models.answerStudent.CreateAnswerStuden
 import com.englishacademy.EnglishAcademy.models.answerStudent.SubmitTest;
 import com.englishacademy.EnglishAcademy.models.testInput.CreateTestInput;
 import com.englishacademy.EnglishAcademy.services.ITestInputService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -82,11 +85,18 @@ public class TestInputController {
     }
 
     @PostMapping("")
-    ResponseEntity<ResponseObject> insert(@ModelAttribute CreateTestInput createTestInput) {
-        testInputService.saveTestInput(createTestInput);
-        return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject(true, 200, "ok", "")
-        );
+    ResponseEntity<ResponseObject> insert(@RequestParam("title") String title, @RequestParam("type") Integer type, @RequestParam("time") Integer time, @RequestParam("description") String description, @RequestParam("file") MultipartFile file) {
+            CreateTestInput createTestInput = new CreateTestInput();
+            createTestInput.setTitle(title);
+            createTestInput.setFile(file);
+            createTestInput.setTime(time);
+            createTestInput.setType(type);
+            createTestInput.setDescription(description);
+
+            testInputService.saveTestInput(createTestInput);
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject(true, 200, "ok", "")
+            );
     }
 
 }

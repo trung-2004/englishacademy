@@ -54,7 +54,7 @@ public class ExcelUploadService {
                 }
                 Iterator<Cell> cellIterator = row.iterator();
                 //int cellIndex = 0;
-                int orderTop = -1;
+                int orderTop = 0;
                 int totalQuestion = 0;
                 QuestionTestInput questionTestInput = new QuestionTestInput();
                 for (int cellIndex = 0; cellIndex < row.getLastCellNum(); cellIndex++) {
@@ -68,7 +68,6 @@ public class ExcelUploadService {
                             TestInputSession testInputSessionExiting = testInputSessionRepository.findByTestInputAndSession(testInput, session);
                             if (testInputSessionExiting == null){
                                 totalQuestion = 1;
-                                orderTop = orderTop + 1;
                                 TestInputSession testInputSession = TestInputSession.builder()
                                         .session(session)
                                         .testInput(testInput)
@@ -77,8 +76,7 @@ public class ExcelUploadService {
                                         .build();
                                 testInputSessionRepository.save(testInputSession);
                                 questionTestInput.setTestInputSession(testInputSession);
-
-
+                                orderTop += 1;
                             } else {
                                 questionTestInput.setTestInputSession(testInputSessionExiting);
                                 testInputSessionExiting.setTotalQuestion(testInputSessionExiting.getTotalQuestion() + 1);

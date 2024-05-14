@@ -391,6 +391,7 @@ public class TestInputService implements ITestInputService {
                 testInput.setTotalQuestion(questionTestInputList.size());
                 testInputRepository.save(testInput);
             } catch (IOException e) {
+                System.out.println(e.getMessage());
                 throw new IllegalArgumentException("The file is not a valid excel file");
             }
         } else {
