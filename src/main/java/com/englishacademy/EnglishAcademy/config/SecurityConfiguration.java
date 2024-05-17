@@ -28,6 +28,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.Arrays;
+
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -47,20 +49,31 @@ public class SecurityConfiguration {
                         .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
                         .accessDeniedHandler(new CustomAccessDeniedHandler())
                 )
-                /*.cors(cors -> cors.configurationSource(request -> {
+                .cors(cors -> cors.configurationSource(request -> {
+                    /*CorsConfiguration configuration = new CorsConfiguration();
+                    //configuration.setExposedHeaders(Arrays.asList("Authorization"));
+                    configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://127.0.0.1:5500"));
+                    //configuration.setAllowedOrigins(Arrays.asList("*"));
+                    configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
+                    configuration.setAllowedHeaders(Arrays.asList("Content-Type", "Authorization"));
+                    configuration.applyPermitDefaultValues();
+                    return configuration;*/
                     CorsConfiguration configuration = new CorsConfiguration();
-                    configuration.setAllowedOrigins(Arrays.asList("*"));
-                    configuration.setAllowedMethods(Arrays.asList("*"));
-                    configuration.setAllowedHeaders(Arrays.asList("*"));
+                    configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
+                    configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
+                    configuration.setAllowCredentials(true);
+                    configuration.setAllowedHeaders(Arrays.asList("Content-Type", "Authorization"));
+                    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+                    source.registerCorsConfiguration("/**", configuration);
                     return configuration;
-                }))*/
+                }))
                 .authorizeHttpRequests(request -> request.requestMatchers("/api/v1/auth/**")
                         .permitAll()
                         .requestMatchers("/api/v1/any/**").permitAll()
                         .requestMatchers("/ws/**").permitAll()
                         .requestMatchers("/api/v1/admin/**").hasAnyAuthority(Role.ADMIN.name())
                         .requestMatchers("/api/v1/user/**").hasAnyAuthority(Role.USER.name())
-                        .anyRequest().permitAll())
+                        .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider()).addFilterBefore(
@@ -78,7 +91,7 @@ public class SecurityConfiguration {
     }
 
 
-    @Bean
+    /*@Bean
     public CorsConfigurationSource configurationSource(){
         CorsConfiguration config = new CorsConfiguration();
         config.addAllowedHeader("*");
@@ -86,6 +99,16 @@ public class SecurityConfiguration {
         config.addAllowedOrigin("*");
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**",config);
+        return source;
+    }*/
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST"));
+        configuration.setAllowCredentials(true);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
         return source;
     }
 

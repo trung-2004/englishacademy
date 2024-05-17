@@ -39,6 +39,7 @@ public enum ErrorCode {
     // Answer Item Slot
     ANSWERITEMSLOT_EXISTING(404, "Answer existed", HttpStatus.BAD_REQUEST),
     ANSWERITEMSLOT_NOTFOUND(404, "Answer Not Found", HttpStatus.NOT_FOUND),
+    ANSWERITEMSLOT_GRADED(400, "Answers were graded", HttpStatus.NOT_FOUND),
 
     // Test Offline
     ITNOTTIME(404, "It's not time to do it yet", HttpStatus.NOT_FOUND),

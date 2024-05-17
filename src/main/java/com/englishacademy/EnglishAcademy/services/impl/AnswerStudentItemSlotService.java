@@ -3,6 +3,7 @@ package com.englishacademy.EnglishAcademy.services.impl;
 import com.englishacademy.EnglishAcademy.dtos.answerStudentItemSlot.ListScore;
 import com.englishacademy.EnglishAcademy.entities.AnswerStudentItemSlot;
 import com.englishacademy.EnglishAcademy.entities.ItemSlot;
+import com.englishacademy.EnglishAcademy.entities.PeerReview;
 import com.englishacademy.EnglishAcademy.entities.Student;
 import com.englishacademy.EnglishAcademy.exceptions.AppException;
 import com.englishacademy.EnglishAcademy.exceptions.ErrorCode;
@@ -10,6 +11,7 @@ import com.englishacademy.EnglishAcademy.models.answerStudent.CreateAnswerStuden
 import com.englishacademy.EnglishAcademy.models.answerStudent.ScoreAnswerStudentItemSlot;
 import com.englishacademy.EnglishAcademy.repositories.AnswerStudentItemSlotRepository;
 import com.englishacademy.EnglishAcademy.repositories.ItemSlotRepository;
+import com.englishacademy.EnglishAcademy.repositories.PeerReviewRepository;
 import com.englishacademy.EnglishAcademy.repositories.StudentRepository;
 import com.englishacademy.EnglishAcademy.services.IAnswerStudentItemSlotService;
 import org.springframework.stereotype.Service;
@@ -22,15 +24,18 @@ public class AnswerStudentItemSlotService implements IAnswerStudentItemSlotServi
     private final AnswerStudentItemSlotRepository answerStudentItemSlotRepository;
     private final ItemSlotRepository itemSlotRepository;
     private final StudentRepository studentRepository;
+    private final PeerReviewRepository peerReviewRepository;
 
     public AnswerStudentItemSlotService(
             AnswerStudentItemSlotRepository answerStudentItemSlotRepository,
             ItemSlotRepository itemSlotRepository,
-            StudentRepository studentRepository
+            StudentRepository studentRepository,
+            PeerReviewRepository peerReviewRepository
     ) {
         this.answerStudentItemSlotRepository = answerStudentItemSlotRepository;
         this.itemSlotRepository = itemSlotRepository;
         this.studentRepository = studentRepository;
+        this.peerReviewRepository = peerReviewRepository;
     }
 
     @Override
@@ -77,6 +82,18 @@ public class AnswerStudentItemSlotService implements IAnswerStudentItemSlotServi
         AnswerStudentItemSlot answerStudentItemSlotExsting = answerStudentItemSlotRepository.findByStudentAndItemSlot(student, answerStudentItemSlot.getItemSlot());
         if (answerStudentItemSlotExsting == null) throw new AppException(ErrorCode.ANSWERITEMSLOT_EXISTING);
         Date now = new Timestamp(System.currentTimeMillis());
+
+        PeerReview peerReviewExsting = peerReviewRepository.findByStudentAndAnswerStudentItemSlot(student, answerStudentItemSlot);
+        if (peerReviewExsting != null){
+            throw new AppException(ErrorCode.ANSWERITEMSLOT_GRADED);
+        }
+        PeerReview peerReview = PeerReview.builder()
+                .answerStudentItemSlot(answerStudentItemSlot)
+                .star(scoreAnswerStudentItemSlot.getStar())
+                .student(student)
+                .build();
+        peerReviewRepository.save(peerReview);
+
         // logic
         if (now.after(answerStudentItemSlot.getItemSlot().getEndDate()) || now.before(answerStudentItemSlot.getItemSlot().getStartDate())) throw new AppException(ErrorCode.EXPIRES);
         if (scoreAnswerStudentItemSlot.getStar().equals(1) && answerStudentItemSlotExsting.getStar1Count() > 0) {

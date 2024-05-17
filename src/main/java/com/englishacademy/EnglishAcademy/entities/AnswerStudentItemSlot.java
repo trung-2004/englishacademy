@@ -1,5 +1,6 @@
 package com.englishacademy.EnglishAcademy.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -38,4 +40,8 @@ public class AnswerStudentItemSlot extends BaseEntity{
     private Integer star2Count;
     @Column(name = "star1Count", nullable = false)
     private Integer star1Count;
+
+    @OneToMany(mappedBy = "answerStudentItemSlot")
+    @JsonIgnore
+    private List<PeerReview> peerReviews;
 }

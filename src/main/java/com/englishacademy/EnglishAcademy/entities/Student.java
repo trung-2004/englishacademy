@@ -74,6 +74,10 @@ public class Student extends BaseEntity implements UserDetails {
 
     @OneToMany(mappedBy = "student")
     @JsonIgnore
+    private List<PeerReview> peerReviews;
+
+    @OneToMany(mappedBy = "student")
+    @JsonIgnore
     private List<ItemOnlineStudent> itemOnlineStudents;
 
     @OneToMany(mappedBy = "student")
