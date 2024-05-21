@@ -88,6 +88,10 @@ public class Student extends BaseEntity implements UserDetails {
     @JsonIgnore
     private List<TestOnlineStudent> testOnlineStudents;
 
+    @OneToMany(mappedBy = "student")
+    @JsonIgnore
+    private List<Booking> bookings;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));

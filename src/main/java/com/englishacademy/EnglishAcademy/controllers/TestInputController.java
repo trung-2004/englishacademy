@@ -85,7 +85,11 @@ public class TestInputController {
     }
 
     @PostMapping("")
-    ResponseEntity<ResponseObject> insert(@RequestParam("title") String title, @RequestParam("type") Integer type, @RequestParam("time") Integer time, @RequestParam("description") String description, @RequestParam("file") MultipartFile file) {
+    ResponseEntity<ResponseObject> insert(@RequestParam("title") String title,
+                                          @RequestParam("type") Integer type,
+                                          @RequestParam("time") Integer time,
+                                          @RequestParam("description") String description,
+                                          @RequestParam("file") MultipartFile file) {
             CreateTestInput createTestInput = new CreateTestInput();
             createTestInput.setTitle(title);
             createTestInput.setFile(file);

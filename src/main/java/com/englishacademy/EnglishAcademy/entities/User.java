@@ -48,6 +48,10 @@ public class User extends BaseEntity implements UserDetails {
     @JsonIgnore
     private List<Classes> classes;
 
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    private List<Tutor> tutors;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));

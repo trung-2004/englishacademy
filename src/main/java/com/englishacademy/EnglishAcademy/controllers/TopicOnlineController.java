@@ -34,7 +34,7 @@ public class TopicOnlineController {
         Authentication auth = SecurityContextHolder.getContext()
                 .getAuthentication();
         if (!(auth.getPrincipal() instanceof Student)) {
-            throw new AppException(ErrorCode.NOTFOUND);
+            throw new AppException(ErrorCode.UNAUTHENTICATED);
         }
         if (auth == null) throw new AppException(ErrorCode.UNAUTHENTICATED);
         Student currentStudent = (Student) auth.getPrincipal();

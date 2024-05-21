@@ -44,6 +44,9 @@ public enum ErrorCode {
     // Test Offline
     ITNOTTIME(404, "It's not time to do it yet", HttpStatus.NOT_FOUND),
 
+    // Tutor
+    TUTOR_NOTFOUND(404, "Tutor Not Found", HttpStatus.NOT_FOUND),
+
     USERNAME_INVALID(1003, "Username must be at least 3 characters", HttpStatus.BAD_REQUEST),
     INVALID_PASSWORD(1004, "Password must be at least 8 characters", HttpStatus.BAD_REQUEST),
     INVALIDEMAILORPASSWORD(400, "Invalid email or password", HttpStatus.BAD_REQUEST),

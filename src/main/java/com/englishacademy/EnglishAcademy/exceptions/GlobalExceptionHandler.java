@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartException;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
 import java.io.IOException;
 import java.nio.file.AccessDeniedException;
@@ -134,5 +135,17 @@ public class GlobalExceptionHandler {
         apiResponse.setMessage(exception.getMessage());
 
         return ResponseEntity.badRequest().body(apiResponse);
+    }
+
+    @ExceptionHandler(NoHandlerFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseBody
+    public ResponseObject handleNoHandlerFoundException(NoHandlerFoundException exception) {
+        log.error("No handler found for request", exception);
+        return ResponseObject.builder()
+                .status(false)
+                .statusCode(HttpStatus.NOT_FOUND.value())
+                .message("Resource not found")
+                .build();
     }
 }
