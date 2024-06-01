@@ -12,7 +12,7 @@ public class LessionBookingMapper {
         if (model == null) {
             throw new AppException(ErrorCode.NOTFOUND);
         }
-        LessionBookingDTO lessionBookingDTO = LessionBookingDTO.builder()
+        /*LessionBookingDTO lessionBookingDTO = LessionBookingDTO.builder()
                 .id(model.getId())
                 .bookingId(model.getBooking().getId())
                 .bookingTime(model.getBookingTime())
@@ -26,6 +26,7 @@ public class LessionBookingMapper {
                 .modifiedBy(model.getModifiedBy())
                 .modifiedDate(model.getModifiedDate())
                 .build();
-        return lessionBookingDTO;
+        return lessionBookingDTO;*/
+        return null;
     }
 }

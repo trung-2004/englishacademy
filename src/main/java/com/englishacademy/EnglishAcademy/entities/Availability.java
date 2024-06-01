@@ -27,6 +27,6 @@ public class Availability extends BaseEntity{
     private LocalTime endTime;
 
     @Column(name = "dayOfWeek")
-    private String dayOfWeek;
+    private DayOfWeek dayOfWeek;
 
 }

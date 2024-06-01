@@ -2,7 +2,7 @@ package com.englishacademy.EnglishAcademy.controllers;
 
 import com.englishacademy.EnglishAcademy.dtos.ResponseObject;
 import com.englishacademy.EnglishAcademy.dtos.booking.BookingDTO;
-import com.englishacademy.EnglishAcademy.dtos.tutor.TutorDTO;
+import com.englishacademy.EnglishAcademy.dtos.booking.BookingWaiting;
 import com.englishacademy.EnglishAcademy.entities.Student;
 import com.englishacademy.EnglishAcademy.entities.User;
 import com.englishacademy.EnglishAcademy.exceptions.AppException;
@@ -67,7 +67,7 @@ public class BookingController {
     }
 
     @PostMapping("/booking")
-    ResponseEntity<ResponseObject> insert(@RequestBody List<CreateBooking> createBookingList) {
+    ResponseEntity<ResponseObject> insert(@RequestBody CreateBooking createBookingList) {
         Authentication auth = SecurityContextHolder.getContext()
                 .getAuthentication();
         if (!(auth.getPrincipal() instanceof Student)) {
@@ -78,6 +78,22 @@ public class BookingController {
         bookingService.save(createBookingList, currentStudent);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(true, 200, "ok", "")
+        );
+    }
+
+    @GetMapping("/tutor/booking-waiting")
+    ResponseEntity<ResponseObject> getAllWaitingByTutor() {
+        Authentication auth = SecurityContextHolder.getContext()
+                .getAuthentication();
+        if (!(auth.getPrincipal() instanceof User)) {
+            throw new AppException(ErrorCode.UNAUTHENTICATED);
+        }
+        if (auth == null) throw new AppException(ErrorCode.UNAUTHENTICATED);
+        User currentUser = (User) auth.getPrincipal();
+
+        BookingWaiting bookingWaiting = bookingService.findAllWaitingByTutor(currentUser);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "ok", bookingWaiting)
         );
     }
 }

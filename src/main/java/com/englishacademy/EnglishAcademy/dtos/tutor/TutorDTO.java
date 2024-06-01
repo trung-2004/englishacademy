@@ -19,7 +19,7 @@ public class TutorDTO {
     private String avatar;
     private String address;
     private String teachingSubject;
-    private Integer hourlyRate;
+    private Double hourlyRate;
     private Timestamp createdDate;
     private Timestamp modifiedDate;
     private String createdBy;

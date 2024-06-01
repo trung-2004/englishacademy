@@ -14,29 +14,26 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "booking")
+@Table(name = "studentPackage")
 @Builder
-public class Booking extends BaseEntity{
+public class StudentPackage extends BaseEntity{
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tutor_id")
-    private Tutor tutor;
+    @JoinColumn(name = "packages_id")
+    private Packages packages;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "student_id")
     private Student student;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "payment_id")
-    private Payment payment;
-    @Column(name = "startTime", nullable = false)
-    private Date startTime;
-    @Column(name = "endTime", nullable = false)
-    private Date endTime;
-    @Column(name = "description")
-    private String description;
-    @Column(name = "status")
-    private BookingStatus status;
+    @Column(name = "remainingSessions", nullable = false)
+    private Integer remainingSessions;
+    @Column(name = "purchaseDate", nullable = false)
+    private Date purchaseDate ;
     @Column(name = "lessonDays", nullable = false, columnDefinition = "TEXT")
     private String lessonDays;
-    @OneToMany(mappedBy = "booking")
+    @Column(name = "status", nullable = false)
+    private BookingStatus status ;
+
+    @OneToMany(mappedBy = "studentPackage")
     @JsonIgnore
-    private List<LessionBooking> lessionBookings;
+    private List<Payment> payments;
+
 }

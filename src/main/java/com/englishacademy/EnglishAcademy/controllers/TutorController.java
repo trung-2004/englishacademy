@@ -47,7 +47,7 @@ public class TutorController {
             @RequestParam("userId") Long userId,
             @RequestParam("phone") String phone,
             @RequestParam("level") Integer level,
-            @RequestParam("hourlyRate") Integer hourlyRate,
+            @RequestParam("hourlyRate") Double hourlyRate,
             @RequestParam("address") String address,
             @RequestParam("cetificate") String cetificate,
             @RequestParam("experience") String experience,

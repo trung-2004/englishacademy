@@ -18,7 +18,7 @@ import java.util.List;
 public class Tutor extends BaseEntity{
     @Column(name = "code", nullable = false, unique = true)
     private String code;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER, cascade={CascadeType.ALL})
     @JoinColumn(name = "user_id")
     private User user;
     @Column(name = "level", nullable = false)
@@ -34,7 +34,7 @@ public class Tutor extends BaseEntity{
     @Column(name = "teachingSubject", nullable = false)
     private String teachingSubject;
     @Column(name = "hourlyRate", nullable = false)
-    private Integer hourlyRate;
+    private Double hourlyRate;
     @Column(name = "status", nullable = false)
     private boolean status;
 
@@ -45,4 +45,8 @@ public class Tutor extends BaseEntity{
     @OneToMany(mappedBy = "tutor")
     @JsonIgnore
     private List<Availability> availabilities;
+
+    @OneToMany(mappedBy = "tutor")
+    @JsonIgnore
+    private List<Packages> packages;
 }

@@ -18,17 +18,14 @@ public class LessionBooking extends BaseEntity{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "booking_id")
     private Booking booking;
-    @Column(name = "bookingTime", nullable = false)
-    private Date bookingTime;
-    @Column(name = "duration", nullable = false)
-    private Integer duration;
+    @Column(name = "scheduledStartTime", nullable = false)
+    private Date scheduledStartTime;
+    @Column(name = "scheduledEndTime", nullable = false)
+    private Date scheduledEndTime;
+    @Column(name = "actualStartTime", nullable = false)
+    private Date actualStartTime;
+    @Column(name = "actualEndTime", nullable = false)
+    private Date actualEndTime;
     @Column(name = "status", nullable = false)
-    private Integer status;
-    @Column(name = "isPaid", nullable = false)
-    private boolean isPaid;
-    @Column(name = "price", nullable = false)
-    private Double price;
-    @Column(name = "paymentMethod")
-    private String paymentMethod;
-
+    private LessonBookingStatus status;
 }

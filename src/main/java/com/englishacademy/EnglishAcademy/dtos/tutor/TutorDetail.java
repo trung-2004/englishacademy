@@ -22,7 +22,7 @@ public class TutorDetail {
     private String cetificate;
     private String experience;
     private String teachingSubject;
-    private Integer hourlyRate;
+    private Double hourlyRate;
     private Timestamp createdDate;
     private Timestamp modifiedDate;
     private String createdBy;

@@ -13,7 +13,7 @@ public class BookingMapper {
             throw new AppException(ErrorCode.NOTFOUND);
         }
         BookingDTO bookingDTO = BookingDTO.builder()
-                .id(model.getId())
+                /*.id(model.getId())
                 .tutorId(model.getTutor().getId())
                 .studentId(model.getStudent().getId())
                 .studentName(model.getStudent().getFullName())
@@ -24,7 +24,7 @@ public class BookingMapper {
                 .createdBy(model.getCreatedBy())
                 .createdDate(model.getCreatedDate())
                 .modifiedBy(model.getModifiedBy())
-                .modifiedDate(model.getModifiedDate())
+                .modifiedDate(model.getModifiedDate())*/
                 .build();
         return bookingDTO;
     }

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 public class SubjectMapper {
     public SubjectDTO toSubjectDTO(Subject model){
         if (model == null) {
-            throw new RuntimeException("Not Found");
+            throw new RuntimeException("    Not Found");
         }
         SubjectDTO subjectDTO = SubjectDTO.builder()
                 .id(model.getId())
