@@ -21,7 +21,7 @@ public class SubscriptionMapper {
                 .endTime(model.getEndTime())
                 .price(model.getPrice())
                 .nextPaymentDate(model.getNextPaymentDate())
-                .status(model.isStatus())
+                .status(model.getStatus())
                 .createdBy(model.getCreatedBy())
                 .createdDate(model.getCreatedDate())
                 .modifiedBy(model.getModifiedBy())

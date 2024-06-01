@@ -16,7 +16,7 @@ public class StudentPackageMapper {
                 .package_Id(model.getPackages().getId())
                 .student_Id(model.getStudent().getId())
                 .lessonDays(model.getLessonDays())
-                .status(model.isStatus())
+                .status(model.getStatus())
                 .purchaseDate(model.getPurchaseDate())
                 .remainingSessions(model.getRemainingSessions())
                 .createdBy(model.getCreatedBy())
