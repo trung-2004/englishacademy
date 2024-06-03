@@ -23,7 +23,7 @@ public class PackageStudentService implements IPackageStudentService {
         StudentPackage studentPackage = studentPackageRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.NOTFOUND));
         Tutor tutor = tutorRepository.findByUser(currentUser);
-        if (tutor == null || studentPackage.getPackages().getTutor().equals(tutor) || studentPackage.getStatus().name().equals(BookingStatus.cancelled)) throw new AppException(ErrorCode.NOTFOUND);
+        if (tutor == null || !studentPackage.getPackages().getTutor().equals(tutor) || studentPackage.getStatus().name().equals(BookingStatus.cancelled)) throw new AppException(ErrorCode.NOTFOUND);
         studentPackage.setStatus(BookingStatus.confirmed);
         studentPackageRepository.save(studentPackage);
     }
@@ -33,7 +33,7 @@ public class PackageStudentService implements IPackageStudentService {
         StudentPackage studentPackage = studentPackageRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.NOTFOUND));
         Tutor tutor = tutorRepository.findByUser(currentUser);
-        if (tutor == null || studentPackage.getPackages().getTutor().equals(tutor)) throw new AppException(ErrorCode.NOTFOUND);
+        if (tutor == null || !studentPackage.getPackages().getTutor().equals(tutor)) throw new AppException(ErrorCode.NOTFOUND);
         studentPackage.setStatus(BookingStatus.cancelled);
         studentPackageRepository.save(studentPackage);
     }

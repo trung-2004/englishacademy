@@ -22,10 +22,12 @@ public class LessionBooking extends BaseEntity{
     private Date scheduledStartTime;
     @Column(name = "scheduledEndTime", nullable = false)
     private Date scheduledEndTime;
-    @Column(name = "actualStartTime", nullable = false)
+    @Column(name = "actualStartTime")
     private Date actualStartTime;
-    @Column(name = "actualEndTime", nullable = false)
+    @Column(name = "actualEndTime")
     private Date actualEndTime;
     @Column(name = "status", nullable = false)
     private LessonBookingStatus status;
+    @Column(name = "path")
+    private String path;
 }

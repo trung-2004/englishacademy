@@ -54,13 +54,13 @@ public class BookingController {
     ResponseEntity<ResponseObject> getAllByTutor() {
         Authentication auth = SecurityContextHolder.getContext()
                 .getAuthentication();
-        if (!(auth.getPrincipal() instanceof Student)) {
+        if (!(auth.getPrincipal() instanceof User)) {
             throw new AppException(ErrorCode.UNAUTHENTICATED);
         }
         if (auth == null) throw new AppException(ErrorCode.UNAUTHENTICATED);
         User currentUser = (User) auth.getPrincipal();
 
-        List<BookingDTO> list = bookingService.findAllByTutor(currentUser.getTutors().get(0));
+        List<BookingDTO> list = bookingService.findAllByTutor(currentUser);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(true, 200, "ok", list)
         );

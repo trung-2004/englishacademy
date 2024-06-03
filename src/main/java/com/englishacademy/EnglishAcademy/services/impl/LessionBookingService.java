@@ -1,14 +1,12 @@
 package com.englishacademy.EnglishAcademy.services.impl;
 
 import com.englishacademy.EnglishAcademy.dtos.lessionBooking.LessionBookingDTO;
-import com.englishacademy.EnglishAcademy.entities.Booking;
-import com.englishacademy.EnglishAcademy.entities.LessionBooking;
-import com.englishacademy.EnglishAcademy.entities.Tutor;
-import com.englishacademy.EnglishAcademy.entities.User;
+import com.englishacademy.EnglishAcademy.entities.*;
 import com.englishacademy.EnglishAcademy.exceptions.AppException;
 import com.englishacademy.EnglishAcademy.exceptions.ErrorCode;
 import com.englishacademy.EnglishAcademy.mappers.LessionBookingMapper;
 import com.englishacademy.EnglishAcademy.models.booking.CreateLessionBooking;
+import com.englishacademy.EnglishAcademy.models.booking.UpdateLessionBooking;
 import com.englishacademy.EnglishAcademy.repositories.BookingRepository;
 import com.englishacademy.EnglishAcademy.repositories.LessionBookingRepository;
 import com.englishacademy.EnglishAcademy.repositories.TutorRepository;
@@ -38,25 +36,21 @@ public class LessionBookingService implements ILessionBookingService {
     }
 
     @Override
-    public void save(CreateLessionBooking createLessionBooking) {
-        /*Booking booking = bookingRepository.findById(createLessionBooking.getBookingId())
+    public void save(CreateLessionBooking createLessionBooking, User user) {
+        Booking booking = bookingRepository.findById(createLessionBooking.getBookingId())
                 .orElseThrow(() -> new AppException(ErrorCode.NOTFOUND));
-        System.out.println(booking.getTutor().getHourlyRate());
         LessionBooking lessionBooking = LessionBooking.builder()
                 .booking(booking)
-                .bookingTime(createLessionBooking.getBookingTime())
-                .duration(createLessionBooking.getDuration())
-                .status(0)
-                .isPaid(false)
-                .paymentMethod(null)
+                .scheduledEndTime(createLessionBooking.getEndTime())
+                .scheduledStartTime(createLessionBooking.getStartTime())
+                .status(LessonBookingStatus.scheduled)
                 .build();
 
-        lessionBooking.setPrice((createLessionBooking.getDuration() / 60.0) * booking.getTutor().getHourlyRate());
-        lessionBooking.setCreatedBy(booking.getTutor().getUser().getFullName());
-        lessionBooking.setModifiedBy(booking.getTutor().getUser().getFullName());
+        lessionBooking.setCreatedBy(user.getFullName());
+        lessionBooking.setModifiedBy(user.getFullName());
         lessionBooking.setCreatedDate(new Timestamp(System.currentTimeMillis()));
         lessionBooking.setModifiedDate(new Timestamp(System.currentTimeMillis()));
-        lessionBookingRepository.save(lessionBooking);*/
+        lessionBookingRepository.save(lessionBooking);
     }
 
     @Transactional(readOnly = true)
@@ -69,5 +63,26 @@ public class LessionBookingService implements ILessionBookingService {
                 lessionBookingDTOS.addAll(lessionBookingDTOList);
             }
         return lessionBookingDTOS;
+    }
+
+    @Override
+    public List<LessionBookingDTO> findAllByBooking(Long bookingId, User user) {
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new AppException(ErrorCode.NOTFOUND));
+        if (booking.getTutor().getUser().equals(user)){
+            throw new AppException(ErrorCode.NOTFOUND);
+        }
+        return lessionBookingRepository.findAllByBooking(booking)
+                .stream().map(lessionBookingMapper::toLessionBookingDTO).collect(Collectors.toList());
+    }
+
+    @Override
+    public void update(UpdateLessionBooking updateLessionBooking, User currentUser) {
+        LessionBooking lessionBooking = lessionBookingRepository.findById(updateLessionBooking.getId())
+                .orElseThrow(() -> new AppException(ErrorCode.NOTFOUND));
+        lessionBooking.setPath(updateLessionBooking.getPath());
+        lessionBooking.setModifiedBy(currentUser.getFullName());
+        lessionBooking.setModifiedDate(new Timestamp(System.currentTimeMillis()));
+        lessionBookingRepository.save(lessionBooking);
     }
 }

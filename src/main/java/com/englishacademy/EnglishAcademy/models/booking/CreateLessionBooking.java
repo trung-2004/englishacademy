@@ -9,6 +9,6 @@ import java.util.Date;
 @Setter
 public class CreateLessionBooking {
     private Long bookingId;
-    private Date bookingTime;
-    private Integer duration;
+    private Date startTime;
+    private Date endTime;
 }

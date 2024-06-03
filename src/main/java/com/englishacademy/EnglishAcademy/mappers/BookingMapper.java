@@ -13,18 +13,21 @@ public class BookingMapper {
             throw new AppException(ErrorCode.NOTFOUND);
         }
         BookingDTO bookingDTO = BookingDTO.builder()
-                /*.id(model.getId())
+                .id(model.getId())
                 .tutorId(model.getTutor().getId())
                 .studentId(model.getStudent().getId())
                 .studentName(model.getStudent().getFullName())
                 .tutorName(model.getTutor().getUser().getFullName())
-                .bookingTime(model.getBookingTime())
                 .description(model.getDescription())
-                .duration(model.getDuration())
                 .createdBy(model.getCreatedBy())
+                .paymentId(model.getPayment().getId())
+                .startTime(model.getStartTime())
+                .endTime(model.getEndTime())
+                .status(model.getStatus())
+                .lessonDays(model.getLessonDays())
                 .createdDate(model.getCreatedDate())
                 .modifiedBy(model.getModifiedBy())
-                .modifiedDate(model.getModifiedDate())*/
+                .modifiedDate(model.getModifiedDate())
                 .build();
         return bookingDTO;
     }

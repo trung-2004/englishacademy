@@ -6,6 +6,7 @@ import com.englishacademy.EnglishAcademy.entities.User;
 import com.englishacademy.EnglishAcademy.exceptions.AppException;
 import com.englishacademy.EnglishAcademy.exceptions.ErrorCode;
 import com.englishacademy.EnglishAcademy.models.booking.CreateLessionBooking;
+import com.englishacademy.EnglishAcademy.models.booking.UpdateLessionBooking;
 import com.englishacademy.EnglishAcademy.services.ILessionBookingService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,10 +32,47 @@ public class LessionBookingController {
                 new ResponseObject(true, 200, "ok", list)
         );
     }
+    @GetMapping("/lession-booking/{booking_id}")
+    ResponseEntity<ResponseObject> getAllByBooking(@PathVariable("booking_id") Long bookingId) {
+        Authentication auth = SecurityContextHolder.getContext()
+                .getAuthentication();
+        if (!(auth.getPrincipal() instanceof User)) {
+            throw new AppException(ErrorCode.UNAUTHENTICATED);
+        }
+        if (auth == null) throw new AppException(ErrorCode.UNAUTHENTICATED);
+        User currentUser = (User) auth.getPrincipal();
+        List<LessionBookingDTO> list = lessionBookingService.findAllByBooking(bookingId, currentUser);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "ok", list)
+        );
+    }
 
     @PostMapping("/lession-booking")
     ResponseEntity<ResponseObject> insert(@RequestBody CreateLessionBooking createLessionBooking) {
-        lessionBookingService.save(createLessionBooking);
+        Authentication auth = SecurityContextHolder.getContext()
+                .getAuthentication();
+        if (!(auth.getPrincipal() instanceof User)) {
+            throw new AppException(ErrorCode.UNAUTHENTICATED);
+        }
+        if (auth == null) throw new AppException(ErrorCode.UNAUTHENTICATED);
+        User currentUser = (User) auth.getPrincipal();
+
+        lessionBookingService.save(createLessionBooking, currentUser);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "ok", "")
+        );
+    }
+    @PutMapping("/lession-booking")
+    ResponseEntity<ResponseObject> update(@RequestBody UpdateLessionBooking updateLessionBooking) {
+        Authentication auth = SecurityContextHolder.getContext()
+                .getAuthentication();
+        if (!(auth.getPrincipal() instanceof User)) {
+            throw new AppException(ErrorCode.UNAUTHENTICATED);
+        }
+        if (auth == null) throw new AppException(ErrorCode.UNAUTHENTICATED);
+        User currentUser = (User) auth.getPrincipal();
+
+        lessionBookingService.update(updateLessionBooking, currentUser);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(true, 200, "ok", "")
         );

@@ -15,7 +15,6 @@ import java.util.Date;
 public class PaymentDTO {
     private Long studentPackagesId;
     private Long subscriptionId;
-    private Integer status;
     private boolean isPaid;
     private Double price;
     private String paymentMethod;

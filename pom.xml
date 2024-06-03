@@ -114,6 +114,14 @@
 			<version>0.11.5</version>
 		</dependency>
 		<!-- end add jwt -->
+
+		<!-- JSON-->
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20211205</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>

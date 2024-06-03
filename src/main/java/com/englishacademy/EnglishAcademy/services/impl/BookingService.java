@@ -14,8 +14,10 @@ import com.englishacademy.EnglishAcademy.models.booking.CreateBooking;
 import com.englishacademy.EnglishAcademy.repositories.*;
 import com.englishacademy.EnglishAcademy.services.IBookingService;
 import lombok.RequiredArgsConstructor;
+import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 import org.threeten.bp.temporal.ChronoUnit;
+import org.json.JSONArray;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -45,6 +47,15 @@ public class BookingService implements IBookingService {
     @Override
     public void save(CreateBooking createBooking, Student student) {
         Date now = new Timestamp(System.currentTimeMillis());
+        // Convert lesson schedule to JSON
+        JSONArray scheduleArray = new JSONArray();
+        for (CreateBooking.LessonDay lesson : createBooking.getLessonDays()) {
+            JSONObject schedule = new JSONObject();
+            schedule.put("dayOfWeek", lesson.getDayOfWeek());
+            schedule.put("startTime", lesson.getStartTime());
+            schedule.put("endTime", lesson.getEndTime());
+            scheduleArray.put(schedule);
+        }
         Tutor tutor = tutorRepository.findById(createBooking.getTutorId())
                 .orElseThrow(() -> new AppException(ErrorCode.TUTOR_NOTFOUND));
         if (createBooking.getTypeBooking().equals(1)){
@@ -55,7 +66,8 @@ public class BookingService implements IBookingService {
                     .student(student)
                     .remainingSessions(packages.getNumSessions())
                     .purchaseDate(now)
-                    .lessonDays(createBooking.getLessonDays())
+                    .lessonDays(scheduleArray.toString())
+                    .price(packages.getHourlyRate())
                     .status(BookingStatus.pending)
                     .build();
             studentPackageRepository.save(studentPackage);
@@ -75,7 +87,7 @@ public class BookingService implements IBookingService {
                     .nextPaymentDate(endTime)
                     .price(tutor.getHourlyRate())
                     .status(BookingStatus.pending)
-                    .lessonDays(createBooking.getLessonDays())
+                    .lessonDays(scheduleArray.toString())
                     .build();
             subscriptionRepository.save(subscription);
         } else {
@@ -84,7 +96,9 @@ public class BookingService implements IBookingService {
     }
 
     @Override
-    public List<BookingDTO> findAllByTutor(Tutor tutor) {
+    public List<BookingDTO> findAllByTutor(User user) {
+        Tutor tutor = tutorRepository.findByUser(user);
+        if (tutor == null) throw new AppException(ErrorCode.NOTFOUND);
         return bookingRepository.findAllByTutor(tutor)
                 .stream().map(bookingMapper::toBookingDTO).collect(Collectors.toList());
     }

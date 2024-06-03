@@ -28,7 +28,10 @@ public class StudentPackage extends BaseEntity{
     @Column(name = "purchaseDate", nullable = false)
     private Date purchaseDate ;
     @Column(name = "lessonDays", nullable = false, columnDefinition = "TEXT")
+    @Lob
     private String lessonDays;
+    @Column(name = "price", nullable = false)
+    private Double price;
     @Column(name = "status", nullable = false)
     private BookingStatus status ;
 

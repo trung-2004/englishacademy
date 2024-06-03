@@ -14,7 +14,7 @@ public interface IBookingService {
     List<BookingDTO> findAll();
     void save(CreateBooking createBookingList, Student student);
 
-    List<BookingDTO> findAllByTutor(Tutor tutor);
+    List<BookingDTO> findAllByTutor(User user);
 
     List<BookingDTO> findAllByStudent(Student student);
 

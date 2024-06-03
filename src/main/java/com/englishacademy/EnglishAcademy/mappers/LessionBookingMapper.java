@@ -12,21 +12,20 @@ public class LessionBookingMapper {
         if (model == null) {
             throw new AppException(ErrorCode.NOTFOUND);
         }
-        /*LessionBookingDTO lessionBookingDTO = LessionBookingDTO.builder()
+        LessionBookingDTO lessionBookingDTO = LessionBookingDTO.builder()
                 .id(model.getId())
                 .bookingId(model.getBooking().getId())
-                .bookingTime(model.getBookingTime())
-                .duration(model.getDuration())
+                .actualStartTime(model.getActualStartTime())
+                .actualEndTime(model.getActualEndTime())
+                .scheduledStartTime(model.getScheduledStartTime())
+                .scheduledEndTime(model.getScheduledEndTime())
                 .status(model.getStatus())
-                .paymentMethod(model.getPaymentMethod())
-                .price(model.getPrice())
-                .isPaid(model.isPaid())
+                .path(model.getPath())
                 .createdBy(model.getCreatedBy())
                 .createdDate(model.getCreatedDate())
                 .modifiedBy(model.getModifiedBy())
                 .modifiedDate(model.getModifiedDate())
                 .build();
-        return lessionBookingDTO;*/
-        return null;
+        return lessionBookingDTO;
     }
 }

@@ -26,9 +26,9 @@ public class Booking extends BaseEntity{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "payment_id")
     private Payment payment;
-    @Column(name = "startTime", nullable = false)
+    @Column(name = "startTime")
     private Date startTime;
-    @Column(name = "endTime", nullable = false)
+    @Column(name = "endTime")
     private Date endTime;
     @Column(name = "description")
     private String description;

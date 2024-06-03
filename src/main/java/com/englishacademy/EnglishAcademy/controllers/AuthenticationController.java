@@ -81,7 +81,7 @@ public class AuthenticationController {
         Authentication auth = SecurityContextHolder.getContext()
                 .getAuthentication();
         if (!(auth.getPrincipal() instanceof User)) {
-            throw new AppException(ErrorCode.NOTFOUND);
+            throw new AppException(ErrorCode.UNAUTHENTICATED);
         }
         if (auth == null) throw new AppException(ErrorCode.UNAUTHENTICATED);
         User currentUser = (User) auth.getPrincipal();

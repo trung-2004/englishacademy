@@ -1,5 +1,6 @@
 package com.englishacademy.EnglishAcademy.dtos.booking;
 
+import com.englishacademy.EnglishAcademy.entities.BookingStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,11 +17,14 @@ public class BookingDTO {
     private Long id;
     private Long tutorId;
     private Long studentId;
-    private Date bookingTime;
+    private Long paymentId;
+    private Date startTime;
+    private Date endTime;
     private String tutorName;
     private String studentName;
-    private Integer duration;
     private String description;
+    private BookingStatus status;
+    private String lessonDays;
     private Timestamp createdDate;
     private Timestamp modifiedDate;
     private String createdBy;

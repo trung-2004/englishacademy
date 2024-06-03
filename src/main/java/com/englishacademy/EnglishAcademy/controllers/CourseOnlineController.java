@@ -59,7 +59,7 @@ public class CourseOnlineController {
     }
 
     @PostMapping("/course-online")
-    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    //@PreAuthorize("hasAnyAuthority('ADMIN')")
     ResponseEntity<ResponseObject> createCourseOnline(@ModelAttribute CreateCourseOnline model) {
         CourseOnlineDTO courseOnlineDTO = courseOnlineService.create(model);
         return ResponseEntity.status(HttpStatus.OK).body(
@@ -68,7 +68,7 @@ public class CourseOnlineController {
     }
 
     @PutMapping("/course-online")
-    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    //@PreAuthorize("hasAnyAuthority('ADMIN')")
     ResponseEntity<ResponseObject> editCourseOnline(@ModelAttribute EditCourseOnline model) {
         CourseOnlineDTO courseOnlineDTO = courseOnlineService.edit(model);
         return ResponseEntity.status(HttpStatus.OK).body(
@@ -77,7 +77,7 @@ public class CourseOnlineController {
     }
 
     @DeleteMapping("/course-online")
-    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    //@PreAuthorize("hasAnyAuthority('ADMIN')")
     ResponseEntity<ResponseObject> deleteCourseOnline(@RequestBody Long[] ids) {
         courseOnlineService.delete(ids);
         return ResponseEntity.status(HttpStatus.OK).body(

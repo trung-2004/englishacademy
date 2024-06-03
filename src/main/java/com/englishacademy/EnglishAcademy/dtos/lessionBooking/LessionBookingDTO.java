@@ -1,5 +1,6 @@
 package com.englishacademy.EnglishAcademy.dtos.lessionBooking;
 
+import com.englishacademy.EnglishAcademy.entities.LessonBookingStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,12 +15,12 @@ import java.util.Date;
 @Builder
 public class LessionBookingDTO {
     private Long bookingId;
-    private Date bookingTime;
-    private Integer duration;
-    private Integer status;
-    private boolean isPaid;
-    private Double price;
-    private String paymentMethod;
+    private Date scheduledStartTime;
+    private Date scheduledEndTime;
+    private Date actualStartTime;
+    private Date actualEndTime;
+    private String path;
+    private LessonBookingStatus status;
     private Long id;
     private Timestamp createdDate;
     private Timestamp modifiedDate;
