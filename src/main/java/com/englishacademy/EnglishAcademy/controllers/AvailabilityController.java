@@ -7,6 +7,7 @@ import com.englishacademy.EnglishAcademy.services.IAvailabilityService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,6 +25,14 @@ public class AvailabilityController {
     @GetMapping("/any/availability")
     ResponseEntity<ResponseObject> getAll() {
         List<AvailabilityDTO> list = availabilityService.findAll();
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "ok", list)
+        );
+    }
+
+    @GetMapping("/any/availability/{code}")
+    ResponseEntity<ResponseObject> getAllByTutor(@PathVariable("code") String code) {
+        List<AvailabilityDTO> list = availabilityService.findALlByTutor(code);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(true, 200, "ok", list)
         );

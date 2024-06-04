@@ -3,6 +3,7 @@ package com.englishacademy.EnglishAcademy.models.booking;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalTime;
 import java.util.List;
 
 
@@ -15,36 +16,37 @@ public class CreateBooking {
     private List<LessonDay> lessonDays;
     private String description;
     public static class LessonDay {
-        private String dayOfWeek;
-        private String startTime;
-        private String endTime;
+        private Integer dayOfWeek;
+        private LocalTime startTime;
+        private LocalTime endTime;
 
-        public String getDayOfWeek() {
+        public Integer getDayOfWeek() {
             return dayOfWeek;
         }
 
-        public LessonDay setDayOfWeek(String dayOfWeek) {
+        public LessonDay setDayOfWeek(Integer dayOfWeek) {
             this.dayOfWeek = dayOfWeek;
             return this;
         }
 
-        public String getStartTime() {
+        public LocalTime getStartTime() {
             return startTime;
         }
 
-        public LessonDay setStartTime(String startTime) {
+        public LessonDay setStartTime(LocalTime startTime) {
             this.startTime = startTime;
             return this;
         }
 
-        public String getEndTime() {
+        public LocalTime getEndTime() {
             return endTime;
         }
 
-        public LessonDay setEndTime(String endTime) {
+        public LessonDay setEndTime(LocalTime endTime) {
             this.endTime = endTime;
             return this;
         }
+
         // Getters and Setters
     }
 }

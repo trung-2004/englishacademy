@@ -19,4 +19,6 @@ public interface IBookingService {
     List<BookingDTO> findAllByStudent(Student student);
 
     BookingWaiting findAllWaitingByTutor(User user);
+
+    BookingWaiting findAllWaitingByStudent(Student currentStudent);
 }

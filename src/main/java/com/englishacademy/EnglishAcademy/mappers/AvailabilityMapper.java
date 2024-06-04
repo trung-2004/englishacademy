@@ -18,6 +18,7 @@ public class AvailabilityMapper {
                 .tutorName(model.getTutor().getUser().getFullName())
                 .startTime(model.getStartTime())
                 .endTime(model.getEndTime())
+                .status(model.isStatus())
                 .createdBy(model.getCreatedBy())
                 .createdDate(model.getCreatedDate())
                 .modifiedDate(model.getModifiedDate())

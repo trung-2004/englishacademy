@@ -29,4 +29,7 @@ public class Availability extends BaseEntity{
     @Column(name = "dayOfWeek")
     private DayOfWeek dayOfWeek;
 
+    @Column(name = "status", nullable = false)
+    private boolean status;
+
 }

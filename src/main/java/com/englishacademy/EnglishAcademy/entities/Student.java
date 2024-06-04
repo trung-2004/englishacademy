@@ -90,7 +90,16 @@ public class Student extends BaseEntity implements UserDetails {
 
     @OneToMany(mappedBy = "student")
     @JsonIgnore
+    private List<StudentPackage> studentPackages;
+
+    @OneToMany(mappedBy = "student")
+    @JsonIgnore
+    private List<Subscription> subscriptions;
+
+    @OneToMany(mappedBy = "student")
+    @JsonIgnore
     private List<Booking> bookings;
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

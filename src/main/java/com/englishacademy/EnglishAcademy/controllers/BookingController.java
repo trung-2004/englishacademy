@@ -96,4 +96,20 @@ public class BookingController {
                 new ResponseObject(true, 200, "ok", bookingWaiting)
         );
     }
+
+    @GetMapping("/student/booking-waiting")
+    ResponseEntity<ResponseObject> getAllWaitingByStudent() {
+        Authentication auth = SecurityContextHolder.getContext()
+                .getAuthentication();
+        if (!(auth.getPrincipal() instanceof Student)) {
+            throw new AppException(ErrorCode.UNAUTHENTICATED);
+        }
+        if (auth == null) throw new AppException(ErrorCode.UNAUTHENTICATED);
+        Student currentStudent = (Student) auth.getPrincipal();
+
+        BookingWaiting bookingWaiting = bookingService.findAllWaitingByStudent(currentStudent);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "ok", bookingWaiting)
+        );
+    }
 }

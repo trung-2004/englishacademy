@@ -16,15 +16,11 @@ import com.englishacademy.EnglishAcademy.services.IBookingService;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
-import org.threeten.bp.temporal.ChronoUnit;
+import org.springframework.transaction.annotation.Transactional;
 import org.json.JSONArray;
 
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,6 +28,8 @@ import java.util.stream.Collectors;
 public class BookingService implements IBookingService {
     private final BookingRepository bookingRepository;
     private final TutorRepository tutorRepository;
+    private final StudentRepository studentRepository;
+    private final AvailabilityRepository availabilityRepository;
     private final BookingMapper bookingMapper;
     private final PackagesRepository packagesRepository;
     private final StudentPackageRepository studentPackageRepository;
@@ -44,6 +42,7 @@ public class BookingService implements IBookingService {
         return bookingRepository.findAll().stream().map(bookingMapper::toBookingDTO).collect(Collectors.toList());
     }
 
+    @Transactional(rollbackFor = AppException.class)
     @Override
     public void save(CreateBooking createBooking, Student student) {
         Date now = new Timestamp(System.currentTimeMillis());
@@ -55,6 +54,10 @@ public class BookingService implements IBookingService {
             schedule.put("startTime", lesson.getStartTime());
             schedule.put("endTime", lesson.getEndTime());
             scheduleArray.put(schedule);
+            Availability availability = availabilityRepository.findByStartTimeAndEndTimeAndDayOfWeek(lesson.getStartTime(), lesson.getEndTime(), lesson.getDayOfWeek());
+            if (availability != null && availability.isStatus()) throw new AppException(ErrorCode.NOTFOUND);
+            availability.setStatus(true);
+            availabilityRepository.save(availability);
         }
         Tutor tutor = tutorRepository.findById(createBooking.getTutorId())
                 .orElseThrow(() -> new AppException(ErrorCode.TUTOR_NOTFOUND));
@@ -115,12 +118,30 @@ public class BookingService implements IBookingService {
         if (tutor == null) throw new AppException(ErrorCode.NOTFOUND);
         List<StudentPackageDTO> studentPackageDTOS = new ArrayList<>();
         for (Packages packages: tutor.getPackages()) {
-            List<StudentPackageDTO> studentPackageDTO = studentPackageRepository.findAllByPackagesAndStatus(packages, BookingStatus.pending)
+            List<StudentPackageDTO> studentPackageDTO = studentPackageRepository.findAllByPackages(packages)
                     .stream().map(studentPackageMapper::toStudentPackageDTO).toList();
             studentPackageDTOS.addAll(studentPackageDTO);
         }
-        List<SubscriptionDTO> subscriptionDTOS = subscriptionRepository.findAllByTutorAndStatus(tutor, BookingStatus.pending)
+        List<SubscriptionDTO> subscriptionDTOS = subscriptionRepository.findAllByTutor(tutor)
                 .stream().map(subscriptionMapper::toSubscriptionDTO).collect(Collectors.toList());
+        studentPackageDTOS.sort(Comparator.comparingLong(StudentPackageDTO::getId).reversed());
+        subscriptionDTOS.sort(Comparator.comparingLong(SubscriptionDTO::getId).reversed());
+        BookingWaiting bookingWaiting = BookingWaiting.builder()
+                .studentPackageDTOS(studentPackageDTOS)
+                .subscriptionDTOS(subscriptionDTOS)
+                .build();
+        return bookingWaiting;
+    }
+
+    @Override
+    public BookingWaiting findAllWaitingByStudent(Student currentStudent) {
+        Student student = studentRepository.findById(currentStudent.getId()).orElseThrow(() -> new AppException(ErrorCode.STUDENT_NOTFOUND));
+        List<StudentPackageDTO> studentPackageDTOS = studentPackageRepository.findAllByStudent(currentStudent)
+                .stream().map(studentPackageMapper::toStudentPackageDTO).collect(Collectors.toList());
+        List<SubscriptionDTO> subscriptionDTOS = subscriptionRepository.findAllByStudent(currentStudent)
+                .stream().map(subscriptionMapper::toSubscriptionDTO).collect(Collectors.toList());
+        studentPackageDTOS.sort(Comparator.comparingLong(StudentPackageDTO::getId).reversed());
+        subscriptionDTOS.sort(Comparator.comparingLong(SubscriptionDTO::getId).reversed());
         BookingWaiting bookingWaiting = BookingWaiting.builder()
                 .studentPackageDTOS(studentPackageDTOS)
                 .subscriptionDTOS(subscriptionDTOS)

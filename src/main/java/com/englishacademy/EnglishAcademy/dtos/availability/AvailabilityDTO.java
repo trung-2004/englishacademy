@@ -16,6 +16,7 @@ public class AvailabilityDTO {
     private String tutorName;
     private LocalTime startTime;
     private LocalTime endTime;
+    private boolean status;
     private Long id;
     private Timestamp createdDate;
     private Timestamp modifiedDate;
