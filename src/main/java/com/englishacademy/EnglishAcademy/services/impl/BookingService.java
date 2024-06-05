@@ -48,16 +48,28 @@ public class BookingService implements IBookingService {
         Date now = new Timestamp(System.currentTimeMillis());
         // Convert lesson schedule to JSON
         JSONArray scheduleArray = new JSONArray();
-        for (CreateBooking.LessonDay lesson : createBooking.getLessonDays()) {
-            JSONObject schedule = new JSONObject();
-            schedule.put("dayOfWeek", lesson.getDayOfWeek());
-            schedule.put("startTime", lesson.getStartTime());
-            schedule.put("endTime", lesson.getEndTime());
-            scheduleArray.put(schedule);
-            Availability availability = availabilityRepository.findByStartTimeAndEndTimeAndDayOfWeek(lesson.getStartTime(), lesson.getEndTime(), lesson.getDayOfWeek());
-            if (availability != null && availability.isStatus()) throw new AppException(ErrorCode.NOTFOUND);
+//        for (CreateBooking.LessonDay lesson : createBooking.getLessonDays()) {
+//            JSONObject schedule = new JSONObject();
+//            schedule.put("dayOfWeek", lesson.getDayOfWeek());
+//            schedule.put("startTime", lesson.getStartTime());
+//            schedule.put("endTime", lesson.getEndTime());
+//            scheduleArray.put(schedule);
+//            Availability availability = availabilityRepository.findByStartTimeAndEndTimeAndDayOfWeek(lesson.getStartTime(), lesson.getEndTime(), lesson.getDayOfWeek());
+//            if (availability == null || availability.isStatus()) throw new AppException(ErrorCode.NOTFOUND);
+//            availability.setStatus(true);
+//            availabilityRepository.save(availability);
+//        }
+        for (Long id : createBooking.getLessonDays()) {
+            Availability availability = availabilityRepository.findById(id)
+                    .orElseThrow(() -> new AppException(ErrorCode.NOTFOUND));
+            if (availability == null || availability.isStatus()) throw new AppException(ErrorCode.NOTFOUND);
             availability.setStatus(true);
             availabilityRepository.save(availability);
+            JSONObject schedule = new JSONObject();
+            schedule.put("dayOfWeek", availability.getDayOfWeek());
+            schedule.put("startTime", availability.getStartTime());
+            schedule.put("endTime", availability.getEndTime());
+            scheduleArray.put(schedule);
         }
         Tutor tutor = tutorRepository.findById(createBooking.getTutorId())
                 .orElseThrow(() -> new AppException(ErrorCode.TUTOR_NOTFOUND));

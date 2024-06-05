@@ -7,7 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class CreateCourseOnline {
     private String name;
 
-    private MultipartFile image;
+    private String image;
 
     private Double price;
 
@@ -18,4 +18,5 @@ public class CreateCourseOnline {
     private String language;
 
     private String trailer;
+    private Long categoryId;
 }

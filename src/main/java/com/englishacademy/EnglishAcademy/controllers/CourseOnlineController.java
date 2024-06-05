@@ -21,12 +21,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/any")
 public class CourseOnlineController {
     @Autowired
     private ICourseOnlineService courseOnlineService;
 
-    @GetMapping("/any/course-online")
+    @GetMapping("/course-online")
     //@PreAuthorize("hasAnyAuthority('STUDENT')")
     ResponseEntity<ResponseObject> getAll() {
         List<CourseOnlineDTO> list = courseOnlineService.findAll();
@@ -60,7 +60,7 @@ public class CourseOnlineController {
 
     @PostMapping("/course-online")
     //@PreAuthorize("hasAnyAuthority('ADMIN')")
-    ResponseEntity<ResponseObject> createCourseOnline(@ModelAttribute CreateCourseOnline model) {
+    ResponseEntity<ResponseObject> createCourseOnline(@RequestBody CreateCourseOnline model) {
         CourseOnlineDTO courseOnlineDTO = courseOnlineService.create(model);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(true, 200, "ok", courseOnlineDTO)
@@ -85,7 +85,7 @@ public class CourseOnlineController {
         );
     }
 
-    @GetMapping("/any/course-online/detail/{slug}")
+    @GetMapping("course-online/detail/{slug}")
     ResponseEntity<ResponseObject> getDetailSlug(@PathVariable("slug") String slug) {
         CourseOnlineDetail courseOnlineDetail = courseOnlineService.getDetail(slug);
         return ResponseEntity.status(HttpStatus.OK).body(

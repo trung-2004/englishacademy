@@ -35,6 +35,7 @@ public class CourseOnlineService implements ICourseOnlineService {
     private final ReviewRepository reviewRepository;
     private final TestOnlineStudentRepository testOnlineStudentRepository;
     private final ItemOnlineStudentRepository itemOnlineStudentRepository;
+    private final CategoryRepository categoryRepository;
     private final ReviewMapper reviewMapper;
     private final TopicOnlineMapper topicOnlineMapper;
 
@@ -101,15 +102,16 @@ public class CourseOnlineService implements ICourseOnlineService {
 
     @Override
     public CourseOnlineDTO create(CreateCourseOnline model) {
-        CourseOnline courseOnlineExist = courseOnlineRepository.findBySlug(model.getName().toLowerCase().replace(" ", "-"));
-        if (courseOnlineExist != null) {
-            throw new AppException(ErrorCode.COURSE_EXISTED);
-        }
-        String generatedFileName = storageService.storeFile(model.getImage());
+        String code = model.getName().toLowerCase().replace(" ", "-");
+        CourseOnline courseOnlineExist = courseOnlineRepository.findBySlug(code);
+        if (courseOnlineExist != null) throw new AppException(ErrorCode.COURSE_EXISTED);
+        Category category = categoryRepository.findById(model.getCategoryId())
+                .orElseThrow(() -> new AppException(ErrorCode.NOTFOUND));
+        //String generatedFileName = storageService.storeFile(model.getImage());
         CourseOnline courseOnline = CourseOnline.builder()
                 .name(model.getName())
                 .slug(model.getName().toLowerCase().replace(" ", "-"))
-                .image("http://localhost:8080/api/v1/FileUpload/files/"+generatedFileName)
+                .image(model.getImage())
                 .price(model.getPrice())
                 .description(model.getDescription())
                 .level(model.getLevel())
@@ -117,6 +119,7 @@ public class CourseOnlineService implements ICourseOnlineService {
                 .status(0)
                 .star(0.0)
                 .trailer(model.getTrailer())
+                .category(category)
                 .build();
 
         courseOnline.setCreatedBy("Demo");
