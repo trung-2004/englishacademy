@@ -19,6 +19,7 @@ public class AvailabilityMapper {
                 .startTime(model.getStartTime())
                 .endTime(model.getEndTime())
                 .status(model.isStatus())
+                .dayOfWeek(model.getDayOfWeek())
                 .createdBy(model.getCreatedBy())
                 .createdDate(model.getCreatedDate())
                 .modifiedDate(model.getModifiedDate())

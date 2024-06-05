@@ -1,5 +1,6 @@
 package com.englishacademy.EnglishAcademy.dtos.availability;
 
+import com.englishacademy.EnglishAcademy.entities.DayOfWeek;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,6 +17,7 @@ public class AvailabilityDTO {
     private String tutorName;
     private LocalTime startTime;
     private LocalTime endTime;
+    private DayOfWeek dayOfWeek;
     private boolean status;
     private Long id;
     private Timestamp createdDate;
