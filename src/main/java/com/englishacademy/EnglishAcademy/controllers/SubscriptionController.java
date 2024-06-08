@@ -1,9 +1,9 @@
 package com.englishacademy.EnglishAcademy.controllers;
 
 import com.englishacademy.EnglishAcademy.dtos.ResponseObject;
+import com.englishacademy.EnglishAcademy.dtos.subscription.SubscriptionDTO;
+import com.englishacademy.EnglishAcademy.entities.Student;
 import com.englishacademy.EnglishAcademy.entities.User;
-import com.englishacademy.EnglishAcademy.exceptions.AppException;
-import com.englishacademy.EnglishAcademy.exceptions.ErrorCode;
 import com.englishacademy.EnglishAcademy.services.SubscriptionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +18,26 @@ public class SubscriptionController {
 
     public SubscriptionController(SubscriptionService subscriptionService) {
         this.subscriptionService = subscriptionService;
+    }
+
+    @GetMapping("/subscription/student/{id}")
+    ResponseEntity<ResponseObject> getDetailStudent(@PathVariable("id") Long id) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Student currentStudent = (Student) auth.getPrincipal();
+        SubscriptionDTO subscriptionDTO = subscriptionService.getDetailByStudent(id, currentStudent);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "ok", subscriptionDTO)
+        );
+    }
+
+    @GetMapping("/subscription/tutor/{id}")
+    ResponseEntity<ResponseObject> getDetailTutor(@PathVariable("id") Long id) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = (User) auth.getPrincipal();
+        SubscriptionDTO subscriptionDTO = subscriptionService.getDetailByTutor(id, currentUser);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "ok", subscriptionDTO)
+        );
     }
 
     @PutMapping("/subscription/confirm/{id}")

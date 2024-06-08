@@ -1,6 +1,8 @@
 package com.englishacademy.EnglishAcademy.controllers;
 
 import com.englishacademy.EnglishAcademy.dtos.ResponseObject;
+import com.englishacademy.EnglishAcademy.dtos.student_package.StudentPackageDTO;
+import com.englishacademy.EnglishAcademy.entities.Student;
 import com.englishacademy.EnglishAcademy.entities.User;
 import com.englishacademy.EnglishAcademy.exceptions.AppException;
 import com.englishacademy.EnglishAcademy.exceptions.ErrorCode;
@@ -18,6 +20,26 @@ public class PackageStudentController {
 
     public PackageStudentController(PackageStudentService packageStudentService) {
         this.packageStudentService = packageStudentService;
+    }
+
+    @GetMapping("/package-student/student/{id}")
+    ResponseEntity<ResponseObject> getDetailStudent(@PathVariable("id") Long id) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Student currentStudent = (Student) auth.getPrincipal();
+        StudentPackageDTO studentPackageDTO = packageStudentService.getDetailByStudent(id, currentStudent);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "ok", studentPackageDTO)
+        );
+    }
+
+    @GetMapping("/package-student/tutor/{id}")
+    ResponseEntity<ResponseObject> getDetailTutor(@PathVariable("id") Long id) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = (User) auth.getPrincipal();
+        StudentPackageDTO studentPackageDTO = packageStudentService.getDetailByTutor(id, currentUser);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "ok", studentPackageDTO)
+        );
     }
 
     @PutMapping("/package-student/confirm/{id}")
