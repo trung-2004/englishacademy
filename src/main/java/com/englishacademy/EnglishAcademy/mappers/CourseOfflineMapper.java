@@ -1,6 +1,6 @@
 package com.englishacademy.EnglishAcademy.mappers;
 
-import com.englishacademy.EnglishAcademy.dtos.courseOffline.CourseOfflineDTO;
+import com.englishacademy.EnglishAcademy.dtos.course_offline.CourseOfflineDTO;
 import com.englishacademy.EnglishAcademy.entities.CourseOffline;
 import com.englishacademy.EnglishAcademy.exceptions.AppException;
 import com.englishacademy.EnglishAcademy.exceptions.ErrorCode;

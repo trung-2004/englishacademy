@@ -1,5 +1,6 @@
 package com.englishacademy.EnglishAcademy.dtos.subscription;
 
+import com.englishacademy.EnglishAcademy.dtos.booking.LessonDay;
 import com.englishacademy.EnglishAcademy.entities.BookingStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -15,12 +17,13 @@ import java.util.Date;
 @Builder
 public class SubscriptionDTO {
     private Long id;
-    private Long tutor_Id;
-    private Long student_Id;
+    private Long tutorId;
+    private Long studentId;
+    private String studentName;
     private Date startTime;
     private Date endTime;
     private Date nextPaymentDate ;
-    private String lessonDays;
+    private List<LessonDay> lessonDays;
     private Double price;
     private BookingStatus status ;
     private Timestamp createdDate;

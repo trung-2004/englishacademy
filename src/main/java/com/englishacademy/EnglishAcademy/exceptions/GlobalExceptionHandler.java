@@ -7,6 +7,7 @@ import org.apache.catalina.connector.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -18,6 +19,8 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 
 import java.io.IOException;
 import java.nio.file.AccessDeniedException;
+import java.util.HashMap;
+import java.util.Map;
 
 @ControllerAdvice
 @Slf4j
@@ -33,6 +36,18 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.badRequest().body(apiResponse);
     }*/
+
+    @ExceptionHandler(value = AccessDeniedException.class)
+    ResponseEntity<ResponseObject> handleAccessDeniedException(AccessDeniedException exception){
+        ErrorCode errorCode = ErrorCode.FORBIDDEN;
+
+        return ResponseEntity.status(errorCode.getStatusCode()).body(
+                ResponseObject.builder()
+                        .statusCode(errorCode.getCode())
+                        .message(errorCode.getMessage())
+                        .build()
+        );
+    }
 
     @ExceptionHandler(value = RuntimeException.class)
     ResponseEntity<ResponseObject> handlingRuntimeException(RuntimeException exception){
@@ -84,18 +99,6 @@ public class GlobalExceptionHandler {
                 .body(apiResponse);
     }
 
-    @ExceptionHandler(value = AccessDeniedException.class)
-    ResponseEntity<ResponseObject> handleAccessDeniedException(AccessDeniedException exception){
-        ErrorCode errorCode = ErrorCode.FORBIDDEN;
-
-        return ResponseEntity.status(errorCode.getStatusCode()).body(
-                ResponseObject.builder()
-                        .statusCode(errorCode.getCode())
-                        .message(errorCode.getMessage())
-                        .build()
-        );
-    }
-
     @ExceptionHandler(value = AuthenticationException.class)
     ResponseEntity<ResponseObject> handleAuthenticationException(AuthenticationException exception){
         ErrorCode errorCode = ErrorCode.INVALIDEMAILORPASSWORD;
@@ -122,18 +125,29 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     ResponseEntity<ResponseObject> handlingValidation(MethodArgumentNotValidException exception){
-        String enumKey = exception.getFieldError().getDefaultMessage();
-        ErrorCode errorCode = ErrorCode.INVALID_KEY;
-        try {
-            errorCode = ErrorCode.valueOf(enumKey);
-        } catch (IllegalArgumentException e){
-            System.out.println(e.getMessage());
-        }
+//        String enumKey = exception.getFieldError().getDefaultMessage();
+//        ErrorCode errorCode = ErrorCode.INVALID_KEY;
+//        try {
+//            errorCode = ErrorCode.valueOf(enumKey);
+//        } catch (IllegalArgumentException e){
+//            System.out.println(e.getMessage());
+//        }
+//        ResponseObject apiResponse = new ResponseObject();
+//
+//        apiResponse.setStatusCode((errorCode.getCode()));
+//        apiResponse.setMessage(exception.getMessage());
+//
+//        return ResponseEntity.badRequest().body(apiResponse);
+        Map<String, String> errors = new HashMap<>();
+        exception.getBindingResult().getAllErrors().forEach(error -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
         ResponseObject apiResponse = new ResponseObject();
-
-        apiResponse.setStatusCode((errorCode.getCode()));
-        apiResponse.setMessage(exception.getMessage());
-
+        apiResponse.setStatusCode(400);
+        apiResponse.setMessage("error");
+        apiResponse.setData(errors);
         return ResponseEntity.badRequest().body(apiResponse);
     }
 

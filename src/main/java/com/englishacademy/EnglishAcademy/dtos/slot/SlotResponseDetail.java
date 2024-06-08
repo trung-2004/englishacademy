@@ -1,7 +1,6 @@
 package com.englishacademy.EnglishAcademy.dtos.slot;
 
-import com.englishacademy.EnglishAcademy.dtos.itemSlot.ItemSlotDTO;
-import com.englishacademy.EnglishAcademy.dtos.itemSlot.ItemSlotResponse;
+import com.englishacademy.EnglishAcademy.dtos.item_slot.ItemSlotResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

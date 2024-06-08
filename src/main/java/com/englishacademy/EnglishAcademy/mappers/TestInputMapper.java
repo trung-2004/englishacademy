@@ -1,6 +1,6 @@
 package com.englishacademy.EnglishAcademy.mappers;
 
-import com.englishacademy.EnglishAcademy.dtos.testInput.TestInputDTO;
+import com.englishacademy.EnglishAcademy.dtos.test_input.TestInputDTO;
 import com.englishacademy.EnglishAcademy.entities.TestInput;
 import org.springframework.stereotype.Component;
 

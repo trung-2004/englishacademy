@@ -1,19 +1,17 @@
 package com.englishacademy.EnglishAcademy.controllers;
 
-import com.englishacademy.EnglishAcademy.dtos.courseOnline.CourseOnlineResponse;
-import com.englishacademy.EnglishAcademy.dtos.courseOnline.CourseOnlineDTO;
+import com.englishacademy.EnglishAcademy.dtos.course_online.CourseOnlineResponse;
+import com.englishacademy.EnglishAcademy.dtos.course_online.CourseOnlineDTO;
 import com.englishacademy.EnglishAcademy.dtos.ResponseObject;
-import com.englishacademy.EnglishAcademy.dtos.courseOnline.CourseOnlineDetail;
+import com.englishacademy.EnglishAcademy.dtos.course_online.CourseOnlineDetail;
 import com.englishacademy.EnglishAcademy.entities.Student;
-import com.englishacademy.EnglishAcademy.exceptions.AppException;
-import com.englishacademy.EnglishAcademy.exceptions.ErrorCode;
-import com.englishacademy.EnglishAcademy.models.courseOnline.CreateCourseOnline;
-import com.englishacademy.EnglishAcademy.models.courseOnline.EditCourseOnline;
-import com.englishacademy.EnglishAcademy.services.ICourseOnlineService;
+import com.englishacademy.EnglishAcademy.models.course_online.CreateCourseOnline;
+import com.englishacademy.EnglishAcademy.models.course_online.EditCourseOnline;
+import com.englishacademy.EnglishAcademy.services.CourseOnlineService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +22,7 @@ import java.util.List;
 @RequestMapping("/api/v1/any")
 public class CourseOnlineController {
     @Autowired
-    private ICourseOnlineService courseOnlineService;
+    private CourseOnlineService courseOnlineService;
 
     @GetMapping("/course-online")
     //@PreAuthorize("hasAnyAuthority('STUDENT')")
@@ -37,12 +35,7 @@ public class CourseOnlineController {
 
     @GetMapping("/course-online/by-student")
     ResponseEntity<ResponseObject> getAllByStudent() {
-        Authentication auth = SecurityContextHolder.getContext()
-                .getAuthentication();
-        if (!(auth.getPrincipal() instanceof Student)) {
-            throw new AppException(ErrorCode.NOTFOUND);
-        }
-        if (auth == null) throw new AppException(ErrorCode.UNAUTHENTICATED);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Student currentStudent = (Student) auth.getPrincipal();
         List<CourseOnlineResponse> list = courseOnlineService.findAllByStudent(currentStudent.getId());
         return ResponseEntity.status(HttpStatus.OK).body(
@@ -60,7 +53,7 @@ public class CourseOnlineController {
 
     @PostMapping("/course-online")
     //@PreAuthorize("hasAnyAuthority('ADMIN')")
-    ResponseEntity<ResponseObject> createCourseOnline(@RequestBody CreateCourseOnline model) {
+    ResponseEntity<ResponseObject> createCourseOnline(@Valid @RequestBody CreateCourseOnline model) {
         CourseOnlineDTO courseOnlineDTO = courseOnlineService.create(model);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(true, 200, "ok", courseOnlineDTO)
@@ -68,8 +61,7 @@ public class CourseOnlineController {
     }
 
     @PutMapping("/course-online")
-    //@PreAuthorize("hasAnyAuthority('ADMIN')")
-    ResponseEntity<ResponseObject> editCourseOnline(@ModelAttribute EditCourseOnline model) {
+    ResponseEntity<ResponseObject> editCourseOnline(@RequestBody EditCourseOnline model) {
         CourseOnlineDTO courseOnlineDTO = courseOnlineService.edit(model);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(true, 200, "ok", courseOnlineDTO)

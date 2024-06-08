@@ -1,12 +1,12 @@
 package com.englishacademy.EnglishAcademy.mappers;
 
-import com.englishacademy.EnglishAcademy.dtos.itemOnline.ItemOnlineDTO;
-import com.englishacademy.EnglishAcademy.dtos.itemOnline.ItemOnlineDetail;
-import com.englishacademy.EnglishAcademy.dtos.testOnline.TestOnlineDTO;
-import com.englishacademy.EnglishAcademy.dtos.testOnline.TestOnlineResponseDTO;
-import com.englishacademy.EnglishAcademy.dtos.topicOnline.TopicOnlineDTO;
-import com.englishacademy.EnglishAcademy.dtos.topicOnline.TopicOnlineDetail;
-import com.englishacademy.EnglishAcademy.dtos.topicOnline.TopicOnlineDetailResponse;
+import com.englishacademy.EnglishAcademy.dtos.item_online.ItemOnlineDTO;
+import com.englishacademy.EnglishAcademy.dtos.item_online.ItemOnlineDetail;
+import com.englishacademy.EnglishAcademy.dtos.test_online.TestOnlineDTO;
+import com.englishacademy.EnglishAcademy.dtos.test_online.TestOnlineResponseDTO;
+import com.englishacademy.EnglishAcademy.dtos.topic_online.TopicOnlineDTO;
+import com.englishacademy.EnglishAcademy.dtos.topic_online.TopicOnlineDetail;
+import com.englishacademy.EnglishAcademy.dtos.topic_online.TopicOnlineDetailResponse;
 import com.englishacademy.EnglishAcademy.entities.*;
 import com.englishacademy.EnglishAcademy.exceptions.AppException;
 import com.englishacademy.EnglishAcademy.exceptions.ErrorCode;

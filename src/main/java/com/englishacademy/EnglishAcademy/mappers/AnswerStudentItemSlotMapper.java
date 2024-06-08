@@ -1,6 +1,6 @@
 package com.englishacademy.EnglishAcademy.mappers;
 
-import com.englishacademy.EnglishAcademy.dtos.answerStudentItemSlot.AnswerStudentItemSlotResponse;
+import com.englishacademy.EnglishAcademy.dtos.answer_student_item_slot.AnswerStudentItemSlotResponse;
 import com.englishacademy.EnglishAcademy.entities.AnswerStudentItemSlot;
 import com.englishacademy.EnglishAcademy.exceptions.AppException;
 import com.englishacademy.EnglishAcademy.exceptions.ErrorCode;

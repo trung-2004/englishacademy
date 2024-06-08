@@ -2,8 +2,7 @@ package com.englishacademy.EnglishAcademy.controllers;
 
 import com.englishacademy.EnglishAcademy.dtos.ResponseObject;
 import com.englishacademy.EnglishAcademy.dtos.availability.AvailabilityDTO;
-import com.englishacademy.EnglishAcademy.dtos.booking.BookingDTO;
-import com.englishacademy.EnglishAcademy.services.IAvailabilityService;
+import com.englishacademy.EnglishAcademy.services.AvailabilityService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,9 +15,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/")
 public class AvailabilityController {
-    private final IAvailabilityService availabilityService;
+    private final AvailabilityService availabilityService;
 
-    public AvailabilityController(IAvailabilityService availabilityService) {
+    public AvailabilityController(AvailabilityService availabilityService) {
         this.availabilityService = availabilityService;
     }
 

@@ -1,7 +1,7 @@
 package com.englishacademy.EnglishAcademy.dtos.subject;
 
 import com.englishacademy.EnglishAcademy.dtos.slot.SlotResponseDetail;
-import com.englishacademy.EnglishAcademy.dtos.testOffline.TestOfflineResponse;
+import com.englishacademy.EnglishAcademy.dtos.test_offline.TestOfflineResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

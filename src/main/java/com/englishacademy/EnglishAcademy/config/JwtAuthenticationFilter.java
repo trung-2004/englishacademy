@@ -1,7 +1,8 @@
 package com.englishacademy.EnglishAcademy.config;
 
-import com.englishacademy.EnglishAcademy.services.IUserService;
+import com.englishacademy.EnglishAcademy.services.UserService;
 import com.englishacademy.EnglishAcademy.services.impl.JWTService;
+import com.englishacademy.EnglishAcademy.services.impl.UserServiceImpl;
 import io.micrometer.common.util.StringUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -23,20 +24,20 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JWTService jwtService;
-    private final IUserService userService;
+    private final UserServiceImpl userService;
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         final String authHeader = request.getHeader("Authorization");
-        final String jwt;
-        final String userEmail;
+        //final String jwt;
+        //final String userEmail;
 
         if (StringUtils.isEmpty(authHeader) || !org.apache.commons.lang3.StringUtils.startsWith(authHeader, "Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
         try {
-            jwt = authHeader.substring(7);
-            userEmail =jwtService.extractUsername(jwt);
+            String jwt = authHeader.substring(7);
+            String userEmail =jwtService.extractUsername(jwt);
             if (userEmail == null || !jwtService.isTokenValid(jwt, userService.userDetailsService().loadUserByUsername(userEmail))) {
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
                 return;

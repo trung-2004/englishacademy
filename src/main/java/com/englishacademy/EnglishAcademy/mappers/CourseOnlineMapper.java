@@ -1,21 +1,10 @@
 package com.englishacademy.EnglishAcademy.mappers;
 
-import com.englishacademy.EnglishAcademy.dtos.courseOnline.CourseOnlineDTO;
-import com.englishacademy.EnglishAcademy.dtos.courseOnline.CourseOnlineDetail;
-import com.englishacademy.EnglishAcademy.dtos.review.ReviewDTO;
-import com.englishacademy.EnglishAcademy.dtos.topicOnline.TopicOnlineDetail;
+import com.englishacademy.EnglishAcademy.dtos.course_online.CourseOnlineDTO;
 import com.englishacademy.EnglishAcademy.entities.CourseOnline;
-import com.englishacademy.EnglishAcademy.entities.ItemOnline;
-import com.englishacademy.EnglishAcademy.entities.TopicOnline;
-import com.englishacademy.EnglishAcademy.exceptions.AppException;
-import com.englishacademy.EnglishAcademy.exceptions.ErrorCode;
 import com.englishacademy.EnglishAcademy.repositories.ReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class CourseOnlineMapper {

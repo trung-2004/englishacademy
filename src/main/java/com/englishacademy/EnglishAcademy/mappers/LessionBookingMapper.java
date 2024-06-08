@@ -1,6 +1,6 @@
 package com.englishacademy.EnglishAcademy.mappers;
 
-import com.englishacademy.EnglishAcademy.dtos.lessionBooking.LessionBookingDTO;
+import com.englishacademy.EnglishAcademy.dtos.lession_booking.LessionBookingDTO;
 import com.englishacademy.EnglishAcademy.entities.LessionBooking;
 import com.englishacademy.EnglishAcademy.exceptions.AppException;
 import com.englishacademy.EnglishAcademy.exceptions.ErrorCode;

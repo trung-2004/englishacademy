@@ -1,6 +1,6 @@
 package com.englishacademy.EnglishAcademy.dtos.booking;
 
-import com.englishacademy.EnglishAcademy.dtos.studentPackage.StudentPackageDTO;
+import com.englishacademy.EnglishAcademy.dtos.student_package.StudentPackageDTO;
 import com.englishacademy.EnglishAcademy.dtos.subscription.SubscriptionDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

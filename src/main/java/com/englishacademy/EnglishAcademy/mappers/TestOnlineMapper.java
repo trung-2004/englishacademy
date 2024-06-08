@@ -1,7 +1,7 @@
 package com.englishacademy.EnglishAcademy.mappers;
 
-import com.englishacademy.EnglishAcademy.dtos.testOnline.TestOnlineDTO;
-import com.englishacademy.EnglishAcademy.dtos.testOnline.TestOnlineResponseDTO;
+import com.englishacademy.EnglishAcademy.dtos.test_online.TestOnlineDTO;
+import com.englishacademy.EnglishAcademy.dtos.test_online.TestOnlineResponseDTO;
 import com.englishacademy.EnglishAcademy.entities.TestOnline;
 import org.springframework.stereotype.Component;
 

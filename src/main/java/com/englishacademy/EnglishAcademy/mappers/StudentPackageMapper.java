@@ -1,9 +1,10 @@
 package com.englishacademy.EnglishAcademy.mappers;
 
-import com.englishacademy.EnglishAcademy.dtos.studentPackage.StudentPackageDTO;
+import com.englishacademy.EnglishAcademy.dtos.student_package.StudentPackageDTO;
 import com.englishacademy.EnglishAcademy.entities.StudentPackage;
 import com.englishacademy.EnglishAcademy.exceptions.AppException;
 import com.englishacademy.EnglishAcademy.exceptions.ErrorCode;
+import com.englishacademy.EnglishAcademy.utils.JsonConverterUtil;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -13,9 +14,11 @@ public class StudentPackageMapper {
 
         StudentPackageDTO studentPackageDTO = StudentPackageDTO.builder()
                 .id(model.getId())
-                .package_Id(model.getPackages().getId())
-                .student_Id(model.getStudent().getId())
-                .lessonDays(model.getLessonDays())
+                .packageId(model.getPackages().getId())
+                .packageName(model.getPackages().getName())
+                .studentId(model.getStudent().getId())
+                .studentName(model.getStudent().getFullName())
+                .lessonDays(JsonConverterUtil.convertJsonToLessonDay(model.getLessonDays()))
                 .status(model.getStatus())
                 .purchaseDate(model.getPurchaseDate())
                 .remainingSessions(model.getRemainingSessions())

@@ -1,11 +1,10 @@
 package com.englishacademy.EnglishAcademy.mappers;
 
-import com.englishacademy.EnglishAcademy.dtos.studentPackage.StudentPackageDTO;
 import com.englishacademy.EnglishAcademy.dtos.subscription.SubscriptionDTO;
-import com.englishacademy.EnglishAcademy.entities.StudentPackage;
 import com.englishacademy.EnglishAcademy.entities.Subscription;
 import com.englishacademy.EnglishAcademy.exceptions.AppException;
 import com.englishacademy.EnglishAcademy.exceptions.ErrorCode;
+import com.englishacademy.EnglishAcademy.utils.JsonConverterUtil;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -14,9 +13,10 @@ public class SubscriptionMapper {
         if (model == null) throw new AppException(ErrorCode.NOTFOUND);
         SubscriptionDTO subscriptionDTO = SubscriptionDTO.builder()
                 .id(model.getId())
-                .tutor_Id(model.getTutor().getId())
-                .student_Id(model.getStudent().getId())
-                .lessonDays(model.getLessonDays())
+                .tutorId(model.getTutor().getId())
+                .studentId(model.getStudent().getId())
+                .studentName(model.getStudent().getFullName())
+                .lessonDays(JsonConverterUtil.convertJsonToLessonDay(model.getLessonDays()))
                 .startTime(model.getStartTime())
                 .endTime(model.getEndTime())
                 .price(model.getPrice())

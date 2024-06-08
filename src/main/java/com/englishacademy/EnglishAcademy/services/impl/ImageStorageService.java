@@ -2,7 +2,7 @@ package com.englishacademy.EnglishAcademy.services.impl;
 
 import com.englishacademy.EnglishAcademy.exceptions.AppException;
 import com.englishacademy.EnglishAcademy.exceptions.ErrorCode;
-import com.englishacademy.EnglishAcademy.services.IStorageService;
+import com.englishacademy.EnglishAcademy.services.StorageService;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -21,7 +21,7 @@ import java.util.UUID;
 import java.util.stream.Stream;
 
 @Service
-public class ImageStorageService implements IStorageService {
+public class ImageStorageService implements StorageService {
     private final Path storageFolder = Paths.get("uploads");
 
     public ImageStorageService() {

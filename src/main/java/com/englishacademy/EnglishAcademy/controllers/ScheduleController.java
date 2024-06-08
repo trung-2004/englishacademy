@@ -5,7 +5,7 @@ import com.englishacademy.EnglishAcademy.dtos.schedule.ScheduleStudent;
 import com.englishacademy.EnglishAcademy.entities.Student;
 import com.englishacademy.EnglishAcademy.exceptions.AppException;
 import com.englishacademy.EnglishAcademy.exceptions.ErrorCode;
-import com.englishacademy.EnglishAcademy.services.IScheduleService;
+import com.englishacademy.EnglishAcademy.services.ScheduleService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -19,20 +19,15 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/schedule")
 public class ScheduleController {
-    private final IScheduleService scheduleService;
+    private final ScheduleService scheduleService;
 
-    public ScheduleController(IScheduleService scheduleService) {
+    public ScheduleController(ScheduleService scheduleService) {
         this.scheduleService = scheduleService;
     }
 
     @GetMapping("/student")
     ResponseEntity<ResponseObject> getScheduleStudent() {
-        Authentication auth = SecurityContextHolder.getContext()
-                .getAuthentication();
-        if (!(auth.getPrincipal() instanceof Student)) {
-            throw new AppException(ErrorCode.UNAUTHENTICATED);
-        }
-        if (auth == null) throw new AppException(ErrorCode.UNAUTHENTICATED);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Student currentStudent = (Student) auth.getPrincipal();
         List<ScheduleStudent> scheduleStudentList = scheduleService.getScheduleStudent(currentStudent.getId());
         return ResponseEntity.status(HttpStatus.OK).body(

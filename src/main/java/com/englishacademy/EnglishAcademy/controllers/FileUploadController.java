@@ -1,6 +1,6 @@
 package com.englishacademy.EnglishAcademy.controllers;
 
-import com.englishacademy.EnglishAcademy.services.IStorageService;
+import com.englishacademy.EnglishAcademy.services.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping(path = "/api/v1/FileUpload")
 public class FileUploadController {
     @Autowired
-    private IStorageService storageService;
+    private StorageService storageService;
     @GetMapping("/files/{fileName:.+}")
     public ResponseEntity<byte[]> readDetailFile(@PathVariable String fileName){
         try {

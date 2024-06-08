@@ -5,8 +5,7 @@ import com.englishacademy.EnglishAcademy.dtos.subject.SubjectDetail;
 import com.englishacademy.EnglishAcademy.entities.Student;
 import com.englishacademy.EnglishAcademy.exceptions.AppException;
 import com.englishacademy.EnglishAcademy.exceptions.ErrorCode;
-import com.englishacademy.EnglishAcademy.services.ISubjectService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.englishacademy.EnglishAcademy.services.SubjectService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -19,20 +18,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/subject")
 public class SubjectController {
-    private final ISubjectService subjectService;
+    private final SubjectService subjectService;
 
-    public SubjectController(ISubjectService subjectService) {
+    public SubjectController(SubjectService subjectService) {
         this.subjectService = subjectService;
     }
 
     @GetMapping("/detail/{slug}")
     ResponseEntity<ResponseObject> getDetailSubjectBySlug(@PathVariable("slug") String slug) {
-        Authentication auth = SecurityContextHolder.getContext()
-                .getAuthentication();
-        if (!(auth.getPrincipal() instanceof Student)) {
-            throw new AppException(ErrorCode.UNAUTHENTICATED);
-        }
-        if (auth == null) throw new AppException(ErrorCode.UNAUTHENTICATED);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Student currentStudent = (Student) auth.getPrincipal();
         SubjectDetail subjectDetail = subjectService.getDetail(slug, currentStudent.getId());
         return ResponseEntity.status(HttpStatus.OK).body(

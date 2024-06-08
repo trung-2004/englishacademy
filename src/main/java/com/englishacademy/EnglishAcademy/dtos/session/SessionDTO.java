@@ -1,6 +1,6 @@
 package com.englishacademy.EnglishAcademy.dtos.session;
 
-import com.englishacademy.EnglishAcademy.dtos.questionTestInput.QuestionTestInputDTO;
+import com.englishacademy.EnglishAcademy.dtos.question_test_input.QuestionTestInputDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

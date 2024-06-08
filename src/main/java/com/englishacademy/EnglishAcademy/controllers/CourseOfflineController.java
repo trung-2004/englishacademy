@@ -1,12 +1,10 @@
 package com.englishacademy.EnglishAcademy.controllers;
 
 import com.englishacademy.EnglishAcademy.dtos.ResponseObject;
-import com.englishacademy.EnglishAcademy.dtos.courseOffline.CourseOfflineDTO;
-import com.englishacademy.EnglishAcademy.dtos.courseOffline.CourseOfflineDetail;
+import com.englishacademy.EnglishAcademy.dtos.course_offline.CourseOfflineDTO;
+import com.englishacademy.EnglishAcademy.dtos.course_offline.CourseOfflineDetail;
 import com.englishacademy.EnglishAcademy.entities.Student;
-import com.englishacademy.EnglishAcademy.exceptions.AppException;
-import com.englishacademy.EnglishAcademy.exceptions.ErrorCode;
-import com.englishacademy.EnglishAcademy.services.ICourseOfflineService;
+import com.englishacademy.EnglishAcademy.services.CourseOfflineService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +21,7 @@ import java.util.List;
 @RequestMapping("/api/v1/course-offline")
 public class CourseOfflineController {
     @Autowired
-    private ICourseOfflineService courseOfflineService;
+    private CourseOfflineService courseOfflineService;
     @GetMapping("")
     ResponseEntity<ResponseObject> getAll() {
         List<CourseOfflineDTO> list = courseOfflineService.findAll();
@@ -34,12 +32,7 @@ public class CourseOfflineController {
 
     @GetMapping("/get-by-class")
     ResponseEntity<ResponseObject> getAllCourseByClass() {
-        Authentication auth = SecurityContextHolder.getContext()
-                .getAuthentication();
-        if (!(auth.getPrincipal() instanceof Student)) {
-            throw new AppException(ErrorCode.NOTFOUND);
-        }
-        if (auth == null) throw new AppException(ErrorCode.UNAUTHENTICATED);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Student currentStudent = (Student) auth.getPrincipal();
         List<CourseOfflineDTO> list = courseOfflineService.findByStudent(currentStudent.getId());
         return ResponseEntity.status(HttpStatus.OK).body(
@@ -53,10 +46,6 @@ public class CourseOfflineController {
     ) {
         Authentication auth = SecurityContextHolder.getContext()
                 .getAuthentication();
-        if (!(auth.getPrincipal() instanceof Student)) {
-            throw new AppException(ErrorCode.NOTFOUND);
-        }
-        if (auth == null) throw new AppException(ErrorCode.UNAUTHENTICATED);
         Student currentStudent = (Student) auth.getPrincipal();
         CourseOfflineDetail courseOfflineDetail = courseOfflineService.getDetail(slug, currentStudent.getId());
         return ResponseEntity.status(HttpStatus.OK).body(

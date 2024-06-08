@@ -9,7 +9,7 @@ import com.englishacademy.EnglishAcademy.entities.User;
 import com.englishacademy.EnglishAcademy.exceptions.AppException;
 import com.englishacademy.EnglishAcademy.exceptions.ErrorCode;
 import com.englishacademy.EnglishAcademy.models.auth.*;
-import com.englishacademy.EnglishAcademy.services.IAuthenticationService;
+import com.englishacademy.EnglishAcademy.services.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1")
 @RequiredArgsConstructor
 public class AuthenticationController {
-    private final IAuthenticationService authenticationService;
+    private final AuthenticationService authenticationService;
 
     @PostMapping("/auth/user/signup")
     public ResponseEntity<User> signup(@RequestBody SignUpRequest signUpRequest) {
@@ -93,12 +93,7 @@ public class AuthenticationController {
 
     @PostMapping("/student/change-password")
     public ResponseEntity<ResponseObject> studenrChangepassword(@RequestBody ChangePasswordRequest changePasswordRequest) {
-        Authentication auth = SecurityContextHolder.getContext()
-                .getAuthentication();
-        if (!(auth.getPrincipal() instanceof Student)) {
-            throw new AppException(ErrorCode.NOTFOUND);
-        }
-        if (auth == null) throw new AppException(ErrorCode.UNAUTHENTICATED);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Student currentStudent = (Student) auth.getPrincipal();
         authenticationService.studentChangePassword(changePasswordRequest, currentStudent);
         return ResponseEntity.status(HttpStatus.OK).body(

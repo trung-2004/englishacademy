@@ -1,20 +1,14 @@
 package com.englishacademy.EnglishAcademy.controllers;
 
 import com.englishacademy.EnglishAcademy.dtos.ResponseObject;
-import com.englishacademy.EnglishAcademy.dtos.questionTestInput.QuestionTestInputDetailResult;
-import com.englishacademy.EnglishAcademy.dtos.testInput.TestInputDTO;
-import com.englishacademy.EnglishAcademy.dtos.testInput.TestInputDetail;
-import com.englishacademy.EnglishAcademy.dtos.testInputStudent.TestInputStudentDTO;
+import com.englishacademy.EnglishAcademy.dtos.question_test_input.QuestionTestInputDetailResult;
+import com.englishacademy.EnglishAcademy.dtos.test_input.TestInputDTO;
+import com.englishacademy.EnglishAcademy.dtos.test_input.TestInputDetail;
+import com.englishacademy.EnglishAcademy.dtos.test_input_student.TestInputStudentDTO;
 import com.englishacademy.EnglishAcademy.entities.Student;
-import com.englishacademy.EnglishAcademy.exceptions.AppException;
-import com.englishacademy.EnglishAcademy.exceptions.ErrorCode;
-import com.englishacademy.EnglishAcademy.models.answerStudent.CreateAnswerStudent;
-import com.englishacademy.EnglishAcademy.models.answerStudent.SubmitTest;
-import com.englishacademy.EnglishAcademy.models.testInput.CreateTestInput;
-import com.englishacademy.EnglishAcademy.services.ITestInputService;
-import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import com.englishacademy.EnglishAcademy.models.answer_student.SubmitTest;
+import com.englishacademy.EnglishAcademy.models.test_input.CreateTestInput;
+import com.englishacademy.EnglishAcademy.services.TestInputService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -27,9 +21,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/test-input")
 public class TestInputController {
-    private final ITestInputService testInputService;
+    private final TestInputService testInputService;
 
-    public TestInputController(ITestInputService testInputService) {
+    public TestInputController(TestInputService testInputService) {
         this.testInputService = testInputService;
     }
 
@@ -55,12 +49,7 @@ public class TestInputController {
             @RequestBody SubmitTest submitTest,
             @PathVariable("slug") String slug
     ) {
-        Authentication auth = SecurityContextHolder.getContext()
-                .getAuthentication();
-        if (!(auth.getPrincipal() instanceof Student)) {
-            throw new AppException(ErrorCode.NOTFOUND);
-        }
-        if (auth == null) throw new AppException(ErrorCode.UNAUTHENTICATED);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Student currentStudent = (Student) auth.getPrincipal();
         testInputService.submitTest(slug, currentStudent.getId(), submitTest);
         return ResponseEntity.status(HttpStatus.OK).body(

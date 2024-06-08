@@ -1,19 +1,13 @@
 package com.englishacademy.EnglishAcademy.controllers;
 
 import com.englishacademy.EnglishAcademy.dtos.ResponseObject;
-import com.englishacademy.EnglishAcademy.dtos.testOffline.TestOfflineDetail;
-import com.englishacademy.EnglishAcademy.dtos.testOnline.TestOnlineDetail;
-import com.englishacademy.EnglishAcademy.dtos.testSession.TestOfflineSessionDetailResult;
+import com.englishacademy.EnglishAcademy.dtos.test_offline.TestOfflineDetail;
+import com.englishacademy.EnglishAcademy.dtos.test_session.TestOfflineSessionDetailResult;
 import com.englishacademy.EnglishAcademy.entities.Student;
-import com.englishacademy.EnglishAcademy.exceptions.AppException;
-import com.englishacademy.EnglishAcademy.exceptions.ErrorCode;
-import com.englishacademy.EnglishAcademy.models.answerStudent.CreateAnswerOfflineStudent;
-import com.englishacademy.EnglishAcademy.models.answerStudent.SubmitTest;
-import com.englishacademy.EnglishAcademy.services.ITestOfflineService;
-import com.englishacademy.EnglishAcademy.services.ITestOnlineService;
+import com.englishacademy.EnglishAcademy.models.answer_student.CreateAnswerOfflineStudent;
+import com.englishacademy.EnglishAcademy.services.TestOfflineService;
 import com.englishacademy.EnglishAcademy.services.impl.FileAudioService;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,23 +20,18 @@ import java.util.List;
 @RequestMapping("/api/v1/test-offline")
 @CrossOrigin("*")
 public class TestOfflineController {
-    private final ITestOfflineService testOfflineService;
+    private final TestOfflineService testOfflineService;
     private final FileAudioService fileAudioService;
-    public TestOfflineController(ITestOfflineService testOfflineService, FileAudioService fileAudioService) {
+    public TestOfflineController(TestOfflineService testOfflineService, FileAudioService fileAudioService) {
         this.testOfflineService = testOfflineService;
         this.fileAudioService = fileAudioService;
     }
 
     @GetMapping("/detail/{slug}")
     ResponseEntity<ResponseObject> getDetailTest(@PathVariable("slug") String slug) {
-        Authentication auth = SecurityContextHolder.getContext()
-                .getAuthentication();
-        if (!(auth.getPrincipal() instanceof Student)) {
-            throw new AppException(ErrorCode.NOTFOUND);
-        }
-        if (auth == null) throw new AppException(ErrorCode.UNAUTHENTICATED);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Student currentStudent = (Student) auth.getPrincipal();
-        TestOfflineDetail testOfflineDetail = testOfflineService.getdetailTest(slug, 1L);
+        TestOfflineDetail testOfflineDetail = testOfflineService.getdetailTest(slug, currentStudent.getId());
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(true, 200, "ok", testOfflineDetail)
         );
@@ -53,12 +42,7 @@ public class TestOfflineController {
             @RequestBody List<CreateAnswerOfflineStudent> submitTest,
             @PathVariable("slug") String slug
     ) {
-        Authentication auth = SecurityContextHolder.getContext()
-                .getAuthentication();
-        if (!(auth.getPrincipal() instanceof Student)) {
-            throw new AppException(ErrorCode.UNAUTHENTICATED);
-        }
-        if (auth == null) throw new AppException(ErrorCode.UNAUTHENTICATED);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Student currentStudent = (Student) auth.getPrincipal();
         testOfflineService.submitTest(slug, currentStudent.getId(), submitTest);
         return ResponseEntity.status(HttpStatus.OK).body(

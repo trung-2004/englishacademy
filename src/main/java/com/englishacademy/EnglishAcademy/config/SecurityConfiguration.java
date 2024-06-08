@@ -1,7 +1,8 @@
 package com.englishacademy.EnglishAcademy.config;
 
 import com.englishacademy.EnglishAcademy.entities.Role;
-import com.englishacademy.EnglishAcademy.services.IUserService;
+import com.englishacademy.EnglishAcademy.services.UserService;
+import com.englishacademy.EnglishAcademy.services.impl.UserServiceImpl;
 import jakarta.servlet.MultipartConfigElement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -37,7 +38,7 @@ import java.util.Arrays;
 @EnableAutoConfiguration(exclude = {MultipartAutoConfiguration.class})
 public class SecurityConfiguration {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
-    private final IUserService userService;
+    private final UserServiceImpl userService;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final CustomAccessDeniedHandler accessDeniedHandler;
 

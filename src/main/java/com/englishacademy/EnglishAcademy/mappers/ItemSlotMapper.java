@@ -1,7 +1,7 @@
 package com.englishacademy.EnglishAcademy.mappers;
 
-import com.englishacademy.EnglishAcademy.dtos.itemSlot.ItemSlotDTO;
-import com.englishacademy.EnglishAcademy.dtos.itemSlot.ItemSlotResponse;
+import com.englishacademy.EnglishAcademy.dtos.item_slot.ItemSlotDTO;
+import com.englishacademy.EnglishAcademy.dtos.item_slot.ItemSlotResponse;
 import com.englishacademy.EnglishAcademy.entities.ItemSlot;
 import org.springframework.stereotype.Component;
 

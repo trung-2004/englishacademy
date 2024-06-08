@@ -2,7 +2,7 @@ package com.englishacademy.EnglishAcademy.controllers;
 
 import com.englishacademy.EnglishAcademy.dtos.ResponseObject;
 import com.englishacademy.EnglishAcademy.dtos.packages.PackageDTO;
-import com.englishacademy.EnglishAcademy.services.IPackageService;
+import com.englishacademy.EnglishAcademy.services.PackageService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,9 +15,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/")
 public class PackageController {
-    private final IPackageService packageService;
+    private final PackageService packageService;
 
-    public PackageController(IPackageService packageService) {
+    public PackageController(PackageService packageService) {
         this.packageService = packageService;
     }
 
