@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Data
@@ -27,7 +28,7 @@ public class StudentDTO {
 
     private Gender gender;
 
-    private Date dayOfBirth;
+    private LocalDate dayOfBirth;
 
     private String address;
 

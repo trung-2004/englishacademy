@@ -23,4 +23,8 @@ public interface AuthenticationService {
     void studentChangePassword(ChangePasswordRequest changePasswordRequest, Student student);
     void studentForgotPassword(ForgotPasswordRequest forgotPasswordRequest);
     void studentResetPassword(ResetPasswordRequest resetPasswordRequest, String token);
+
+    void updateProfileUser(UpdateProfileUserRequest updateProfileUserRequest, User currentUser);
+
+    void updateProfileStudent(UpdateProfileStudentRequest updateProfileStudentRequest, Student currentStudent);
 }

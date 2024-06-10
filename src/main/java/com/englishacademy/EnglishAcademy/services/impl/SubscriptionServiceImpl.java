@@ -52,6 +52,5 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                 .orElseThrow(() -> new AppException(ErrorCode.NOTFOUND));
         if(!subscription.getTutor().getUser().getId().equals(currentUser.getId())) throw new AppException(ErrorCode.NOTFOUND);
         return subscriptionMapper.toSubscriptionDTO(subscription);
-
     }
 }

@@ -12,6 +12,10 @@ public enum ErrorCode {
     //storage
     INITIALIZE(400, "Cannot initialize storage", HttpStatus.BAD_REQUEST),
 
+    // Category
+    CATEGORY_NOTFOUND(404, "Category Not Found", HttpStatus.NOT_FOUND),
+    CATEGORY_EXISTED(400, "Category name existed", HttpStatus.BAD_REQUEST),
+
     // Course
     COURSE_NOTFOUND(404, "Course Not Found", HttpStatus.NOT_FOUND),
     COURSE_EXISTED(400, "User existed", HttpStatus.BAD_REQUEST),

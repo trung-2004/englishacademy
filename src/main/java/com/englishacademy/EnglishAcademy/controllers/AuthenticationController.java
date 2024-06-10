@@ -48,16 +48,21 @@ public class AuthenticationController {
 
     @GetMapping("/user/profile")
     ResponseEntity<ResponseObject> profile() {
-        Authentication auth = SecurityContextHolder.getContext()
-                .getAuthentication();
-        if (!(auth.getPrincipal() instanceof User)) {
-            throw new AppException(ErrorCode.NOTFOUND);
-        }
-        if (auth == null) throw new AppException(ErrorCode.UNAUTHENTICATED);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = (User) auth.getPrincipal();
         UserDTO userDTO = authenticationService.profile(currentUser);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(true, 200, "ok", userDTO)
+        );
+    }
+
+    @PutMapping("/user/update-profile")
+    ResponseEntity<ResponseObject> updateProfile(@RequestBody UpdateProfileUserRequest updateProfileUserRequest) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = (User) auth.getPrincipal();
+        authenticationService.updateProfileUser(updateProfileUserRequest, currentUser);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "ok", "")
         );
     }
 
@@ -73,6 +78,16 @@ public class AuthenticationController {
         StudentDTO studentDTO = authenticationService.studentProfile(currentStudent);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(true, 200, "ok", studentDTO)
+        );
+    }
+
+    @PutMapping("/student/update-profile")
+    ResponseEntity<ResponseObject> updateProfileStudent(@RequestBody UpdateProfileStudentRequest updateProfileStudentRequest) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Student currentStudent = (Student) auth.getPrincipal();
+        authenticationService.updateProfileStudent(updateProfileStudentRequest, currentStudent);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "ok", "")
         );
     }
 

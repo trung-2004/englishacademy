@@ -20,6 +20,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.*;
 
 @Service
@@ -263,6 +264,25 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         student.setResetToken(null);
         student.setResetTokenExpiry(null);
         studentRepository.save(student);
+    }
+
+    @Override
+    public void updateProfileUser(UpdateProfileUserRequest updateProfileUserRequest, User user) {
+        user.setDob(updateProfileUserRequest.getDob());
+        user.setPhone(updateProfileUserRequest.getPhone());
+        user.setAddress(updateProfileUserRequest.getAddress());
+        user.setModifiedDate(new Timestamp(System.currentTimeMillis()));
+        userRepository.save(user);
+    }
+
+    @Override
+    public void updateProfileStudent(UpdateProfileStudentRequest updateProfileStudentRequest, Student currentStudent) {
+        currentStudent.setDayOfBirth(updateProfileStudentRequest.getDob());
+        currentStudent.setPhone(updateProfileStudentRequest.getPhone());
+        currentStudent.setAddress(updateProfileStudentRequest.getAddress());
+        currentStudent.setModifiedDate(new Timestamp(System.currentTimeMillis()));
+        currentStudent.setGender(updateProfileStudentRequest.getGender());
+        studentRepository.save(currentStudent);
     }
 
     private String generateResetToken() {

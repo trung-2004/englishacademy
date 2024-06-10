@@ -61,7 +61,7 @@ public class CourseOnlineController {
     }
 
     @PutMapping("/course-online")
-    ResponseEntity<ResponseObject> editCourseOnline(@RequestBody EditCourseOnline model) {
+    ResponseEntity<ResponseObject> editCourseOnline(@Valid @RequestBody EditCourseOnline model) {
         CourseOnlineDTO courseOnlineDTO = courseOnlineService.edit(model);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(true, 200, "ok", courseOnlineDTO)
