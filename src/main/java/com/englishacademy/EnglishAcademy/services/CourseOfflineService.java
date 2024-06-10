@@ -2,6 +2,9 @@ package com.englishacademy.EnglishAcademy.services;
 
 import com.englishacademy.EnglishAcademy.dtos.course_offline.CourseOfflineDTO;
 import com.englishacademy.EnglishAcademy.dtos.course_offline.CourseOfflineDetail;
+import com.englishacademy.EnglishAcademy.entities.User;
+import com.englishacademy.EnglishAcademy.models.course_offline.CreateCourseOffline;
+import com.englishacademy.EnglishAcademy.models.course_offline.EditCourseOffline;
 
 import java.util.List;
 
@@ -15,4 +18,11 @@ public interface CourseOfflineService {
 
     CourseOfflineDetail getDetail(String slug,Long StudentId);
 
+    CourseOfflineDTO findBySlug(String slug);
+
+    CourseOfflineDTO create(CreateCourseOffline model, User user);
+
+    CourseOfflineDTO edit(EditCourseOffline model, User user);
+
+    void delete(Long[] ids);
 }

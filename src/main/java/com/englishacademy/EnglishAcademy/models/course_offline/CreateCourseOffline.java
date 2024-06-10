@@ -1,12 +1,11 @@
-package com.englishacademy.EnglishAcademy.models.course_online;
+package com.englishacademy.EnglishAcademy.models.course_offline;
 
 import jakarta.validation.constraints.*;
 import lombok.Data;
 
 @Data
-public class EditCourseOnline {
-    @NotNull(message = "Id is mandatory")
-    private Long id;
+public class CreateCourseOffline {
+
     @NotBlank(message = "Name is mandatory")
     private String name;
 
@@ -33,8 +32,4 @@ public class EditCourseOnline {
     @NotBlank(message = "Trailer URL is mandatory")
     @Pattern(regexp = "^(http|https)://.*$", message = "Trailer URL should be a valid URL")
     private String trailer;
-
-    @NotNull(message = "Category ID is mandatory")
-    @Positive(message = "Category ID must be a positive number")
-    private Long categoryId;
 }

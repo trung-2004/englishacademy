@@ -18,7 +18,7 @@ public enum ErrorCode {
 
     // Course
     COURSE_NOTFOUND(404, "Course Not Found", HttpStatus.NOT_FOUND),
-    COURSE_EXISTED(400, "User existed", HttpStatus.BAD_REQUEST),
+    COURSE_EXISTED(400, "Course existed", HttpStatus.BAD_REQUEST),
     COURSE_PURCHASED(400, "This course has been purchased", HttpStatus.BAD_REQUEST),
     COURSE_NOTPURCHASED(400, "This course has't been purchased", HttpStatus.BAD_REQUEST),
     // Course Online Student

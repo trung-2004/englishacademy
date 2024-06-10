@@ -23,7 +23,7 @@ public class JWTService implements com.englishacademy.EnglishAcademy.services.JW
         User user = (User) userDetails;
         return Jwts.builder().setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
                 .signWith(getSiginKey(), SignatureAlgorithm.HS256)
                 .claim("Role", userDetails.getAuthorities())
                 .claim("Id", user.getId())
@@ -35,7 +35,7 @@ public class JWTService implements com.englishacademy.EnglishAcademy.services.JW
         Student student = (Student) userDetails;
         return Jwts.builder().setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
                 .signWith(getSiginKey(), SignatureAlgorithm.HS256)
                 .claim("Role", userDetails.getAuthorities())
                 .claim("Id", student.getId())

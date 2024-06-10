@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class EditCategory {
-    @NotNull(message = "ID is mandatory")
+    @NotNull(message = "Id is mandatory")
     private Long id;
     @NotBlank(message = "Name is mandatory")
     private String name;
