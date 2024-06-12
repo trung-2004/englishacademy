@@ -28,6 +28,7 @@ public class JWTService implements com.englishacademy.EnglishAcademy.services.JW
                 .claim("Role", userDetails.getAuthorities())
                 .claim("Id", user.getId())
                 .claim("Fullname", user.getFullName())
+                .claim("Email", user.getEmail())
                 .compact();
     }
 

@@ -10,4 +10,5 @@ import java.util.List;
 @Repository
 public interface TopicOnlineRepository extends JpaRepository<TopicOnline, Long> {
     List<TopicOnline> findAllByCourseOnline(CourseOnline courseOnline);
+    TopicOnline findBySlug(String slug);
 }

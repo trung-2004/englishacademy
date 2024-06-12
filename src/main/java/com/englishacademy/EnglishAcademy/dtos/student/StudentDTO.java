@@ -17,28 +17,16 @@ import java.util.Date;
 public class StudentDTO {
     private Long id;
     private String code;
-
     private String fullName;
-
     private String email;
-
     private String phone;
-
     private Integer status;
-
     private Gender gender;
-
     private LocalDate dayOfBirth;
-
     private String address;
-
     private Date startDate;
-
     private Timestamp createdDate;
-
     private Timestamp modifiedDate;
-
     private String createdBy;
-
     private String modifiedBy;
 }

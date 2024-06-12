@@ -141,6 +141,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .code(currentStudent.getCode())
                 .fullName(currentStudent.getFullName())
                 .email(currentStudent.getEmail())
+                .address(currentStudent.getAddress())
                 .phone(currentStudent.getPhone())
                 .status(currentStudent.getStatus())
                 .gender(currentStudent.getGender())

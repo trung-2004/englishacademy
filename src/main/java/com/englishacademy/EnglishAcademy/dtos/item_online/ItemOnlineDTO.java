@@ -25,10 +25,6 @@ public class ItemOnlineDTO {
 
     private String pathUrl;
 
-    private boolean status;
-
-    private Date lastAccessed;
-
     private Timestamp createdDate;
 
     private Timestamp modifiedDate;

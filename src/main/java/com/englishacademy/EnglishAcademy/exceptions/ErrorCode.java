@@ -21,10 +21,15 @@ public enum ErrorCode {
     COURSE_EXISTED(400, "Course existed", HttpStatus.BAD_REQUEST),
     COURSE_PURCHASED(400, "This course has been purchased", HttpStatus.BAD_REQUEST),
     COURSE_NOTPURCHASED(400, "This course has't been purchased", HttpStatus.BAD_REQUEST),
+    // Topic Online
+    TOPIC_NOTFOUND(404, "Topic Not Found", HttpStatus.NOT_FOUND),
+    TOPIC_EXISTED(400, "Topic existed", HttpStatus.BAD_REQUEST),
+
+    // Item Online
+    ITEMONLINE_NOTFOUND(404, "Item Online Not Found", HttpStatus.NOT_FOUND),
+    ITEMONLINE_EXISTED(400, "Item Online existed", HttpStatus.BAD_REQUEST),
     // Course Online Student
     // Item online
-
-    ITEMONLINE_NOTFOUND(404, "Item Online Not Found", HttpStatus.NOT_FOUND),
 
     // Class
     CLASS_NOTFOUND(404, "Students do not have classes", HttpStatus.NOT_FOUND),
