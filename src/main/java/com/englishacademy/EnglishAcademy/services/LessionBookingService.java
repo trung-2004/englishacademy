@@ -1,6 +1,7 @@
 package com.englishacademy.EnglishAcademy.services;
 
 import com.englishacademy.EnglishAcademy.dtos.lession_booking.LessionBookingDTO;
+import com.englishacademy.EnglishAcademy.entities.Student;
 import com.englishacademy.EnglishAcademy.entities.User;
 import com.englishacademy.EnglishAcademy.models.booking.CreateLessionBooking;
 import com.englishacademy.EnglishAcademy.models.booking.UpdateLessionBooking;
@@ -17,4 +18,6 @@ public interface LessionBookingService {
     List<LessionBookingDTO> findAllByBooking(Long bookingId, User user);
 
     void update(UpdateLessionBooking updateLessionBooking, User currentUser);
+
+    LessionBookingDTO getDetail(Long id, Student currentUser);
 }

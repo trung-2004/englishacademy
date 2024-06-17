@@ -2,6 +2,7 @@ package com.englishacademy.EnglishAcademy.controllers;
 
 import com.englishacademy.EnglishAcademy.dtos.ResponseObject;
 import com.englishacademy.EnglishAcademy.dtos.lession_booking.LessionBookingDTO;
+import com.englishacademy.EnglishAcademy.entities.Student;
 import com.englishacademy.EnglishAcademy.entities.User;
 import com.englishacademy.EnglishAcademy.models.booking.CreateLessionBooking;
 import com.englishacademy.EnglishAcademy.models.booking.UpdateLessionBooking;
@@ -35,6 +36,16 @@ public class LessionBookingController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = (User) auth.getPrincipal();
         List<LessionBookingDTO> list = lessionBookingService.findAllByBooking(bookingId, currentUser);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "ok", list)
+        );
+    }
+
+    @GetMapping("/lession-booking/detail/{id}")
+    ResponseEntity<ResponseObject> getDetail(@PathVariable("id") Long id) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Student currentUser = (Student) auth.getPrincipal();
+        LessionBookingDTO list = lessionBookingService.getDetail(id, currentUser);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(true, 200, "ok", list)
         );

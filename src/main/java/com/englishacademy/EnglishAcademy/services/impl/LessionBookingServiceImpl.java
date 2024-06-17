@@ -84,4 +84,12 @@ public class LessionBookingServiceImpl implements LessionBookingService {
         lessionBooking.setModifiedDate(new Timestamp(System.currentTimeMillis()));
         lessionBookingRepository.save(lessionBooking);
     }
+
+    @Override
+    public LessionBookingDTO getDetail(Long id, Student currentUser) {
+        LessionBooking lessionBooking = lessionBookingRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.NOTFOUND));
+        if (!lessionBooking.getBooking().getStudent().getId().equals(currentUser.getId())) throw new AppException(ErrorCode.NOTFOUND);
+        return lessionBookingMapper.toLessionBookingDTO(lessionBooking);
+    }
 }
