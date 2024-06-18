@@ -16,7 +16,6 @@ public interface AuthenticationService {
     void forgotPassword(ForgotPasswordRequest forgotPasswordRequest);
     void resetPassword(ResetPasswordRequest resetPasswordRequest, String token);
 
-
     Student studentSignUp(SignUpRequest signUpRequest);
     JwtAuthenticationResponse studentSignIn(SignInRequest signInRequest);
     StudentDTO studentProfile(Student currentStudent);

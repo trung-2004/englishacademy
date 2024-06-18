@@ -16,6 +16,7 @@ public class StudentPackageMapper {
                 .id(model.getId())
                 .packageId(model.getPackages().getId())
                 .packageName(model.getPackages().getName())
+                .packagePrice(model.getPrice())
                 .studentId(model.getStudent().getId())
                 .studentName(model.getStudent().getFullName())
                 .lessonDays(JsonConverterUtil.convertJsonToLessonDay(model.getLessonDays()))

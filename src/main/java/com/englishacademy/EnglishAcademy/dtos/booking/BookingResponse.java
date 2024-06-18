@@ -1,6 +1,6 @@
-package com.englishacademy.EnglishAcademy.dtos.student_package;
+package com.englishacademy.EnglishAcademy.dtos.booking;
 
-import com.englishacademy.EnglishAcademy.dtos.booking.LessonDay;
+import com.englishacademy.EnglishAcademy.dtos.lession_booking.LessionBookingDTO;
 import com.englishacademy.EnglishAcademy.entities.BookingStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,20 +12,22 @@ import java.util.Date;
 import java.util.List;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public class StudentPackageDTO {
+public class BookingResponse {
     private Long id;
-    private Long packageId;
-    private String packageName;
-    private Double packagePrice;
+    private Long tutorId;
     private Long studentId;
+    private Long paymentId;
+    private Date startTime;
+    private Date endTime;
+    private String tutorName;
     private String studentName;
-    private Integer remainingSessions;
-    private Date purchaseDate ;
+    private String description;
+    private BookingStatus status;
     private List<LessonDay> lessonDays;
-    private BookingStatus status ;
+    private List<LessionBookingDTO> lessionBookingDTOS;
     private Timestamp createdDate;
     private Timestamp modifiedDate;
     private String createdBy;

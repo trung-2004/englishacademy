@@ -100,6 +100,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .email(currentUser.getEmail())
                 .phone(currentUser.getPhone())
                 .status(currentUser.getStatus())
+                .dob(currentUser.getDob())
+                .address(currentUser.getAddress())
                 .build();
         return userDTO;
     }

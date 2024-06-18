@@ -34,6 +34,8 @@ public class PaymentServiceImpl implements PaymentService {
             if (studentPackage.getStatus().equals(BookingStatus.pending) || studentPackage.getStatus().equals(BookingStatus.cancelled)) {
                 throw new AppException(ErrorCode.NOTFOUND);
             }
+            Payment paymentExisting = paymentRepository.findByStudentPackage(studentPackage);
+            if (paymentExisting != null) throw new AppException(ErrorCode.NOTFOUND);
             Payment payment = Payment.builder()
                     .paymentMethod(createPayment.getPaymentMethod())
                     .paymentDate(now)
@@ -62,6 +64,8 @@ public class PaymentServiceImpl implements PaymentService {
             if (subscription.getStatus().equals(BookingStatus.pending) || subscription.getStatus().equals(BookingStatus.cancelled)) {
                 throw new AppException(ErrorCode.NOTFOUND);
             }
+            Payment paymentExisting = paymentRepository.findBySubscription(subscription);
+            if (paymentExisting != null) throw new AppException(ErrorCode.NOTFOUND);
             Payment payment = Payment.builder()
                     .paymentMethod(createPayment.getPaymentMethod())
                     .paymentDate(now)

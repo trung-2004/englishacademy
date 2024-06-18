@@ -36,6 +36,7 @@ public class ItemOnlineMapper {
                 .itemType(model.getItemType())
                 .orderTop(model.getOrderTop())
                 .pathUrl(model.getPathUrl())
+                .topicId(model.getTopicOnline().getId())
                 .createdBy(model.getCreatedBy())
                 .createdDate(model.getCreatedDate())
                 .modifiedBy(model.getModifiedBy())

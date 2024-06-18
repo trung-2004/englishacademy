@@ -2,6 +2,7 @@ package com.englishacademy.EnglishAcademy.controllers;
 
 import com.englishacademy.EnglishAcademy.dtos.ResponseObject;
 import com.englishacademy.EnglishAcademy.dtos.booking.BookingDTO;
+import com.englishacademy.EnglishAcademy.dtos.booking.BookingResponse;
 import com.englishacademy.EnglishAcademy.dtos.booking.BookingWaiting;
 import com.englishacademy.EnglishAcademy.entities.Student;
 import com.englishacademy.EnglishAcademy.entities.User;
@@ -43,6 +44,16 @@ public class BookingController {
         List<BookingDTO> list = bookingService.findAllByStudent(currentStudent);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(true, 200, "ok", list)
+        );
+    }
+
+    @GetMapping("/student/booking/{id}")
+    ResponseEntity<ResponseObject> getDetail(@PathVariable("id") Long id) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Student currentStudent = (Student) auth.getPrincipal();
+        BookingResponse bookingResponse = bookingService.getDetailById(id, currentStudent);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "ok", bookingResponse)
         );
     }
 

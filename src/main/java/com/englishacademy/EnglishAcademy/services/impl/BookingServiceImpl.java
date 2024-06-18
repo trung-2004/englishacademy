@@ -1,6 +1,7 @@
 package com.englishacademy.EnglishAcademy.services.impl;
 
 import com.englishacademy.EnglishAcademy.dtos.booking.BookingDTO;
+import com.englishacademy.EnglishAcademy.dtos.booking.BookingResponse;
 import com.englishacademy.EnglishAcademy.dtos.booking.BookingWaiting;
 import com.englishacademy.EnglishAcademy.dtos.student_package.StudentPackageDTO;
 import com.englishacademy.EnglishAcademy.dtos.subscription.SubscriptionDTO;
@@ -8,11 +9,13 @@ import com.englishacademy.EnglishAcademy.entities.*;
 import com.englishacademy.EnglishAcademy.exceptions.AppException;
 import com.englishacademy.EnglishAcademy.exceptions.ErrorCode;
 import com.englishacademy.EnglishAcademy.mappers.BookingMappers;
+import com.englishacademy.EnglishAcademy.mappers.LessionBookingMapper;
 import com.englishacademy.EnglishAcademy.mappers.StudentPackageMapper;
 import com.englishacademy.EnglishAcademy.mappers.SubscriptionMapper;
 import com.englishacademy.EnglishAcademy.models.booking.CreateBooking;
 import com.englishacademy.EnglishAcademy.repositories.*;
 import com.englishacademy.EnglishAcademy.services.BookingService;
+import com.englishacademy.EnglishAcademy.utils.JsonConverterUtil;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
@@ -31,6 +34,7 @@ public class BookingServiceImpl implements BookingService {
     private final StudentRepository studentRepository;
     private final AvailabilityRepository availabilityRepository;
     private final BookingMappers bookingMappers;
+    private final LessionBookingMapper lessionBookingMapper;
     private final PackagesRepository packagesRepository;
     private final StudentPackageRepository studentPackageRepository;
     private final PaymentRepository paymentRepository;
@@ -159,5 +163,31 @@ public class BookingServiceImpl implements BookingService {
                 .subscriptionDTOS(subscriptionDTOS)
                 .build();
         return bookingWaiting;
+    }
+
+    @Override
+    public BookingResponse getDetailById(Long id, Student currentStudent) {
+        Booking booking = bookingRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.NOTFOUND));
+
+        BookingResponse bookingResponse = BookingResponse.builder()
+                .id(booking.getId())
+                .tutorId(booking.getTutor().getId())
+                .studentId(booking.getStudent().getId())
+                .studentName(booking.getStudent().getFullName())
+                .tutorName(booking.getTutor().getUser().getFullName())
+                .description(booking.getDescription())
+                .createdBy(booking.getCreatedBy())
+                .paymentId(booking.getPayment().getId())
+                .startTime(booking.getStartTime())
+                .endTime(booking.getEndTime())
+                .status(booking.getStatus())
+                .lessonDays(JsonConverterUtil.convertJsonToLessonDay(booking.getLessonDays()))
+                .lessionBookingDTOS(booking.getLessionBookings().stream().map(lessionBookingMapper::toLessionBookingDTO).collect(Collectors.toList()))
+                .createdDate(booking.getCreatedDate())
+                .modifiedBy(booking.getModifiedBy())
+                .modifiedDate(booking.getModifiedDate())
+                .build();
+        return bookingResponse;
     }
 }

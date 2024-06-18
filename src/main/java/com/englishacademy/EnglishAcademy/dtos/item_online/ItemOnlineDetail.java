@@ -18,23 +18,14 @@ public class ItemOnlineDetail {
     private String title;
     private String slug;
     private String courseSlug;
-
     private String content;
-
     private Integer itemType;
-
     private Integer orderTop;
-
     private String pathUrl;
     private boolean status;
-
     private List<QuestionItemOnlineDTO> questionItemOnlineDTOList;
-
     private Timestamp createdDate;
-
     private Timestamp modifiedDate;
-
     private String createdBy;
-
     private String modifiedBy;
 }

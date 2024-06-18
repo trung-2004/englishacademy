@@ -16,20 +16,13 @@ public class ItemOnlineDTO {
     private Long id;
     private String title;
     private String slug;
-
     private String content;
-
     private Integer itemType;
-
     private Integer orderTop;
-
     private String pathUrl;
-
+    private Long topicId;
     private Timestamp createdDate;
-
     private Timestamp modifiedDate;
-
     private String createdBy;
-
     private String modifiedBy;
 }

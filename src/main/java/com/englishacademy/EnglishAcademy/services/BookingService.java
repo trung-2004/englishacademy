@@ -1,6 +1,7 @@
 package com.englishacademy.EnglishAcademy.services;
 
 import com.englishacademy.EnglishAcademy.dtos.booking.BookingDTO;
+import com.englishacademy.EnglishAcademy.dtos.booking.BookingResponse;
 import com.englishacademy.EnglishAcademy.dtos.booking.BookingWaiting;
 import com.englishacademy.EnglishAcademy.entities.Student;
 import com.englishacademy.EnglishAcademy.entities.User;
@@ -20,4 +21,6 @@ public interface BookingService {
     BookingWaiting findAllWaitingByTutor(User user);
 
     BookingWaiting findAllWaitingByStudent(Student currentStudent);
+
+    BookingResponse getDetailById(Long id, Student currentStudent);
 }

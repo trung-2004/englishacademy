@@ -80,6 +80,7 @@ public class ItemOnlineServiceImpl implements ItemOnlineService {
                 .orderTop(createItemOnline.getOrderTop())
                 .itemType(createItemOnline.getItemType())
                 .content(createItemOnline.getContent())
+                .topicOnline(topicOnline)
                 .createdBy("Demo")
                 .modifiedBy("Demo")
                 .createdDate(new Timestamp(System.currentTimeMillis()))
