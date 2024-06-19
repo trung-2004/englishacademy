@@ -21,6 +21,7 @@ public class ItemOnlineDTO {
     private Integer orderTop;
     private String pathUrl;
     private Long topicId;
+    private Long courseId;
     private Timestamp createdDate;
     private Timestamp modifiedDate;
     private String createdBy;

@@ -37,6 +37,7 @@ public class TutorMapper {
         TutorDetail tutorDTO = TutorDetail.builder()
                 .id(model.getId())
                 .fullname(model.getUser().getFullName())
+                .code(model.getCode())
                 .avatar(model.getAvatar())
                 .address(model.getAddress())
                 .level(model.getLevel())

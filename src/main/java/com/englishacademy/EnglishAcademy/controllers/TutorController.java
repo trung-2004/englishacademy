@@ -48,6 +48,7 @@ public class TutorController {
             @RequestParam("experience") String experience,
             @RequestParam("teachingSubject") String teachingSubject,
             @RequestParam("avatar") MultipartFile avatar
+//            @ModelAttribute CreateTutor createTutor
     ) {
         CreateTutor createTutor = new CreateTutor();
         createTutor.setUserId(userId);

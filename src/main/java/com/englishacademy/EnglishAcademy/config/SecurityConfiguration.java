@@ -70,7 +70,9 @@ public class SecurityConfiguration {
                 }))
                 .authorizeHttpRequests(request -> request.requestMatchers("/api/v1/auth/**")
                         .permitAll()
-                        .requestMatchers("/api/v1/any/**").permitAll()
+                        .requestMatchers("/api/v1/any/**","/swagger-ui/**",
+                                "/swagger-ui.html",
+                                "/v3/api-docs/**").permitAll()
                         //.requestMatchers("/api/v1/any/tutor/**").permitAll()
                         .requestMatchers("/ws/**").permitAll()
                         .requestMatchers("/api/v1/FileUpload/**").permitAll()
