@@ -25,4 +25,6 @@ public interface CourseOfflineService {
     CourseOfflineDTO edit(EditCourseOffline model, User user);
 
     void delete(Long[] ids);
+
+    CourseOfflineDetail getDetailTeacher(String slug, Long id);
 }

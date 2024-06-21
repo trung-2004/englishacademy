@@ -54,6 +54,19 @@ public class CourseOfflineController {
         );
     }
 
+    @GetMapping("/course-offline/user/detail/{slug}")
+    ResponseEntity<ResponseObject> getDetailCourseByClassTeacher(
+            @PathVariable("slug") String slug
+    ) {
+        Authentication auth = SecurityContextHolder.getContext()
+                .getAuthentication();
+        User currentUser = (User) auth.getPrincipal();
+        CourseOfflineDetail courseOfflineDetail = courseOfflineService.getDetailTeacher(slug, currentUser.getId());
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "ok", courseOfflineDetail)
+        );
+    }
+
     @GetMapping("/course-offline/{slug}")
     ResponseEntity<ResponseObject> getBySlug(@PathVariable("slug") String slug) {
         CourseOfflineDTO courseOfflineDTO = courseOfflineService.findBySlug(slug);

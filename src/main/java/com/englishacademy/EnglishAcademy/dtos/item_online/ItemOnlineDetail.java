@@ -19,6 +19,7 @@ public class ItemOnlineDetail {
     private String slug;
     private String courseSlug;
     private String content;
+    private Integer duration;
     private Integer itemType;
     private Integer orderTop;
     private String pathUrl;

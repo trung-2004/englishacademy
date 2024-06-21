@@ -16,7 +16,9 @@ import com.englishacademy.EnglishAcademy.models.course_offline.EditCourseOffline
 import com.englishacademy.EnglishAcademy.repositories.CourseOfflineRepository;
 import com.englishacademy.EnglishAcademy.repositories.CourseOfflineStudentRepository;
 import com.englishacademy.EnglishAcademy.repositories.StudentRepository;
+import com.englishacademy.EnglishAcademy.repositories.UserRepository;
 import com.englishacademy.EnglishAcademy.services.CourseOfflineService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,17 +29,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class CourseOfflineServiceImpl implements CourseOfflineService {
-    @Autowired
-    private CourseOfflineRepository courseOfflineRepository;
-    @Autowired
-    private CourseOfflineStudentRepository courseOfflineStudentRepository;
-    @Autowired
-    private StudentRepository studentRepository;
-    @Autowired
-    private CourseOfflineMapper courseOfflineMapper;
-    @Autowired
-    private SubjectMapper subjectMapper;
+    private final CourseOfflineRepository courseOfflineRepository;
+    private final CourseOfflineStudentRepository courseOfflineStudentRepository;
+    private final StudentRepository studentRepository;
+    private final UserRepository userRepository;
+    private final CourseOfflineMapper courseOfflineMapper;
+    private final SubjectMapper subjectMapper;
     @Override
     public List<CourseOfflineDTO> findAll() {
         return courseOfflineRepository.findAll().stream()
@@ -154,5 +153,35 @@ public class CourseOfflineServiceImpl implements CourseOfflineService {
     @Override
     public void delete(Long[] ids) {
         courseOfflineRepository.deleteAllById(List.of(ids));
+    }
+
+    @Override
+    public CourseOfflineDetail getDetailTeacher(String slug, Long id) {
+        // Tìm sinh viên theo studentId
+        CourseOffline courseOffline = courseOfflineRepository.findBySlug(slug);
+        if (courseOffline == null) {
+            throw new AppException(ErrorCode.NOTFOUND);
+        }
+        List<SubjectDTO> subjectDTOList = courseOffline.getSubjects().stream().map(subjectMapper::toSubjectDTO).collect(Collectors.toList());
+        subjectDTOList.sort(Comparator.comparingInt(SubjectDTO::getOrderTop));
+
+        CourseOfflineDetail courseOfflineDetail = CourseOfflineDetail.builder()
+                .id(courseOffline.getId())
+                .name(courseOffline.getName())
+                .slug(courseOffline.getSlug())
+                .level(courseOffline.getLevel())
+                .description(courseOffline.getDescription())
+                .image(courseOffline.getImage())
+                .price(courseOffline.getPrice())
+                .status(courseOffline.getStatus())
+                .language(courseOffline.getLanguage())
+                .trailer(courseOffline.getTrailer())
+                .subjectList(subjectDTOList)
+                .modifiedBy(courseOffline.getModifiedBy())
+                .modifiedDate(courseOffline.getModifiedDate())
+                .createdDate(courseOffline.getCreatedDate())
+                .createdBy(courseOffline.getCreatedBy())
+                .build();
+        return courseOfflineDetail;
     }
 }
