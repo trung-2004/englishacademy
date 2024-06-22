@@ -190,4 +190,30 @@ public class BookingServiceImpl implements BookingService {
                 .build();
         return bookingResponse;
     }
+
+    @Override
+    public BookingResponse getDetailByIdTutor(Long id, User currentUser) {
+        Booking booking = bookingRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.NOTFOUND));
+
+        BookingResponse bookingResponse = BookingResponse.builder()
+                .id(booking.getId())
+                .tutorId(booking.getTutor().getId())
+                .studentId(booking.getStudent().getId())
+                .studentName(booking.getStudent().getFullName())
+                .tutorName(booking.getTutor().getUser().getFullName())
+                .description(booking.getDescription())
+                .createdBy(booking.getCreatedBy())
+                .paymentId(booking.getPayment().getId())
+                .startTime(booking.getStartTime())
+                .endTime(booking.getEndTime())
+                .status(booking.getStatus())
+                .lessonDays(JsonConverterUtil.convertJsonToLessonDay(booking.getLessonDays()))
+                .lessionBookingDTOS(booking.getLessionBookings().stream().map(lessionBookingMapper::toLessionBookingDTO).collect(Collectors.toList()))
+                .createdDate(booking.getCreatedDate())
+                .modifiedBy(booking.getModifiedBy())
+                .modifiedDate(booking.getModifiedDate())
+                .build();
+        return bookingResponse;
+    }
 }

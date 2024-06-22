@@ -57,6 +57,16 @@ public class BookingController {
         );
     }
 
+    @GetMapping("/user/booking/{id}")
+    ResponseEntity<ResponseObject> getDetailByTutor(@PathVariable("id") Long id) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser= (User) auth.getPrincipal();
+        BookingResponse bookingResponse = bookingService.getDetailByIdTutor(id, currentUser);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "ok", bookingResponse)
+        );
+    }
+
     @PreAuthorize("hasAnyAuthority('USER')")
     @GetMapping("/tutor/booking")
     ResponseEntity<ResponseObject> getAllByTutor() {

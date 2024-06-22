@@ -44,6 +44,11 @@ public enum ErrorCode {
     USER_NOTFOUND(404, "User Not Found", HttpStatus.NOT_FOUND),
     // ItemSlot
     ITEMSLOT_NOTFOUND(404, "ItemSlot Not Found", HttpStatus.NOT_FOUND),
+    ITEMSLOT_EXISTED(404, "ItemSlot existed", HttpStatus.BAD_REQUEST),
+
+    // Slot
+    SLOT_NOTFOUND(404, "Slot Not Found", HttpStatus.NOT_FOUND),
+    SLOT_EXISTED(404, "Slot existed", HttpStatus.BAD_REQUEST),
 
     // Answer Item Slot
     ANSWERITEMSLOT_EXISTING(404, "Answer existed", HttpStatus.BAD_REQUEST),
@@ -55,6 +60,10 @@ public enum ErrorCode {
 
     // Tutor
     TUTOR_NOTFOUND(404, "Tutor Not Found", HttpStatus.NOT_FOUND),
+
+    // Subject
+    SUBJECT_NOTFOUND(404, "Subject Not Found", HttpStatus.NOT_FOUND),
+    SUBJECT_EXISTED(400, "Subject existed", HttpStatus.BAD_REQUEST),
 
     USERNAME_INVALID(1003, "Username must be at least 3 characters", HttpStatus.BAD_REQUEST),
     INVALID_PASSWORD(1004, "Password must be at least 8 characters", HttpStatus.BAD_REQUEST),

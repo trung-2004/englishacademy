@@ -12,4 +12,5 @@ import java.util.List;
 public interface AnswerStudentItemSlotRepository extends JpaRepository<AnswerStudentItemSlot, Long> {
     AnswerStudentItemSlot findByStudentAndItemSlot(Student student, ItemSlot itemSlot);
     List<AnswerStudentItemSlot> findAllByStudentAndItemSlot(Student student, ItemSlot itemSlot);
+    List<AnswerStudentItemSlot> findAllByItemSlot(ItemSlot itemSlot);
 }

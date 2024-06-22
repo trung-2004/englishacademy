@@ -23,4 +23,6 @@ public interface BookingService {
     BookingWaiting findAllWaitingByStudent(Student currentStudent);
 
     BookingResponse getDetailById(Long id, Student currentStudent);
+
+    BookingResponse getDetailByIdTutor(Long id, User currentUser);
 }

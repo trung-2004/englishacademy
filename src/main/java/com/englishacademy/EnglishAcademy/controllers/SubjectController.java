@@ -1,28 +1,29 @@
 package com.englishacademy.EnglishAcademy.controllers;
 
 import com.englishacademy.EnglishAcademy.dtos.ResponseObject;
+import com.englishacademy.EnglishAcademy.dtos.subject.SubjectDTO;
 import com.englishacademy.EnglishAcademy.dtos.subject.SubjectDetail;
 import com.englishacademy.EnglishAcademy.entities.Student;
+import com.englishacademy.EnglishAcademy.entities.User;
 import com.englishacademy.EnglishAcademy.exceptions.AppException;
 import com.englishacademy.EnglishAcademy.exceptions.ErrorCode;
+import com.englishacademy.EnglishAcademy.models.subject.CreateSubject;
+import com.englishacademy.EnglishAcademy.models.subject.EditSubject;
 import com.englishacademy.EnglishAcademy.services.SubjectService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/subject")
+@RequiredArgsConstructor
 public class SubjectController {
     private final SubjectService subjectService;
 
-    public SubjectController(SubjectService subjectService) {
-        this.subjectService = subjectService;
-    }
 
     @GetMapping("/detail/{slug}")
     ResponseEntity<ResponseObject> getDetailSubjectBySlug(@PathVariable("slug") String slug) {
@@ -31,6 +32,48 @@ public class SubjectController {
         SubjectDetail subjectDetail = subjectService.getDetail(slug, currentStudent.getId());
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(true, 200, "ok", subjectDetail)
+        );
+    }
+
+    @GetMapping("/detail/user/{slug}/{classId}")
+    ResponseEntity<ResponseObject> getDetailSubjectBySlugUser(@PathVariable("slug") String slug, @PathVariable("classId") Long classId) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User currentStudent = (User) auth.getPrincipal();
+        SubjectDetail subjectDetail = subjectService.getDetailByUser(slug, currentStudent.getId(), classId);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "ok", subjectDetail)
+        );
+    }
+
+    @GetMapping("/{slug}")
+    ResponseEntity<ResponseObject> getById(@PathVariable("slug") String slug) {
+        SubjectDTO subjectDTO = subjectService.getBySlug(slug);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "ok", subjectDTO)
+        );
+    }
+
+    @PostMapping("")
+    ResponseEntity<ResponseObject> create(@RequestBody @Valid CreateSubject createSubject) {
+        SubjectDTO subjectDTO = subjectService.create(createSubject);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "ok", subjectDTO)
+        );
+    }
+
+    @PutMapping("")
+    ResponseEntity<ResponseObject> edit(@RequestBody @Valid EditSubject editSubject) {
+        SubjectDTO subjectDTO = subjectService.edit(editSubject);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "ok", subjectDTO)
+        );
+    }
+
+    @DeleteMapping("")
+    ResponseEntity<ResponseObject> delete(@RequestBody @Valid Long[] ids) {
+        subjectService.delete(ids);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "ok", "")
         );
     }
 }
