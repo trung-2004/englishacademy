@@ -5,15 +5,14 @@ import com.englishacademy.EnglishAcademy.dtos.classes.CLassesDTO;
 import com.englishacademy.EnglishAcademy.dtos.course_offline.CourseOfflineDTO;
 import com.englishacademy.EnglishAcademy.entities.Student;
 import com.englishacademy.EnglishAcademy.entities.User;
+import com.englishacademy.EnglishAcademy.models.classes.CreateClasses;
 import com.englishacademy.EnglishAcademy.services.ClassesService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -28,6 +27,14 @@ public class ClassesController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = (User) auth.getPrincipal();
         List<CLassesDTO> list = classesService.getAllByTeacher(currentUser);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "ok", list)
+        );
+    }
+
+    @PostMapping("")
+    ResponseEntity<ResponseObject> create(@RequestBody CreateClasses createClasses) {
+        CLassesDTO list = classesService.create(createClasses);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(true, 200, "ok", list)
         );

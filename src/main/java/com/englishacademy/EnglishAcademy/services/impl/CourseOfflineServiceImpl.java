@@ -3,20 +3,14 @@ package com.englishacademy.EnglishAcademy.services.impl;
 import com.englishacademy.EnglishAcademy.dtos.course_offline.CourseOfflineDTO;
 import com.englishacademy.EnglishAcademy.dtos.course_offline.CourseOfflineDetail;
 import com.englishacademy.EnglishAcademy.dtos.subject.SubjectDTO;
-import com.englishacademy.EnglishAcademy.entities.CourseOffline;
-import com.englishacademy.EnglishAcademy.entities.CourseOfflineStudent;
-import com.englishacademy.EnglishAcademy.entities.Student;
-import com.englishacademy.EnglishAcademy.entities.User;
+import com.englishacademy.EnglishAcademy.entities.*;
 import com.englishacademy.EnglishAcademy.exceptions.AppException;
 import com.englishacademy.EnglishAcademy.exceptions.ErrorCode;
 import com.englishacademy.EnglishAcademy.mappers.CourseOfflineMapper;
 import com.englishacademy.EnglishAcademy.mappers.SubjectMapper;
 import com.englishacademy.EnglishAcademy.models.course_offline.CreateCourseOffline;
 import com.englishacademy.EnglishAcademy.models.course_offline.EditCourseOffline;
-import com.englishacademy.EnglishAcademy.repositories.CourseOfflineRepository;
-import com.englishacademy.EnglishAcademy.repositories.CourseOfflineStudentRepository;
-import com.englishacademy.EnglishAcademy.repositories.StudentRepository;
-import com.englishacademy.EnglishAcademy.repositories.UserRepository;
+import com.englishacademy.EnglishAcademy.repositories.*;
 import com.englishacademy.EnglishAcademy.services.CourseOfflineService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +28,7 @@ public class CourseOfflineServiceImpl implements CourseOfflineService {
     private final CourseOfflineRepository courseOfflineRepository;
     private final CourseOfflineStudentRepository courseOfflineStudentRepository;
     private final StudentRepository studentRepository;
+    private final ClassesRepository classesRepository;
     private final UserRepository userRepository;
     private final CourseOfflineMapper courseOfflineMapper;
     private final SubjectMapper subjectMapper;
@@ -183,5 +178,15 @@ public class CourseOfflineServiceImpl implements CourseOfflineService {
                 .createdBy(courseOffline.getCreatedBy())
                 .build();
         return courseOfflineDetail;
+    }
+
+    @Override
+    public List<CourseOfflineDTO> findByUser(Long id, Long classId) {
+        Classes classes = classesRepository.findById(classId).orElseThrow(() -> new AppException(ErrorCode.CLASS_NOTFOUND));
+        List<CourseOffline> courseOfflineList = new ArrayList<>();
+        for (CourseOfflineStudent courseOfflineStudent: classes.getCourseOfflineStudents()) {
+            courseOfflineList.add(courseOfflineStudent.getCourseOffline());
+        }
+        return courseOfflineList.stream().map(courseOfflineMapper::toCourseOfflineDTO).collect(Collectors.toList());
     }
 }

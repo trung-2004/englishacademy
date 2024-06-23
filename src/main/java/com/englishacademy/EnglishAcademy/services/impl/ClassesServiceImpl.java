@@ -5,6 +5,7 @@ import com.englishacademy.EnglishAcademy.dtos.course_offline.CourseOfflineDTO;
 import com.englishacademy.EnglishAcademy.entities.Classes;
 import com.englishacademy.EnglishAcademy.entities.User;
 import com.englishacademy.EnglishAcademy.mappers.ClassesMapper;
+import com.englishacademy.EnglishAcademy.models.classes.CreateClasses;
 import com.englishacademy.EnglishAcademy.repositories.ClassesRepository;
 import com.englishacademy.EnglishAcademy.services.ClassesService;
 import lombok.RequiredArgsConstructor;
@@ -22,5 +23,10 @@ public class ClassesServiceImpl implements ClassesService {
     @Override
     public List<CLassesDTO> getAllByTeacher(User currentUser) {
         return classesRepository.findAllByTeacher(currentUser).stream().map(classesMapper::toClassesDTO).collect(Collectors.toList());
+    }
+
+    @Override
+    public CLassesDTO create(CreateClasses createClasses) {
+        return null;
     }
 }

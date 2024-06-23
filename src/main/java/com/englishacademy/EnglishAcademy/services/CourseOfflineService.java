@@ -27,4 +27,6 @@ public interface CourseOfflineService {
     void delete(Long[] ids);
 
     CourseOfflineDetail getDetailTeacher(String slug, Long id);
+
+    List<CourseOfflineDTO> findByUser(Long id, Long classId);
 }
