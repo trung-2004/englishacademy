@@ -274,4 +274,13 @@ public class SubjectServiceImpl implements SubjectService {
         if (subject == null) throw new AppException(ErrorCode.NOTFOUND);
         return subjectMapper.toSubjectDTO(subject);
     }
+
+    @Override
+    public List<SubjectDTO> getAllByCourseSlug(String slug) {
+        CourseOffline courseOffline = courseOfflineRepository.findBySlug(slug);
+        if (courseOffline == null) throw new AppException(ErrorCode.COURSE_NOTFOUND);
+        List<SubjectDTO> subjects = subjectRepository.findAllByCourseOffline(courseOffline)
+                .stream().map(subjectMapper::toSubjectDTO).collect(Collectors.toList());
+        return subjects;
+    }
 }

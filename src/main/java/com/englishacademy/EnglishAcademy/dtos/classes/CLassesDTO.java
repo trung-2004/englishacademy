@@ -1,4 +1,4 @@
-package com.englishacademy.EnglishAcademy.dtos.category;
+package com.englishacademy.EnglishAcademy.dtos.classes;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,10 +11,10 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CategoryDTO {
+public class CLassesDTO {
     private Long id;
     private String name;
-    private String slug;
+    private String roomName;
     private Timestamp createdDate;
     private Timestamp modifiedDate;
     private String createdBy;

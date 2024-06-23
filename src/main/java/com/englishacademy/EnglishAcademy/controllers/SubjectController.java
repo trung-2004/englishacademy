@@ -18,6 +18,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/subject")
 @RequiredArgsConstructor
@@ -42,6 +44,14 @@ public class SubjectController {
         SubjectDetail subjectDetail = subjectService.getDetailByUser(slug, currentStudent.getId(), classId);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(true, 200, "ok", subjectDetail)
+        );
+    }
+
+    @GetMapping("/get-all/{slug}")
+    ResponseEntity<ResponseObject> getAllByCourse(@PathVariable("slug") String slug) {
+        List<SubjectDTO> subjectDTOs = subjectService.getAllByCourseSlug(slug);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "ok", subjectDTOs)
         );
     }
 
