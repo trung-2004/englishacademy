@@ -28,12 +28,12 @@ public class PotentialCustomerServiceImpl implements PotentialCustomerService {
 
     @Override
     public PotentialCustomerDTO create(PotentialCustomerCreate potentialCustomerCreate) {
-        PotentialCustomer potentialCustomerExisting = potentialCustomerRepository.findByEmailAAndPhone(potentialCustomerCreate.getEmail(), potentialCustomerCreate.getPhone());
+        PotentialCustomer potentialCustomerExisting = potentialCustomerRepository.findByEmailAndPhone(potentialCustomerCreate.getEmail(), potentialCustomerCreate.getPhone());
         if (potentialCustomerExisting == null) {
             PotentialCustomer potentialCustomer = PotentialCustomer.builder()
                     .email(potentialCustomerCreate.getEmail())
                     .phone(potentialCustomerCreate.getPhone())
-                    .fullName(potentialCustomerExisting.getFullName())
+                    .fullName(potentialCustomerCreate.getFullname())
                     .status(0)
                     .createdBy("Demo")
                     .modifiedBy("Demo")

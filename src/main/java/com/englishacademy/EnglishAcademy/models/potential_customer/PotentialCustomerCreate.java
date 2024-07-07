@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 public class PotentialCustomerCreate {
     @NotEmpty(message = "Name cannot be empty")
-    private String name;
+    private String fullname;
     @NotEmpty(message = "Email cannot be empty")
     private String email;
     @NotEmpty(message = "Phone number cannot be empty")

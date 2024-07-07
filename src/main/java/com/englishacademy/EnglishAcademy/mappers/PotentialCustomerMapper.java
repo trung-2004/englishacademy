@@ -15,6 +15,7 @@ public class PotentialCustomerMapper {
                 .fullname(potentialCustomer.getFullName())
                 .email(potentialCustomer.getEmail())
                 .phone(potentialCustomer.getPhone())
+                .status(potentialCustomer.getStatus())
                 .createdBy(potentialCustomer.getCreatedBy())
                 .createdDate(potentialCustomer.getCreatedDate())
                 .modifiedBy(potentialCustomer.getModifiedBy())
