@@ -28,8 +28,8 @@ public class CertificateServiceImpl implements CertificateService {
 
     @Override
     public CertificateDTO create(CreateCertificate model) {
-        CourseOnline course = courseRepository.findById(model.getCourseId())
-                .orElseThrow(() -> new AppException(ErrorCode.COURSE_NOTFOUND));
+        CourseOnline course = courseRepository.findBySlug(model.getCourseSlug());
+        if (course == null) throw new AppException(ErrorCode.COURSE_NOTFOUND);
         Certificate certificateExisting = certificateRepository.findByCourseIdAndUserId(course.getId(), model.getUserId());
         if (certificateExisting != null) {
             return toCertificateDTO(certificateExisting);
@@ -65,8 +65,8 @@ public class CertificateServiceImpl implements CertificateService {
 
     @Override
     public CertificateDTO createOf(CreateCertificate model) {
-        CourseOffline course = courseOfflineRepository.findById(model.getCourseId())
-                .orElseThrow(() -> new AppException(ErrorCode.COURSE_NOTFOUND));
+        CourseOffline course = courseOfflineRepository.findBySlug(model.getCourseSlug());
+        if (course == null) throw new AppException(ErrorCode.COURSE_NOTFOUND);
         Certificate certificateExisting = certificateRepository.findByCourseIdAndUserId(course.getId(), model.getUserId());
         if (certificateExisting != null) {
             return toCertificateDTO(certificateExisting);
@@ -124,6 +124,7 @@ public class CertificateServiceImpl implements CertificateService {
         CourseOnline courseOnline = courseRepository.findById(certificate.getCourseId()).orElseThrow(() -> new AppException(ErrorCode.COURSE_NOTFOUND));
         CertificateDTO certificateDTO = CertificateDTO.builder()
                 .id(certificate.getId())
+                .code(certificate.getCode())
                 .courseId(courseOnline.getId())
                 .courseName(courseOnline.getName())
                 .fullName(certificate.getFullName())

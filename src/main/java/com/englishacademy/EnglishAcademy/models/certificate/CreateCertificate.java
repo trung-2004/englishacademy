@@ -5,5 +5,5 @@ import lombok.Data;
 @Data
 public class CreateCertificate {
     private Long userId;
-    private Long courseId;
+    private String courseSlug;
 }

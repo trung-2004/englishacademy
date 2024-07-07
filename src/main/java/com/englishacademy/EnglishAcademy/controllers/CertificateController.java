@@ -22,12 +22,12 @@ import java.util.List;
 public class CertificateController {
     private final CertificateService certificateService;
 
-    @PostMapping("/certificate-online/complete-course/{courseId}")
-    ResponseEntity<ResponseObject> createCertificate(@PathVariable("courseId") Long courseId) {
+    @PostMapping("/certificate-online/complete-course/{courseSlug}")
+    ResponseEntity<ResponseObject> createCertificate(@PathVariable("courseSlug") String courseSlug) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Student currentStudent = (Student) auth.getPrincipal();
         CreateCertificate certificate = new CreateCertificate();
-        certificate.setCourseId(courseId);
+        certificate.setCourseSlug(courseSlug);
         certificate.setUserId(currentStudent.getId());
         CertificateDTO certificateDTO = certificateService.create(certificate);
         return ResponseEntity.status(HttpStatus.OK).body(
@@ -35,12 +35,12 @@ public class CertificateController {
         );
     }
 
-    @PostMapping("/certificate-offline/complete-course/{courseId}")
-    ResponseEntity<ResponseObject> createCertificateOf(@PathVariable("courseId") Long courseId) {
+    @PostMapping("/certificate-offline/complete-course/{courseSlug}")
+    ResponseEntity<ResponseObject> createCertificateOf(@PathVariable("courseSlug") String courseSlug) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Student currentStudent = (Student) auth.getPrincipal();
         CreateCertificate certificate = new CreateCertificate();
-        certificate.setCourseId(courseId);
+        certificate.setCourseSlug(courseSlug);
         certificate.setUserId(currentStudent.getId());
         CertificateDTO certificateDTO = certificateService.createOf(certificate);
         return ResponseEntity.status(HttpStatus.OK).body(
