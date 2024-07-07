@@ -42,6 +42,9 @@ public enum ErrorCode {
     STUDENT_NOTFOUND(404, "Student Not Found", HttpStatus.NOT_FOUND),
     // User
     USER_NOTFOUND(404, "User Not Found", HttpStatus.NOT_FOUND),
+    // certificate
+    CERTIFICATE_QUALIFIED(400, "You are not qualified yet", HttpStatus.BAD_REQUEST),
+    CERTIFICATE_NOTFOUND(404, "Certificate not found", HttpStatus.NOT_FOUND),
     // ItemSlot
     ITEMSLOT_NOTFOUND(404, "ItemSlot Not Found", HttpStatus.NOT_FOUND),
     ITEMSLOT_EXISTED(404, "ItemSlot existed", HttpStatus.BAD_REQUEST),

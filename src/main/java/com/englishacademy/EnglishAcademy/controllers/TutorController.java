@@ -29,6 +29,14 @@ public class TutorController {
         );
     }
 
+    @GetMapping("/any/tutor/get-top")
+    ResponseEntity<ResponseObject> getTutorTop6() {
+        List<TutorDTO> list = tutorService.getTutorTop6();
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "ok", list)
+        );
+    }
+
     @GetMapping("/any/tutor-detail/{code}")
     ResponseEntity<ResponseObject> getDetail(@PathVariable("code") String code) {
         TutorDetail tutorDetail = tutorService.getDetail(code);

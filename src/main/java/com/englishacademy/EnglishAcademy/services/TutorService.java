@@ -8,8 +8,7 @@ import java.util.List;
 
 public interface TutorService {
     List<TutorDTO> findAll();
-
     TutorDetail getDetail(String code);
-
     void save(CreateTutor createTutor);
+    List<TutorDTO> getTutorTop6();
 }

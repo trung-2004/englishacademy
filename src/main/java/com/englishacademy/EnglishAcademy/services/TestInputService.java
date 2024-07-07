@@ -12,9 +12,7 @@ import java.util.List;
 public interface TestInputService {
     List<TestInputDTO> findAll();
     TestInputDetail getdetailTest(String slug);
-
-    void submitTest(String slug, Long studentId, SubmitTest submitTest);
-
+    String submitTest(String slug, Long studentId, SubmitTest submitTest);
     TestInputStudentDTO getresultTest(String code);
     List<QuestionTestInputDetailResult> getresultDetailTest(String code);
     void saveTestInput(CreateTestInput createTestInput);

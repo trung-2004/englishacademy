@@ -51,9 +51,9 @@ public class TestInputController {
     ) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Student currentStudent = (Student) auth.getPrincipal();
-        testInputService.submitTest(slug, currentStudent.getId(), submitTest);
+        String code = testInputService.submitTest(slug, currentStudent.getId(), submitTest);
         return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject(true, 200, "ok", "")
+                new ResponseObject(true, 200, "ok", code)
         );
     }
 

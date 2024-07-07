@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 public interface TestOfflineStudentRepository extends JpaRepository<TestOfflineStudent, Long> {
     TestOfflineStudent findByCode(String code);
     TestOfflineStudent findByTestOfflineAndStudent(TestOffline testOffline, Student student);
+    TestOfflineStudent findByTestOfflineAndStudentAndStatus(TestOffline testOffline, Student student, boolean status);
 }

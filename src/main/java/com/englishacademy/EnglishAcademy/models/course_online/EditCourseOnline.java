@@ -23,8 +23,8 @@ public class EditCourseOnline {
     private String description;
 
     @NotNull(message = "Level is mandatory")
-    @Min(value = 1, message = "Level must be at least 1")
-    @Max(value = 5, message = "Level must be at most 5")
+    @Min(value = 0, message = "Level must be at least 0")
+    @Max(value = 3, message = "Level must be at most 3")
     private Integer level;
 
     @NotBlank(message = "Language is mandatory")

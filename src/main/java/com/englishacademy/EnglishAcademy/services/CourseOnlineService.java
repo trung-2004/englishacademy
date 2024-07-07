@@ -15,7 +15,8 @@ public interface CourseOnlineService {
     CourseOnlineDTO create(CreateCourseOnline model);
     CourseOnlineDTO edit(EditCourseOnline model);
     void delete(Long[] ids);
-
     CourseOnlineDetail getDetail(String slug);
-
+    List<CourseOnlineDTO> getCourseTop6();
+    List<CourseOnlineDTO> getCourseTopToeic(Integer score);
+    List<CourseOnlineDTO> getCourseTopIelts(Integer score);
 }

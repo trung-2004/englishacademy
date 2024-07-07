@@ -201,6 +201,60 @@ public class CourseOnlineServiceImpl implements CourseOnlineService {
 
         return courseOnlineDetail;
     }
+
+    @Override
+    public List<CourseOnlineDTO> getCourseTop6() {
+        List<CourseOnlineDTO> courseOnlineDTOS = courseOnlineRepository.findAllCourseLimit()
+                .stream().map(courseOnlineMapper::toCourseOnlineDTO).collect(Collectors.toList());
+        return courseOnlineDTOS;
+    }
+
+    @Override
+    public List<CourseOnlineDTO> getCourseTopToeic(Integer score) {
+        List<CourseOnline> courseOnlineDTOnlineList = new ArrayList<>();
+        if (score >= 0 && score <= 300) {
+            List<CourseOnline> courseOnlineDTOS = courseOnlineRepository.findAllByCategoryIdAndLevelIn(3L, List.of(0,1,2,3));
+            courseOnlineDTOnlineList.addAll(courseOnlineDTOS);
+        } else if (score > 300 && score <= 600) {
+            List<CourseOnline> courseOnlineDTOS = courseOnlineRepository.findAllByCategoryIdAndLevelIn(3L, List.of(1,2,3));
+            courseOnlineDTOnlineList.addAll(courseOnlineDTOS);
+        } else if (score > 600 && score <= 800) {
+            List<CourseOnline> courseOnlineDTOS = courseOnlineRepository.findAllByCategoryIdAndLevelIn(3L, List.of(2,3));
+            courseOnlineDTOnlineList.addAll(courseOnlineDTOS);
+        } else if (score > 800 && score <= 990) {
+            List<CourseOnline> courseOnlineDTOS = courseOnlineRepository.findAllByCategoryIdAndLevelIn(3L, List.of(3));
+            courseOnlineDTOnlineList.addAll(courseOnlineDTOS);
+        } else {
+            List<CourseOnline> courseOnlineDTOS = courseOnlineRepository.findAllByCategoryIdAndLevelIn(3L, List.of(0,1,2,3));
+            courseOnlineDTOnlineList.addAll(courseOnlineDTOS);
+        }
+        List<CourseOnlineDTO> courseOnlineDTOList = courseOnlineDTOnlineList.stream().map(courseOnlineMapper::toCourseOnlineDTO).collect(Collectors.toList());
+        return courseOnlineDTOList;
+    }
+
+    @Override
+    public List<CourseOnlineDTO> getCourseTopIelts(Integer score) {
+        List<CourseOnline> courseOnlineDTOnlineList = new ArrayList<>();
+        if (score >= 0 && score <= 300) {
+            List<CourseOnline> courseOnlineDTOS = courseOnlineRepository.findAllByCategoryIdAndLevelIn(4L, List.of(0,1,2,3));
+            courseOnlineDTOnlineList.addAll(courseOnlineDTOS);
+        } else if (score > 300 && score <= 600) {
+            List<CourseOnline> courseOnlineDTOS = courseOnlineRepository.findAllByCategoryIdAndLevelIn(4L, List.of(1,2,3));
+            courseOnlineDTOnlineList.addAll(courseOnlineDTOS);
+        } else if (score > 600 && score <= 800) {
+            List<CourseOnline> courseOnlineDTOS = courseOnlineRepository.findAllByCategoryIdAndLevelIn(4L, List.of(2,3));
+            courseOnlineDTOnlineList.addAll(courseOnlineDTOS);
+        } else if (score > 800 && score <= 990) {
+            List<CourseOnline> courseOnlineDTOS = courseOnlineRepository.findAllByCategoryIdAndLevelIn(4L, List.of(3));
+            courseOnlineDTOnlineList.addAll(courseOnlineDTOS);
+        } else {
+            List<CourseOnline> courseOnlineDTOS = courseOnlineRepository.findAllByCategoryIdAndLevelIn(4L, List.of(0,1,2,3));
+            courseOnlineDTOnlineList.addAll(courseOnlineDTOS);
+        }
+        List<CourseOnlineDTO> courseOnlineDTOList = courseOnlineDTOnlineList.stream().map(courseOnlineMapper::toCourseOnlineDTO).collect(Collectors.toList());
+        return courseOnlineDTOList;
+    }
+
     private String convertSecondtoHour(Long seconds){
         int hours = (int) (seconds / 3600);
         int minutes = (int) ((seconds % 3600) / 60);

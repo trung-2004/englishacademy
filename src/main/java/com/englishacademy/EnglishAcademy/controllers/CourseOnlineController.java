@@ -33,6 +33,30 @@ public class CourseOnlineController {
         );
     }
 
+    @GetMapping("/course-online/get-top")
+    ResponseEntity<ResponseObject> getCourseOnlineTop() {
+        List<CourseOnlineDTO> list = courseOnlineService.getCourseTop6();
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "ok", list)
+        );
+    }
+
+    @GetMapping("/course-online/toeic/get-score/{score}")
+    ResponseEntity<ResponseObject> getCourseOnlineTop(@PathVariable("score") Integer score) {
+        List<CourseOnlineDTO> list = courseOnlineService.getCourseTopToeic(score);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "ok", list)
+        );
+    }
+
+    @GetMapping("/course-online/ielts/get-score/{score}")
+    ResponseEntity<ResponseObject> getCourseOnlineTopIelts(@PathVariable("score") Integer score) {
+        List<CourseOnlineDTO> list = courseOnlineService.getCourseTopIelts(score);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "ok", list)
+        );
+    }
+
     @GetMapping("/course-online/by-student")
     ResponseEntity<ResponseObject> getAllByStudent() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();

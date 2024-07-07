@@ -82,4 +82,10 @@ public class TutorServiceImpl implements TutorService {
         tutorRepository.save(tutor);
 
     }
+
+    @Override
+    public List<TutorDTO> getTutorTop6() {
+        List<TutorDTO> tutorDTOList = tutorRepository.findTop6Tutor().stream().map(tutorMapper::toTutorDTO).collect(Collectors.toUnmodifiableList());
+        return tutorDTOList;
+    }
 }

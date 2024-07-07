@@ -126,7 +126,7 @@ public class TestInputServiceImpl implements TestInputService {
     }
 
     @Override
-    public void submitTest(String slug, Long studentId, SubmitTest submitTest) {
+    public String submitTest(String slug, Long studentId, SubmitTest submitTest) {
 
         // Tìm testInput theo slug
         TestInput testInput = testInputRepository.findBySlug(slug);
@@ -231,6 +231,7 @@ public class TestInputServiceImpl implements TestInputService {
         testInputStudent.setModifiedDate(new Timestamp(System.currentTimeMillis()));
 
         testInputStudentRepository.save(testInputStudent);
+        return testInputStudent.getCode();
     }
 
     @Override

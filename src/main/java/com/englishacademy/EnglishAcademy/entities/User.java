@@ -28,23 +28,18 @@ public class User extends BaseEntity implements UserDetails {
 
     @Column(name = "email", nullable = false, unique = true)
     private String email;
-
     @Column(name = "password", nullable = false)
     private String password;
-
     @Column(name = "phone")
     private String phone;
     @Column(name = "address")
     private String address;
     @Column(name = "dob")
     private LocalDate dob;
-
     @Column(name = "status")
     private Integer status;
-
     @Column(name = "resetToken")
     private String resetToken;
-
     @Column(name = "resetTokenExpiry")
     private Date resetTokenExpiry;
     private Role role;
