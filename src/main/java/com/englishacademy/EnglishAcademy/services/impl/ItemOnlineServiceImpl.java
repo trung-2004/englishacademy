@@ -1,6 +1,7 @@
 package com.englishacademy.EnglishAcademy.services.impl;
 
 import com.englishacademy.EnglishAcademy.dtos.item_online.ItemOnlineDTO;
+import com.englishacademy.EnglishAcademy.dtos.item_online.ItemOnlineDTOResponse;
 import com.englishacademy.EnglishAcademy.dtos.item_online.ItemOnlineDetail;
 import com.englishacademy.EnglishAcademy.entities.*;
 import com.englishacademy.EnglishAcademy.exceptions.AppException;
@@ -59,10 +60,10 @@ public class ItemOnlineServiceImpl implements ItemOnlineService {
     }
 
     @Override
-    public ItemOnlineDTO findBySlug(String slug) {
+    public ItemOnlineDTOResponse findBySlug(String slug) {
         ItemOnline itemOnline = itemOnlineRepository.findBySlug(slug);
         if (itemOnline == null) throw new AppException(ErrorCode.ITEMONLINE_NOTFOUND);
-        return itemOnlineMapper.toItemOnlineDTO(itemOnline);
+        return itemOnlineMapper.toItemOnlineDTOResponse(itemOnline);
     }
 
     @Override

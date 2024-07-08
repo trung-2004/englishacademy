@@ -33,22 +33,21 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public ReviewDTO create(CreateReview model, Long studentId) {
         Optional<Student> studentOptional  = studentRepository.findById(studentId);
-        Optional<CourseOnline> courseOnlineOptional = courseOnlineRepository.findById(model.getCourseOnlineId());
-        if (!studentOptional.isPresent() || !courseOnlineOptional.isPresent()){
+        CourseOnline courseOnlineOptional = courseOnlineRepository.findBySlug(model.getCourseOnlineSlug());
+        if (!studentOptional.isPresent() || courseOnlineOptional==null){
             throw new AppException(ErrorCode.NOTFOUND);
         }
 
         Student student = studentOptional.get();
-        CourseOnline courseOnline = courseOnlineOptional.get();
 
-        CourseOnlineStudent courseOnlineStudentExsiting = courseOnlineStudentRepository.findByCourseOnlineAndStudent(courseOnline, student);
+        CourseOnlineStudent courseOnlineStudentExsiting = courseOnlineStudentRepository.findByCourseOnlineAndStudent(courseOnlineOptional, student);
 
         if (courseOnlineStudentExsiting == null){
             throw new AppException(ErrorCode.COURSE_NOTPURCHASED);
         }
 
         Review review = Review.builder()
-                .courseOnline(courseOnline)
+                .courseOnline(courseOnlineOptional)
                 .student(student)
                 .score(model.getScore())
                 .message(model.getMessage())
@@ -60,16 +59,16 @@ public class ReviewServiceImpl implements ReviewService {
         review .setModifiedDate(new Timestamp(System.currentTimeMillis()));
         reviewRepository.save(review);
 
-        List<Review> reviews = reviewRepository.findAllByCourseOnline(courseOnline);
+        List<Review> reviews = reviewRepository.findAllByCourseOnline(courseOnlineOptional);
         var totalReview = reviews.size();
         Double totalScore = 0.0;
         for (Review review1: reviews) {
             totalScore += review1.getScore();
         }
         Double star = totalScore/totalReview;
-        courseOnline.setStar((double) Math.round(star * 10) / 10);
+        courseOnlineOptional.setStar((double) Math.round(star * 10) / 10);
 
-        courseOnlineRepository.save(courseOnline);
+        courseOnlineRepository.save(courseOnlineOptional);
         return reviewMapper.toReviewDTO(review);
     }
 }

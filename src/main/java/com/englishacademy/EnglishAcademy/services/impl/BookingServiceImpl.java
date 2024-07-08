@@ -3,15 +3,13 @@ package com.englishacademy.EnglishAcademy.services.impl;
 import com.englishacademy.EnglishAcademy.dtos.booking.BookingDTO;
 import com.englishacademy.EnglishAcademy.dtos.booking.BookingResponse;
 import com.englishacademy.EnglishAcademy.dtos.booking.BookingWaiting;
+import com.englishacademy.EnglishAcademy.dtos.student.StudentDTO;
 import com.englishacademy.EnglishAcademy.dtos.student_package.StudentPackageDTO;
 import com.englishacademy.EnglishAcademy.dtos.subscription.SubscriptionDTO;
 import com.englishacademy.EnglishAcademy.entities.*;
 import com.englishacademy.EnglishAcademy.exceptions.AppException;
 import com.englishacademy.EnglishAcademy.exceptions.ErrorCode;
-import com.englishacademy.EnglishAcademy.mappers.BookingMappers;
-import com.englishacademy.EnglishAcademy.mappers.LessionBookingMapper;
-import com.englishacademy.EnglishAcademy.mappers.StudentPackageMapper;
-import com.englishacademy.EnglishAcademy.mappers.SubscriptionMapper;
+import com.englishacademy.EnglishAcademy.mappers.*;
 import com.englishacademy.EnglishAcademy.models.booking.CreateBooking;
 import com.englishacademy.EnglishAcademy.repositories.*;
 import com.englishacademy.EnglishAcademy.services.BookingService;
@@ -41,6 +39,7 @@ public class BookingServiceImpl implements BookingService {
     private final SubscriptionRepository subscriptionRepository;
     private final SubscriptionMapper subscriptionMapper;
     private final StudentPackageMapper studentPackageMapper;
+    private final StudentMapper studentMapper;
     @Override
     public List<BookingDTO> findAll() {
         return bookingRepository.findAll().stream().map(bookingMappers::toBookingDTO).collect(Collectors.toList());
@@ -215,5 +214,20 @@ public class BookingServiceImpl implements BookingService {
                 .modifiedDate(booking.getModifiedDate())
                 .build();
         return bookingResponse;
+    }
+
+    @Override
+    public int findCountAllStudentStuding(User currenUser) {
+        Tutor tutor = tutorRepository.findByUser(currenUser);
+        if (tutor == null) throw new AppException(ErrorCode.NOTFOUND);
+        return bookingRepository.getCountStudentStudying(tutor.getId());
+    }
+
+    @Override
+    public List<StudentDTO> findActiveStudentsByTutorId(User currenUser) {
+        Tutor tutor = tutorRepository.findByUser(currenUser);
+        if (tutor == null) throw new AppException(ErrorCode.NOTFOUND);
+        return bookingRepository.findActiveStudentsByTutorId(tutor.getId())
+                .stream().map(studentMapper::toStudentDTO).collect(Collectors.toList());
     }
 }

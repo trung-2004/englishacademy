@@ -14,7 +14,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/classes")
@@ -29,6 +31,19 @@ public class ClassesController {
         List<CLassesDTO> list = classesService.getAllByTeacher(currentUser);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(true, 200, "ok", list)
+        );
+    }
+
+    @GetMapping("/by-teacher/count")
+    ResponseEntity<ResponseObject> getCountAllClassByTeacher() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = (User) auth.getPrincipal();
+        int totalClasses = classesService.countClassesByTeacher(currentUser);
+        Map<String, Integer> result = new HashMap<>();
+        result.put("totalClasses", totalClasses);
+
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "ok", result)
         );
     }
 

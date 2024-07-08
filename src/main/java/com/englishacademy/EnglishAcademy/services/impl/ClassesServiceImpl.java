@@ -22,11 +22,16 @@ public class ClassesServiceImpl implements ClassesService {
 
     @Override
     public List<CLassesDTO> getAllByTeacher(User currentUser) {
-        return classesRepository.findAllByTeacher(currentUser).stream().map(classesMapper::toClassesDTO).collect(Collectors.toList());
+        return classesRepository.findAllByTeacherAndStatus(currentUser, true).stream().map(classesMapper::toClassesDTO).collect(Collectors.toList());
     }
 
     @Override
     public CLassesDTO create(CreateClasses createClasses) {
         return null;
+    }
+
+    @Override
+    public int countClassesByTeacher(User currentUser) {
+        return classesRepository.findAllByTeacherCount(currentUser.getId());
     }
 }

@@ -1,8 +1,6 @@
 package com.englishacademy.EnglishAcademy.models.item_online;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,6 +22,8 @@ public class CreateItemOnline {
     @NotBlank(message = "Content is mandatory")
     private String content;
     @NotNull(message = "Item Type is mandatory")
+    @Min(value = 0, message = "Item Type must be at least 0")
+    @Max(value = 3, message = "Item Type must be at most 3")
     private Integer itemType;
     @NotNull(message = "Topic Online ID is mandatory")
     @Positive(message = "Topic Online ID must be a positive number")

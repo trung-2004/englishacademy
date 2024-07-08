@@ -18,6 +18,8 @@ import java.util.List;
 public class Classes extends BaseEntity{
     @Column(name = "name", nullable = false)
     private String name;
+    @Column(name = "status", nullable = false)
+    private boolean status;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "teacherId")

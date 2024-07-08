@@ -9,6 +9,6 @@ import java.util.List;
 
 public interface ClassesService {
     List<CLassesDTO> getAllByTeacher(User currentUser);
-
     CLassesDTO create(CreateClasses createClasses);
+    int countClassesByTeacher(User currentUser);
 }

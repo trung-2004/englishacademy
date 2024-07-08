@@ -2,6 +2,7 @@ package com.englishacademy.EnglishAcademy.controllers;
 
 import com.englishacademy.EnglishAcademy.dtos.ResponseObject;
 import com.englishacademy.EnglishAcademy.dtos.item_online.ItemOnlineDTO;
+import com.englishacademy.EnglishAcademy.dtos.item_online.ItemOnlineDTOResponse;
 import com.englishacademy.EnglishAcademy.dtos.item_online.ItemOnlineDetail;
 import com.englishacademy.EnglishAcademy.entities.ItemOnline;
 import com.englishacademy.EnglishAcademy.entities.Student;
@@ -44,7 +45,7 @@ public class ItemOnlineController {
 
     @GetMapping("/any/item-online/get-by-slug/{slug}")
     ResponseEntity<ResponseObject> getBySlug(@PathVariable("slug") String slug) {
-        ItemOnlineDTO itemOnlineDTO = itemOnlineService.findBySlug(slug);
+        ItemOnlineDTOResponse itemOnlineDTO = itemOnlineService.findBySlug(slug);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(true, 200, "ok", itemOnlineDTO)
         );

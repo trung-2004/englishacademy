@@ -6,7 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CreateReview {
-    private Long courseOnlineId;
+    private String courseOnlineSlug;
     private String message;
     private Double score;
 }

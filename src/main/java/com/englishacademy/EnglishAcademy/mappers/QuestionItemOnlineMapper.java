@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 public class QuestionItemOnlineMapper {
     public QuestionItemOnlineDTO toQuestionItemOnlineDTO(QuestionItemOnline model){
         if (model == null) {
-            throw new RuntimeException("Not Found");
+            return null;
         }
         QuestionItemOnlineDTO questionItemOnlineDTO = QuestionItemOnlineDTO.builder()
                 .id(model.getId())

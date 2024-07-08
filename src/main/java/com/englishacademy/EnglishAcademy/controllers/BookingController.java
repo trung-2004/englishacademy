@@ -4,6 +4,7 @@ import com.englishacademy.EnglishAcademy.dtos.ResponseObject;
 import com.englishacademy.EnglishAcademy.dtos.booking.BookingDTO;
 import com.englishacademy.EnglishAcademy.dtos.booking.BookingResponse;
 import com.englishacademy.EnglishAcademy.dtos.booking.BookingWaiting;
+import com.englishacademy.EnglishAcademy.dtos.student.StudentDTO;
 import com.englishacademy.EnglishAcademy.entities.Student;
 import com.englishacademy.EnglishAcademy.entities.User;
 import com.englishacademy.EnglishAcademy.exceptions.AppException;
@@ -17,7 +18,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -107,6 +110,30 @@ public class BookingController {
         BookingWaiting bookingWaiting = bookingService.findAllWaitingByStudent(currentStudent);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(true, 200, "ok", bookingWaiting)
+        );
+    }
+
+    @GetMapping("/tutor/get-count-student-studing")
+    ResponseEntity<ResponseObject> getCountAllStudentStuding() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User currenUser = (User) auth.getPrincipal();
+        int bookingWaiting = bookingService.findCountAllStudentStuding(currenUser);
+        Map<String, Integer> result = new HashMap<>();
+        result.put("totalStudents", bookingWaiting);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "ok", result)
+        );
+    }
+
+    @GetMapping("/tutor/get-all-student-studing")
+    ResponseEntity<ResponseObject> getAllStudentStuding() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User currenUser = (User) auth.getPrincipal();
+        List<StudentDTO> allStudentStuding = bookingService.findActiveStudentsByTutorId(currenUser);
+        Map<String, Object> result = new HashMap<>();
+        result.put("totalStudents", allStudentStuding);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "ok", result)
         );
     }
 }
