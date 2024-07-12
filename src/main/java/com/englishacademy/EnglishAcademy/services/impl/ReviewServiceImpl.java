@@ -37,15 +37,13 @@ public class ReviewServiceImpl implements ReviewService {
         if (!studentOptional.isPresent() || courseOnlineOptional==null){
             throw new AppException(ErrorCode.NOTFOUND);
         }
-
         Student student = studentOptional.get();
-
         CourseOnlineStudent courseOnlineStudentExsiting = courseOnlineStudentRepository.findByCourseOnlineAndStudent(courseOnlineOptional, student);
-
         if (courseOnlineStudentExsiting == null){
             throw new AppException(ErrorCode.COURSE_NOTPURCHASED);
         }
-
+        Review reviewExisting = reviewRepository.findByCourseOnlineAndStudent(courseOnlineOptional, student);
+        if (reviewExisting != null) throw new AppException(ErrorCode.NOTFOUND);
         Review review = Review.builder()
                 .courseOnline(courseOnlineOptional)
                 .student(student)

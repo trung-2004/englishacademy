@@ -1,6 +1,7 @@
 package com.englishacademy.EnglishAcademy.services.impl;
 
 import com.englishacademy.EnglishAcademy.dtos.question_test_online.QuestionTestOnlineDTO;
+import com.englishacademy.EnglishAcademy.dtos.test_online.TestOnlineDTO;
 import com.englishacademy.EnglishAcademy.dtos.test_online.TestOnlineDetail;
 import com.englishacademy.EnglishAcademy.dtos.test_session.TestOnlineSessionDetail;
 import com.englishacademy.EnglishAcademy.dtos.test_online_student.TestOnlineStudentDTO;
@@ -10,11 +11,15 @@ import com.englishacademy.EnglishAcademy.exceptions.ErrorCode;
 import com.englishacademy.EnglishAcademy.mappers.TestOnlineMapper;
 import com.englishacademy.EnglishAcademy.models.answer_student.CreateAnswerStudent;
 import com.englishacademy.EnglishAcademy.models.answer_student.SubmitTest;
+import com.englishacademy.EnglishAcademy.models.test_online.CreateTestOnline;
+import com.englishacademy.EnglishAcademy.models.test_online.EditTestOnline;
 import com.englishacademy.EnglishAcademy.repositories.*;
 import com.englishacademy.EnglishAcademy.services.TestOnlineService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -23,39 +28,31 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class TestOnlineServiceImpl implements TestOnlineService {
     private static final String ALLOWED_CHARACTERS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-    @Autowired
-    private TestOnlineRepository testOnlineRepository;
-    @Autowired
-    private StudentRepository studentRepository;
-    @Autowired
-    private CourseOnlineStudentRepository courseOnlineStudentRepository;
-    @Autowired
-    private TestOnlineStudentRepository testOnlineStudentRepository;
-    @Autowired
-    private AnswerStudentOnlineRepository answerStudentOnlineRepository;
-    @Autowired
-    private QuestionTestOnlineRepository questionTestOnlineRepository;
-    @Autowired
-    private TestOnlineMapper testOnlineMapper;
+    private final TestOnlineRepository testOnlineRepository;
+    private final StudentRepository studentRepository;
+    private final CourseOnlineStudentRepository courseOnlineStudentRepository;
+    private final TestOnlineStudentRepository testOnlineStudentRepository;
+    private final AnswerStudentOnlineRepository answerStudentOnlineRepository;
+    private final QuestionTestOnlineRepository questionTestOnlineRepository;
+    private final TestOnlineMapper testOnlineMapper;
+    private final ExcelUploadService excelUploadService;
+    private final TopicOnlineRepository topicOnlineRepository;
 
 
     @Override
     public TestOnlineDetail getdetailTest(String slug, Long studentId) {
         TestOnline testOnline = testOnlineRepository.findBySlug(slug);
-        if (testOnline == null){
-            throw new RuntimeException("Not Found");
-        }
+        if (testOnline == null) throw new AppException(ErrorCode.NOTFOUND);
 
         // Tìm sinh viên theo studentId
         Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new RuntimeException("Student Not Found"));
 
         CourseOnlineStudent courseOnlineStudent = courseOnlineStudentRepository.findByCourseOnlineAndStudent(testOnline.getTopicOnline().getCourseOnline(), student);
-        if (courseOnlineStudent == null) {
-            throw new RuntimeException("Not Found");
-        }
+        if (courseOnlineStudent == null) throw new AppException(ErrorCode.NOTFOUND);
 
         TestOnlineStudent testOnlineStudent = testOnlineStudentRepository.findByTestOnlineAndStudentAndStatus(testOnline, student, true);
         if (testOnlineStudent != null) throw new AppException(ErrorCode.NOTFOUND);
@@ -276,6 +273,65 @@ public class TestOnlineServiceImpl implements TestOnlineService {
         }
 
         return testOnlineStudentDTO;
+    }
+
+    @Override
+    public void saveTestOnline(CreateTestOnline createTestOnline) {
+        if(excelUploadService.isValidExcelFile(createTestOnline.getFile())){
+            try {
+                TopicOnline topicOnline = topicOnlineRepository.findById(createTestOnline.getTopicId()).orElseThrow(()->new AppException(ErrorCode.NOTFOUND));
+                TestOnline online = testOnlineRepository.findBySlug(createTestOnline.getTitle().toLowerCase().replace(" ", "-"));
+                if (online == null) throw new AppException(ErrorCode.NOTFOUND);
+
+                TestOnline testInput = TestOnline.builder()
+                        .title(createTestOnline.getTitle())
+                        .slug(createTestOnline.getTitle().toLowerCase().replace(" ", "-"))
+                        .description(createTestOnline.getDescription())
+                        .type(0)
+                        .topicOnline(topicOnline)
+                        .time(createTestOnline.getTime())
+                        .pastMark(createTestOnline.getPastMark())
+                        .totalMark(createTestOnline.getTotalMark())
+                        .totalQuestion(0)
+                        .createdBy("Demo")
+                        .createdDate(new Timestamp(System.currentTimeMillis()))
+                        .modifiedBy("Demo")
+                        .modifiedDate(new Timestamp(System.currentTimeMillis()))
+                        .build();
+                testOnlineRepository.save(testInput);
+
+                List<QuestionTestOnline> questionTestOnlineList = excelUploadService.getCustomersDataFromExcelOnline(createTestOnline.getFile().getInputStream(), testInput);
+                this.questionTestOnlineRepository.saveAll(questionTestOnlineList);
+                testInput.setTotalQuestion(questionTestOnlineList.size());
+                testOnlineRepository.save(testInput);
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+                throw new IllegalArgumentException("The file is not a valid excel file");
+            }
+        } else {
+            throw new AppException(ErrorCode.NOTFOUND);
+        }
+    }
+
+    @Override
+    public TestOnlineDTO edit(EditTestOnline editTestOnline) {
+        TestOnline testOnline = testOnlineRepository.findById(editTestOnline.getId()).orElseThrow(()->new AppException(ErrorCode.NOTFOUND));
+        TestOnline testOnline1 = testOnlineRepository.findBySlug(editTestOnline.getTitle().toLowerCase().replace(" ", "-"));
+        if (testOnline1 != null && !testOnline1.getSlug().equals(testOnline.getSlug())) throw  new AppException(ErrorCode.NOTFOUND);
+        testOnline.setTitle(editTestOnline.getTitle());
+        testOnline.setSlug(editTestOnline.getTitle().toLowerCase().replace(" ", "-"));
+        testOnline.setDescription(editTestOnline.getDescription());
+        testOnline.setTime(editTestOnline.getTime());
+        testOnline.setPastMark(editTestOnline.getPastMark());
+        testOnline.setTotalMark(editTestOnline.getTotalMark());
+        testOnline.setModifiedDate(new Timestamp(System.currentTimeMillis()));
+        testOnlineRepository.save(testOnline);
+        return testOnlineMapper.toTestOnlineDTO(testOnline);
+    }
+
+    @Override
+    public void delete(List<Long> ids) {
+        testOnlineRepository.deleteAllById(ids);
     }
 
 

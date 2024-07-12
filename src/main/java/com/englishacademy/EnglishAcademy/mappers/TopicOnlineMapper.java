@@ -122,7 +122,6 @@ public class TopicOnlineMapper {
             testOnlineResponseDTOS.add(testOnlineResponseDTO);
         }
 
-
         TopicOnlineDetailResponse topicOnlineDetail = TopicOnlineDetailResponse.builder()
                 .id(model.getId())
                 .name(model.getName())

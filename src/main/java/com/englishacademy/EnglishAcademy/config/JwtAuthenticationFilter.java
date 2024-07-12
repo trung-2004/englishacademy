@@ -1,7 +1,6 @@
 package com.englishacademy.EnglishAcademy.config;
 
-import com.englishacademy.EnglishAcademy.services.UserService;
-import com.englishacademy.EnglishAcademy.services.impl.JWTService;
+import com.englishacademy.EnglishAcademy.services.impl.JWTServiceImpl;
 import com.englishacademy.EnglishAcademy.services.impl.UserServiceImpl;
 import io.micrometer.common.util.StringUtils;
 import jakarta.servlet.FilterChain;
@@ -9,6 +8,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,8 +23,10 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final JWTService jwtService;
-    private final UserServiceImpl userService;
+    @Autowired
+    private JWTServiceImpl jwtServiceImpl;
+    @Autowired
+    private UserServiceImpl userService;
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         final String authHeader = request.getHeader("Authorization");
@@ -37,8 +39,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
         try {
             String jwt = authHeader.substring(7);
-            String userEmail =jwtService.extractUsername(jwt);
-            if (userEmail == null || !jwtService.isTokenValid(jwt, userService.userDetailsService().loadUserByUsername(userEmail))) {
+            String userEmail = jwtServiceImpl.extractUsername(jwt);
+            if (userEmail == null || !jwtServiceImpl.isTokenValid(jwt, userService.userDetailsService().loadUserByUsername(userEmail))) {
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
                 return;
             }
@@ -46,7 +48,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             if (StringUtils.isNotEmpty(userEmail) && SecurityContextHolder.getContext().getAuthentication() == null){
                 UserDetails userDetails = userService.userDetailsService().loadUserByUsername(userEmail);
 
-                if (jwtService.isTokenValid(jwt, userDetails)){
+                if (jwtServiceImpl.isTokenValid(jwt, userDetails)){
                     SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
 
                     UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(

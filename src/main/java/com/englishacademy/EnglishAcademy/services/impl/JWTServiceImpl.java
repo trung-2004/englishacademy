@@ -2,6 +2,7 @@ package com.englishacademy.EnglishAcademy.services.impl;
 
 import com.englishacademy.EnglishAcademy.entities.Student;
 import com.englishacademy.EnglishAcademy.entities.User;
+import com.englishacademy.EnglishAcademy.services.JWTService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -18,7 +19,7 @@ import java.util.function.Function;
 
 @Service
 @RequiredArgsConstructor
-public class JWTService implements com.englishacademy.EnglishAcademy.services.JWTService {
+public class JWTServiceImpl implements JWTService {
     public String generateToken(UserDetails userDetails){
         User user = (User) userDetails;
         return Jwts.builder().setSubject(userDetails.getUsername())

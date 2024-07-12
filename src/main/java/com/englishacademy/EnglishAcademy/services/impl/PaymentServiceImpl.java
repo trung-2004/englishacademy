@@ -1,20 +1,25 @@
 package com.englishacademy.EnglishAcademy.services.impl;
 
+import com.englishacademy.EnglishAcademy.dtos.booking.LessonDay;
 import com.englishacademy.EnglishAcademy.dtos.payment.PaymentDTO;
 import com.englishacademy.EnglishAcademy.entities.*;
 import com.englishacademy.EnglishAcademy.exceptions.AppException;
 import com.englishacademy.EnglishAcademy.exceptions.ErrorCode;
 import com.englishacademy.EnglishAcademy.mappers.PaymentMapper;
 import com.englishacademy.EnglishAcademy.models.payment.CreatePayment;
-import com.englishacademy.EnglishAcademy.repositories.BookingRepository;
-import com.englishacademy.EnglishAcademy.repositories.PaymentRepository;
-import com.englishacademy.EnglishAcademy.repositories.StudentPackageRepository;
-import com.englishacademy.EnglishAcademy.repositories.SubscriptionRepository;
+import com.englishacademy.EnglishAcademy.repositories.*;
 import com.englishacademy.EnglishAcademy.services.PaymentService;
+import com.englishacademy.EnglishAcademy.utils.JsonConverterUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +29,7 @@ public class PaymentServiceImpl implements PaymentService {
     private final SubscriptionRepository subscriptionRepository;
     private final PaymentMapper paymentMapper;
     private final BookingRepository bookingRepository;
+    private final LessionBookingRepository lessionBookingRepository;
 
     @Override
     public PaymentDTO payment(CreatePayment createPayment, Student currentStudent) {
@@ -56,6 +62,43 @@ public class PaymentServiceImpl implements PaymentService {
                     .lessonDays(studentPackage.getLessonDays())
                     .build();
             bookingRepository.save(booking);
+
+            List<LessonDay> lessonDays = JsonConverterUtil.convertJsonToLessonDay(booking.getLessonDays());
+
+            LocalDate today = LocalDate.now();
+            DayOfWeek todayDayOfWeek = today.getDayOfWeek();
+            List<LessionBooking> lessonBookings = new ArrayList<>();
+            int sessionsCreated = 0;
+            int numSessions = studentPackage.getPackages().getNumSessions();
+            while (sessionsCreated < numSessions) {
+                for (LessonDay schedule : lessonDays) {
+                    if (sessionsCreated >= numSessions) {
+                        break;
+                    }
+
+                    DayOfWeek lessonDayOfWeek = DayOfWeek.valueOf(schedule.getDayOfWeek().toUpperCase(Locale.ROOT));
+                    LocalDate lessonDate = today.with(lessonDayOfWeek);
+
+                    if (lessonDayOfWeek.compareTo(todayDayOfWeek) < 0) {
+                        lessonDate = lessonDate.plusWeeks(1);
+                    }
+
+                    lessonDate = lessonDate.plusWeeks(sessionsCreated / lessonDays.size());
+                    LocalTime startTime = schedule.getStartTime();
+                    LocalTime endTime = schedule.getEndTime();
+
+                    LessionBooking lessonBooking = new LessionBooking();
+                    lessonBooking.setBooking(booking);
+                    lessonBooking.setScheduledStartTime(java.sql.Date.valueOf(lessonDate.atTime(startTime).toLocalDate()));
+                    lessonBooking.setScheduledEndTime(java.sql.Date.valueOf(lessonDate.atTime(endTime).toLocalDate()));
+                    lessonBooking.setStatus(LessonBookingStatus.scheduled); // Adjust based on your enum
+                    // Set other necessary fields
+
+                    lessonBookings.add(lessonBooking);
+                    sessionsCreated++;
+                }
+            }
+            lessionBookingRepository.saveAll(lessonBookings);
 
             return paymentMapper.toPaymentDTO(payment);
         } else if (createPayment.getBookingType().equals(2)) {

@@ -3,6 +3,7 @@ package com.englishacademy.EnglishAcademy.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
@@ -11,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name = "courseOnline")
-@Builder
+@SuperBuilder
 public class CourseOnline extends BaseEntity{
     @Column(name = "name", nullable = false)
     private String name;
