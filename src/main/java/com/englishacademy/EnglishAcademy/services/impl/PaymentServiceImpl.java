@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.sql.Timestamp;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -84,14 +85,18 @@ public class PaymentServiceImpl implements PaymentService {
                     }
 
                     lessonDate = lessonDate.plusWeeks(sessionsCreated / lessonDays.size());
-                    LocalTime startTime = schedule.getStartTime();
-                    LocalTime endTime = schedule.getEndTime();
+                    LocalDateTime startTime = lessonDate.atTime(schedule.getStartTime());
+                    LocalDateTime endTime = lessonDate.atTime(schedule.getEndTime());
 
                     LessionBooking lessonBooking = new LessionBooking();
                     lessonBooking.setBooking(booking);
-                    lessonBooking.setScheduledStartTime(java.sql.Date.valueOf(lessonDate.atTime(startTime).toLocalDate()));
-                    lessonBooking.setScheduledEndTime(java.sql.Date.valueOf(lessonDate.atTime(endTime).toLocalDate()));
+                    lessonBooking.setScheduledStartTime(java.sql.Timestamp.valueOf(startTime));
+                    lessonBooking.setScheduledEndTime(java.sql.Timestamp.valueOf(endTime));
                     lessonBooking.setStatus(LessonBookingStatus.scheduled); // Adjust based on your enum
+                    lessonBooking.setCreatedBy("Demo");
+                    lessonBooking.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+                    lessonBooking.setModifiedDate(new Timestamp(System.currentTimeMillis()));
+                    lessonBooking.setModifiedBy("Demo");
                     // Set other necessary fields
 
                     lessonBookings.add(lessonBooking);

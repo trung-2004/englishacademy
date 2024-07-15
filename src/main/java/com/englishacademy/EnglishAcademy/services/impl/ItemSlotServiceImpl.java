@@ -177,7 +177,7 @@ public class ItemSlotServiceImpl implements ItemSlotService {
             throw new AppException(ErrorCode.ITEMSLOT_EXISTED);
         }
         Classes classes = classesRepository.findById(editItemSlot.getClassId()).orElseThrow(() -> new AppException(ErrorCode.CLASS_NOTFOUND));
-        Slot slot = slotRepository.findById(editItemSlot.getClassId()).orElseThrow(() -> new AppException(ErrorCode.SLOT_NOTFOUND));
+        Slot slot = slotRepository.findById(editItemSlot.getSlotId()).orElseThrow(() -> new AppException(ErrorCode.SLOT_NOTFOUND));
 
         ClassesSlot classesSlot = classesSlotRepository.findByClassesAndSlot(classes, slot);
         if (classesSlot == null) throw new AppException(ErrorCode.NOTFOUND);

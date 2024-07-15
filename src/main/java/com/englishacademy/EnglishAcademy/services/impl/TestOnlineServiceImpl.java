@@ -281,7 +281,7 @@ public class TestOnlineServiceImpl implements TestOnlineService {
             try {
                 TopicOnline topicOnline = topicOnlineRepository.findById(createTestOnline.getTopicId()).orElseThrow(()->new AppException(ErrorCode.NOTFOUND));
                 TestOnline online = testOnlineRepository.findBySlug(createTestOnline.getTitle().toLowerCase().replace(" ", "-"));
-                if (online == null) throw new AppException(ErrorCode.NOTFOUND);
+                if (online != null) throw new AppException(ErrorCode.NOTFOUND);
 
                 TestOnline testInput = TestOnline.builder()
                         .title(createTestOnline.getTitle())
@@ -332,6 +332,13 @@ public class TestOnlineServiceImpl implements TestOnlineService {
     @Override
     public void delete(List<Long> ids) {
         testOnlineRepository.deleteAllById(ids);
+    }
+
+    @Override
+    public TestOnlineDTO getBySlug(String slug) {
+        TestOnline testOnline = testOnlineRepository.findBySlug(slug);
+        if (testOnline == null) throw new AppException(ErrorCode.NOTFOUND);
+        return testOnlineMapper.toTestOnlineDTO(testOnline);
     }
 
 

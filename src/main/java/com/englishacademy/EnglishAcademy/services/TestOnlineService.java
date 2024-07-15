@@ -16,4 +16,5 @@ public interface TestOnlineService {
     void saveTestOnline(CreateTestOnline createTestOnline);
     TestOnlineDTO edit(EditTestOnline editTestOnline);
     void delete(List<Long> ids);
+    TestOnlineDTO getBySlug(String slug);
 }

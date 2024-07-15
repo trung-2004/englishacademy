@@ -7,8 +7,7 @@ import com.englishacademy.EnglishAcademy.models.answer_student.ScoreAnswerStuden
 
 public interface AnswerStudentItemSlotService {
     AnswerStudentItemSlot save(CreateAnswerStudentItemSlot model, Long studentId);
-
     AnswerStudentItemSlot scoreAnswer(ScoreAnswerStudentItemSlot scoreAnswerStudentItemSlot, Long studentId);
-
     ListScore listScore(String slug, Long id);
+    AnswerStudentItemSlot scoreAnswerByTeacher(ScoreAnswerStudentItemSlot scoreAnswerStudentItemSlot, Long id);
 }

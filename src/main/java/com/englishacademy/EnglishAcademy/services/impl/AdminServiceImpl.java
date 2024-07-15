@@ -29,25 +29,41 @@ public class AdminServiceImpl implements AdminService {
         if (roles.contains(Role.ADMIN)) {
             List<MenuItem> menuItems1 = new ArrayList<>();
             List<MenuItem> menuItems2 = new ArrayList<>();
+            List<MenuItem> menuItems3 = new ArrayList<>();
+            List<MenuItem> menuItems4 = new ArrayList<>();
+            List<MenuItem> menuItems5 = new ArrayList<>();
             menuItems1.add(new MenuItem("Dashboard", "config.routes.dashboard", "fas fa-book-reader"));
             menuItems2.add(new MenuItem("Course Online", "config.routes.course_online", "fas fa-book-reader"));
             menuItems2.add(new MenuItem("Course Offline", "config.routes.course_offline", "fas fa-book-reader"));
             menuItems2.add(new MenuItem("Categories", "config.routes.category_list", "fas fa-stream"));
+            menuItems3.add(new MenuItem("Entrance Test", "config.routes.entrance_test", "fas fa-window-restore"));
+            menuItems4.add(new MenuItem("Booking", "config.routes.booking_list", "fas fa-calendar-alt"));
+            menuItems5.add(new MenuItem("Profile", "config.routes.profile", "fas fa-user-shield"));
             menus.add(new Menu("Dashboard", menuItems1));
             menus.add(new Menu("Course & Lesson", menuItems2));
-        } else if (roles.contains(Role.USER)) {
+            menus.add(new Menu("Entrance Test", menuItems3));
+            menus.add(new Menu("Teacher & Tutor", menuItems4));
+            menus.add(new Menu("Information", menuItems5));
+        } else if (roles.contains(Role.TEACHER)) {
             List<MenuItem> menuItems1 = new ArrayList<>();
             List<MenuItem> menuItems2 = new ArrayList<>();
+            List<MenuItem> menuItems4 = new ArrayList<>();
+            List<MenuItem> menuItems5 = new ArrayList<>();
             menuItems1.add(new MenuItem("Dashboard", "config.routes.dashboard", "fas fa-book-reader"));
-            menuItems2.add(new MenuItem("Course Online", "config.routes.course_online", "fas fa-book-reader"));
-            menuItems2.add(new MenuItem("Course Offline", "config.routes.course_offline", "fas fa-book-reader"));
-            menuItems2.add(new MenuItem("Categories", "config.routes.category_list", "fas fa-stream"));
+            menuItems2.add(new MenuItem("Class", "config.routes.class_list_teacher", "fas fa-door-open"));
+            menuItems4.add(new MenuItem("Booking", "config.routes.booking_list", "fas fa-calendar-alt"));
+            menuItems5.add(new MenuItem("Profile", "config.routes.profile", "fas fa-user-shield"));
             menus.add(new Menu("Dashboard", menuItems1));
-            menus.add(new Menu("Course & Lesson", menuItems2));
-        } else if (roles.contains(Role.STUDENT)) {
-            List<MenuItem> menuItems = new ArrayList<>();
-            menuItems.add(new MenuItem("Dashboard", "config.routes.dashboard", "fas fa-book-reader"));
-            menus.add(new Menu("", menuItems));
+            menus.add(new Menu("Teacher & Tutor", menuItems4));
+            menus.add(new Menu("Class", menuItems2));
+            menus.add(new Menu("Information", menuItems5));
+        } else if (roles.contains(Role.TRAINERS)) {
+            List<MenuItem> menuItems1 = new ArrayList<>();
+            List<MenuItem> menuItems5 = new ArrayList<>();
+            menuItems1.add(new MenuItem("Dashboard", "config.routes.dashboard", "fas fa-book-reader"));
+            menuItems5.add(new MenuItem("Profile", "config.routes.profile", "fas fa-user-shield"));
+            menus.add(new Menu("Dashboard", menuItems1));
+            menus.add(new Menu("Information", menuItems5));
         }
         return menus;
     }

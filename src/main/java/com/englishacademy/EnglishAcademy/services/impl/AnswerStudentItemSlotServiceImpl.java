@@ -133,4 +133,14 @@ public class AnswerStudentItemSlotServiceImpl implements AnswerStudentItemSlotSe
                 .build();
         return listScore;
     }
+
+    @Override
+    public AnswerStudentItemSlot scoreAnswerByTeacher(ScoreAnswerStudentItemSlot scoreAnswerStudentItemSlot, Long id) {
+        AnswerStudentItemSlot answerStudentItemSlot = answerStudentItemSlotRepository.findById(scoreAnswerStudentItemSlot.getAnswerStudentItemSlotId())
+                .orElseThrow(()-> new AppException(ErrorCode.ANSWERITEMSLOT_NOTFOUND));
+        answerStudentItemSlot.setStar(scoreAnswerStudentItemSlot.getStar());
+        answerStudentItemSlot.setModifiedDate(new Timestamp(System.currentTimeMillis()));
+        answerStudentItemSlotRepository.save(answerStudentItemSlot);
+        return answerStudentItemSlot;
+    }
 }

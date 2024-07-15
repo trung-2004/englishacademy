@@ -42,13 +42,6 @@ public class ItemSlotController extends TextWebSocketHandler {
         );
     }
 
-    /*@MessageMapping("/message")
-    @SendTo("/chatroom/public")
-    public ItemSlotDetail receivePublicMessage(@Payload ItemSlotDetail itemSlotDetail){
-        System.out.println(itemSlotDetail.toString());
-        return itemSlotDetail;
-    }*/
-
     @GetMapping("/api/v1/item-slot/{slug}")
     public ResponseEntity<ResponseObject> getDetail(@PathVariable("slug") String slug){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();

@@ -3,6 +3,7 @@ package com.englishacademy.EnglishAcademy.services.impl;
 import com.englishacademy.EnglishAcademy.dtos.question_test_offline.QuestionTestOfflineDTO;
 import com.englishacademy.EnglishAcademy.dtos.question_test_offline.QuestionTestOfflineDetailResult;
 import com.englishacademy.EnglishAcademy.dtos.test_offline.TestOfflineDetail;
+import com.englishacademy.EnglishAcademy.dtos.test_offline_student.TestOfflineStudentDTO;
 import com.englishacademy.EnglishAcademy.dtos.test_session.TestOfflineSessionDetail;
 import com.englishacademy.EnglishAcademy.dtos.test_session.TestOfflineSessionDetailResult;
 import com.englishacademy.EnglishAcademy.entities.*;
@@ -209,5 +210,13 @@ public class TestOfflineServiceImpl implements TestOfflineService {
         }
         List<TestOfflineSessionDetailResult> testOfflineSessionDetailResults = new ArrayList<>(sessionDetailMap.values());
         return testOfflineSessionDetailResults;
+    }
+
+    @Override
+    public List<TestOfflineStudentDTO> getListScore(Long classId, String slug) {
+        TestOffline testOffline = testOfflineRepository.findBySlug(slug);
+        if (testOffline == null) throw new AppException(ErrorCode.NOTFOUND);
+//        List<TestOfflineStudent> testOfflineStudents = testOfflineStudentRepository.findByTestOfflineAndStudent();
+        return List.of();
     }
 }

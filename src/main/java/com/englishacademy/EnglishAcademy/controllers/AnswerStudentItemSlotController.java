@@ -5,6 +5,7 @@ import com.englishacademy.EnglishAcademy.dtos.answer_student_item_slot.ListScore
 import com.englishacademy.EnglishAcademy.dtos.item_slot.ItemSlotDetail;
 import com.englishacademy.EnglishAcademy.entities.AnswerStudentItemSlot;
 import com.englishacademy.EnglishAcademy.entities.Student;
+import com.englishacademy.EnglishAcademy.entities.User;
 import com.englishacademy.EnglishAcademy.models.answer_student.CreateAnswerStudentItemSlot;
 import com.englishacademy.EnglishAcademy.models.answer_student.ScoreAnswerStudentItemSlot;
 import com.englishacademy.EnglishAcademy.services.AnswerStudentItemSlotService;
@@ -74,4 +75,20 @@ public class AnswerStudentItemSlotController {
         );
     }
 
+    @PutMapping("/teacher/score/{classId}")
+    ResponseEntity<ResponseObject> scoreAnswerByTeacher(
+            @RequestBody ScoreAnswerStudentItemSlot scoreAnswerStudentItemSlot,
+            @PathVariable("classId") Long classId
+    ){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = (User) auth.getPrincipal();
+        AnswerStudentItemSlot answerStudentItemSlot = answerStudentItemSlotService.scoreAnswerByTeacher(scoreAnswerStudentItemSlot, currentUser.getId());
+        // Get the updated itemSlotDetail
+        ItemSlotDetail itemSlotDetail = itemSlotService.getDetailByUser(answerStudentItemSlot.getItemSlot().getSlug(), currentUser.getId(), classId);
+        // Send the updated itemSlotDetail to the client
+        this.template.convertAndSend("/topic/" + answerStudentItemSlot.getItemSlot().getSlug(), itemSlotDetail);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "ok", "")
+        );
+    }
 }

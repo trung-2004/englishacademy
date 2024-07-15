@@ -2,8 +2,10 @@ package com.englishacademy.EnglishAcademy.controllers;
 
 import com.englishacademy.EnglishAcademy.dtos.ResponseObject;
 import com.englishacademy.EnglishAcademy.dtos.test_offline.TestOfflineDetail;
+import com.englishacademy.EnglishAcademy.dtos.test_offline_student.TestOfflineStudentDTO;
 import com.englishacademy.EnglishAcademy.dtos.test_session.TestOfflineSessionDetailResult;
 import com.englishacademy.EnglishAcademy.entities.Student;
+import com.englishacademy.EnglishAcademy.entities.TestOfflineStudent;
 import com.englishacademy.EnglishAcademy.models.answer_student.CreateAnswerOfflineStudent;
 import com.englishacademy.EnglishAcademy.services.TestOfflineService;
 import com.englishacademy.EnglishAcademy.services.impl.FileAudioService;
@@ -55,6 +57,14 @@ public class TestOfflineController {
         List<TestOfflineSessionDetailResult> testOfflineDetail = testOfflineService.getdetailToScoreTest(code);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(true, 200, "ok", testOfflineDetail)
+        );
+    }
+
+    @GetMapping("list-student/{classId}/{slug}")
+    ResponseEntity<ResponseObject> getListToScoreTest(@PathVariable("classId") Long classId, @PathVariable("slug") String slug) {
+        List<TestOfflineStudentDTO> testOfflineStudentDTOS = testOfflineService.getListScore(classId, slug);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "ok", testOfflineStudentDTOS)
         );
     }
 

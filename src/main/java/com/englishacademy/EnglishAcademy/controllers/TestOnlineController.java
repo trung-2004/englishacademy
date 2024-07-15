@@ -83,6 +83,14 @@ public class TestOnlineController {
         );
     }
 
+    @GetMapping("/get-by-slug/{slug}")
+    ResponseEntity<ResponseObject> edit(@PathVariable String slug){
+        TestOnlineDTO testOnlineDTO = testOnlineService.getBySlug(slug);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "ok", testOnlineDTO)
+        );
+    }
+
     @PutMapping("/edit")
     ResponseEntity<ResponseObject> edit(@RequestBody EditTestOnline editTestOnline){
         TestOnlineDTO testOnlineDTO = testOnlineService.edit(editTestOnline);
