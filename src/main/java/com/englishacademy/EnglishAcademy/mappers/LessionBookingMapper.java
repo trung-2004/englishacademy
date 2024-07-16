@@ -21,6 +21,7 @@ public class LessionBookingMapper {
                 .scheduledEndTime(model.getScheduledEndTime())
                 .status(model.getStatus())
                 .path(model.getPath())
+                .code(model.getCode())
                 .createdBy(model.getCreatedBy())
                 .createdDate(model.getCreatedDate())
                 .modifiedBy(model.getModifiedBy())

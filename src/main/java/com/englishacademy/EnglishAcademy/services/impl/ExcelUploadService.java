@@ -5,6 +5,7 @@ import com.englishacademy.EnglishAcademy.exceptions.AppException;
 import com.englishacademy.EnglishAcademy.exceptions.ErrorCode;
 import com.englishacademy.EnglishAcademy.repositories.SessionRepository;
 import com.englishacademy.EnglishAcademy.repositories.TestInputSessionRepository;
+import com.englishacademy.EnglishAcademy.repositories.TestOfflineSessionRepository;
 import com.englishacademy.EnglishAcademy.repositories.TestOnlineSessionRepository;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,7 @@ public class ExcelUploadService {
     private final SessionRepository sessionRepository;
     private final TestInputSessionRepository testInputSessionRepository;
     private final TestOnlineSessionRepository testOnlineSessionRepository;
+    private final TestOfflineSessionRepository testOfflineSessionRepository;
     //private final
 
     public boolean isValidExcelFile(MultipartFile file){
@@ -626,5 +628,208 @@ public class ExcelUploadService {
         }
 
         return questionTestOnlineList;
+    }
+
+    public List<QuestionTestOffline> getCustomersDataFromExcelOffline(InputStream inputStream, TestOffline testOffline){
+        List<QuestionTestOffline> questionTestOfflineList = new ArrayList<>();
+        try {
+            XSSFWorkbook workbook = new XSSFWorkbook(inputStream);
+            XSSFSheet sheet = workbook.getSheet("TestOffline");// name sheet
+            int rowIndex =0;
+            for (Row row : sheet){
+                if (rowIndex ==0){
+                    rowIndex++;
+                    continue;
+                }
+                Iterator<Cell> cellIterator = row.iterator();
+                //int cellIndex = 0;
+                int orderTop = 0;
+                int totalQuestion = 0;
+                QuestionTestOffline questionTestOffline = new QuestionTestOffline();
+                for (int cellIndex = 0; cellIndex < row.getLastCellNum(); cellIndex++) {
+                    Cell cell = row.getCell(cellIndex, Row.MissingCellPolicy.RETURN_BLANK_AS_NULL);
+                    switch (cellIndex){
+                        case 0 -> questionTestOffline.setTitle(cell.getStringCellValue().trim());
+                        case 1 -> {
+                            var id = cell.getNumericCellValue();
+                            Session session = sessionRepository.findById((long)id)
+                                    .orElseThrow(() -> new AppException(ErrorCode.NOTFOUND));
+                            TestOfflineSession testOfflineSessionExiting = testOfflineSessionRepository.findByTestOfflineAndSession(testOffline, session);
+                            if (testOfflineSessionExiting == null){
+                                totalQuestion = 1;
+                                TestOfflineSession testOfflineSession = TestOfflineSession.builder()
+                                        .session(session)
+                                        .testOffline(testOffline)
+                                        .orderTop(orderTop)
+                                        .totalQuestion(totalQuestion)
+                                        .build();
+                                testOfflineSessionRepository.save(testOfflineSession);
+                                questionTestOffline.setTestOfflineSession(testOfflineSession);
+                                orderTop += 1;
+                            } else {
+                                questionTestOffline.setTestOfflineSession(testOfflineSessionExiting);
+                                testOfflineSessionExiting.setTotalQuestion(testOfflineSessionExiting.getTotalQuestion() + 1);
+                            }
+
+                        }
+                        case 2 -> //questionTestInput.setAudiomp3(cell.getStringCellValue());
+                        {
+                            if (cell == null || cell.getCellType().equals(CellType.BLANK)) {
+                                questionTestOffline.setAudiomp3(" ");
+                            } else {
+                                switch (cell.getCellType()) {
+                                    case STRING:
+                                        questionTestOffline.setAudiomp3(cell.getStringCellValue());
+                                        break;
+                                    case NUMERIC:
+                                        questionTestOffline.setAudiomp3(NumberToTextConverter.toText(cell.getNumericCellValue()));
+                                        break;
+                                    default:
+                                        questionTestOffline.setAudiomp3(" ");
+                                        break;
+                                }
+                            }
+                        }
+                        case 3 -> //questionTestInput.setImage(cell.getStringCellValue());
+                        {
+                            if (cell == null || cell.getCellType().equals(CellType.BLANK)) {
+                                questionTestOffline.setImage(" ");
+                            } else {
+                                switch (cell.getCellType()) {
+                                    case STRING:
+                                        questionTestOffline.setImage(cell.getStringCellValue());
+                                        break;
+                                    case NUMERIC:
+                                        questionTestOffline.setImage(NumberToTextConverter.toText(cell.getNumericCellValue()));
+                                        break;
+                                    default:
+                                        questionTestOffline.setImage(" ");
+                                        break;
+                                }
+                            }
+                        }
+
+                        case 4 -> //questionTestInput.setParagraph(cell.getStringCellValue());
+                        {
+                            if (cell == null || cell.getCellType().equals(CellType.BLANK)) {
+                                questionTestOffline.setParagraph(" ");
+                            } else {
+                                switch (cell.getCellType()) {
+                                    case STRING:
+                                        questionTestOffline.setParagraph(cell.getStringCellValue());
+                                        break;
+                                    case NUMERIC:
+                                        questionTestOffline.setParagraph(NumberToTextConverter.toText(cell.getNumericCellValue()));
+                                        break;
+                                    default:
+                                        questionTestOffline.setParagraph(" ");
+                                        break;
+                                }
+                            }
+                        }
+                        case 5 ->
+                        {
+                            switch (cell.getCellType()) {
+                                case STRING:
+                                    questionTestOffline.setOption1(cell.getStringCellValue());
+                                    break;
+                                case NUMERIC:
+                                    questionTestOffline.setOption1(NumberToTextConverter.toText(cell.getNumericCellValue()));
+                                    break;
+                                default:
+                                    questionTestOffline.setOption1(null);
+                                    break;
+                            }
+                        }
+                        case 6 ->
+                        {
+                            {
+                                switch (cell.getCellType()) {
+                                    case STRING:
+                                        questionTestOffline.setOption2(cell.getStringCellValue());
+                                        break;
+                                    case NUMERIC:
+                                        questionTestOffline.setOption2(NumberToTextConverter.toText(cell.getNumericCellValue()));
+                                        break;
+                                    default:
+                                        questionTestOffline.setOption2(null);
+                                        break;
+                                }
+                            }
+                        }
+                        case 7 ->
+                        {
+                            {
+                                switch (cell.getCellType()) {
+                                    case STRING:
+                                        questionTestOffline.setOption3(cell.getStringCellValue());
+                                        break;
+                                    case NUMERIC:
+                                        questionTestOffline.setOption3(NumberToTextConverter.toText(cell.getNumericCellValue()));
+                                        break;
+                                    default:
+                                        questionTestOffline.setOption3(null);
+                                        break;
+                                }
+                            }
+                        }
+                        case 8 ->
+                        {
+                            {
+                                switch (cell.getCellType()) {
+                                    case STRING:
+                                        questionTestOffline.setOption4(cell.getStringCellValue());
+                                        break;
+                                    case NUMERIC:
+                                        questionTestOffline.setOption4(NumberToTextConverter.toText(cell.getNumericCellValue()));
+                                        break;
+                                    default:
+                                        questionTestOffline.setOption4(null);
+                                        break;
+                                }
+                            }
+                        }
+                        case 9 ->
+                        {
+                            switch (cell.getCellType()) {
+                                case STRING:
+                                    questionTestOffline.setCorrectanswer(cell.getStringCellValue());
+                                    break;
+                                case NUMERIC:
+                                    questionTestOffline.setCorrectanswer(NumberToTextConverter.toText(cell.getNumericCellValue()));
+                                    break;
+                                default:
+                                    questionTestOffline.setCorrectanswer(null);
+                                    break;
+                            }
+                        }
+                        case 10 -> questionTestOffline.setType((int) cell.getNumericCellValue());
+                        case 11 -> questionTestOffline.setPart((int) cell.getNumericCellValue());
+                        case 12 -> //questionTestInput.setOrderTop((int) cell.getNumericCellValue());
+                        {
+                            switch (cell.getCellType()) {
+                                case STRING:
+                                    questionTestOffline.setOrderTop(Integer.valueOf(cell.getStringCellValue()));
+                                    break;
+                                case NUMERIC:
+                                    questionTestOffline.setOrderTop(Integer.valueOf(NumberToTextConverter.toText(cell.getNumericCellValue())));
+                                    break;
+                                default:
+                                    questionTestOffline.setOrderTop(0);
+                                    break;
+                            }
+                        }
+                        default -> {
+                        }
+                    }
+                }
+                questionTestOfflineList.add(questionTestOffline);
+            }
+            workbook.close();
+        } catch (IOException e) {
+            e.getStackTrace();
+        }
+
+        return questionTestOfflineList;
     }
 }

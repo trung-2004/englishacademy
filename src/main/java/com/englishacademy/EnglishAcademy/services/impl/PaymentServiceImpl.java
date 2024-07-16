@@ -93,6 +93,7 @@ public class PaymentServiceImpl implements PaymentService {
                     lessonBooking.setScheduledStartTime(startTime);
                     lessonBooking.setScheduledEndTime(endTime);
                     lessonBooking.setStatus(LessonBookingStatus.scheduled); // Adjust based on your enum
+                    lessonBooking.setCode(TestOnlineServiceImpl.generateRandomString(8));
                     lessonBooking.setCreatedBy("Demo");
                     lessonBooking.setCreatedDate(new Timestamp(System.currentTimeMillis()));
                     lessonBooking.setModifiedDate(new Timestamp(System.currentTimeMillis()));

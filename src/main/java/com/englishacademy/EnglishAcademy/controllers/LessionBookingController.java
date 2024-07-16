@@ -31,6 +31,7 @@ public class LessionBookingController {
                 new ResponseObject(true, 200, "ok", list)
         );
     }
+
     @GetMapping("/lession-booking/{booking_id}")
     ResponseEntity<ResponseObject> getAllByBooking(@PathVariable("booking_id") Long bookingId) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -51,6 +52,16 @@ public class LessionBookingController {
         );
     }
 
+    @GetMapping("/lession-booking/detail/check/{id}")
+    ResponseEntity<ResponseObject> check(@PathVariable("id") Long id) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Student currentUser = (Student) auth.getPrincipal();
+        boolean list = lessionBookingService.check(id, currentUser);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "ok", list)
+        );
+    }
+
     @PostMapping("/lession-booking")
     ResponseEntity<ResponseObject> insert(@RequestBody CreateLessionBooking createLessionBooking) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -60,6 +71,7 @@ public class LessionBookingController {
                 new ResponseObject(true, 200, "ok", "")
         );
     }
+
     @PutMapping("/lession-booking")
     ResponseEntity<ResponseObject> update(@RequestBody UpdateLessionBooking updateLessionBooking) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();

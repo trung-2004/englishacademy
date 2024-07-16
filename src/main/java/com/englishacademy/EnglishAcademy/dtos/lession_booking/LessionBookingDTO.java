@@ -21,6 +21,7 @@ public class LessionBookingDTO {
     private LocalDateTime actualStartTime;
     private LocalDateTime actualEndTime;
     private String path;
+    private String code;
     private LessonBookingStatus status;
     private Long id;
     private Timestamp createdDate;

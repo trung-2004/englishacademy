@@ -92,4 +92,11 @@ public class LessionBookingServiceImpl implements LessionBookingService {
         if (!lessionBooking.getBooking().getStudent().getId().equals(currentUser.getId())) throw new AppException(ErrorCode.NOTFOUND);
         return lessionBookingMapper.toLessionBookingDTO(lessionBooking);
     }
+
+    @Override
+    public boolean check(Long id, Student currentUser) {
+        LessionBooking lessionBooking = lessionBookingRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.NOTFOUND));
+        return lessionBooking.getBooking().getStudent().getId().equals(currentUser.getId());
+    }
 }

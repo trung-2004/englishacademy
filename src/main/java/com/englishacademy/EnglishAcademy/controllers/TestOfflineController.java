@@ -7,6 +7,9 @@ import com.englishacademy.EnglishAcademy.dtos.test_session.TestOfflineSessionDet
 import com.englishacademy.EnglishAcademy.entities.Student;
 import com.englishacademy.EnglishAcademy.entities.TestOfflineStudent;
 import com.englishacademy.EnglishAcademy.models.answer_student.CreateAnswerOfflineStudent;
+import com.englishacademy.EnglishAcademy.models.test_offline.CreateTestOffline;
+import com.englishacademy.EnglishAcademy.models.test_offline.ScoreTestOfflineStudent;
+import com.englishacademy.EnglishAcademy.models.test_online.CreateTestOnline;
 import com.englishacademy.EnglishAcademy.services.TestOfflineService;
 import com.englishacademy.EnglishAcademy.services.impl.FileAudioService;
 import org.springframework.http.HttpStatus;
@@ -16,6 +19,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -68,6 +72,14 @@ public class TestOfflineController {
         );
     }
 
+    @PutMapping("/score")
+    ResponseEntity<ResponseObject> scoreList(@RequestBody List<ScoreTestOfflineStudent> testOfflineStudents) {
+        testOfflineService.scoreList(testOfflineStudents);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "ok", "")
+        );
+    }
+
     @PostMapping("/file")
     ResponseEntity<String> save(@RequestParam("file") MultipartFile file) {
         try{
@@ -77,5 +89,30 @@ public class TestOfflineController {
             System.out.println(exception.getMessage());
             return null;
         }
+    }
+
+    @PostMapping("/create")
+    ResponseEntity<ResponseObject> insert(
+            @RequestParam("title") String title,
+            @RequestParam("startDate") LocalDateTime startDate,
+            @RequestParam("endDate") LocalDateTime endDate,
+            @RequestParam("pastMark") Integer pastMark,
+            @RequestParam("totalMark") Integer totalMark,
+            @RequestParam("description") String description,
+            @RequestParam("subjectId") Long subjectId,
+            @RequestParam("file") MultipartFile file)
+    {
+        CreateTestOffline createTestOffline = new CreateTestOffline();
+        createTestOffline.setTitle(title);
+        createTestOffline.setFile(file);
+        createTestOffline.setPastMark(pastMark);
+        createTestOffline.setTotalMark(totalMark);
+        createTestOffline.setStartDate(startDate);
+        createTestOffline.setEndDate(endDate);
+        createTestOffline.setSubjectId(subjectId);
+        testOfflineService.saveTestOffline(createTestOffline);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "ok", "")
+        );
     }
 }

@@ -32,4 +32,6 @@ public class LessionBooking extends BaseEntity{
     private LessonBookingStatus status;
     @Column(name = "path")
     private String path;
+    @Column(name = "code", nullable = false)
+    private String code;
 }

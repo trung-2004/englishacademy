@@ -11,12 +11,15 @@ import com.englishacademy.EnglishAcademy.exceptions.AppException;
 import com.englishacademy.EnglishAcademy.exceptions.ErrorCode;
 import com.englishacademy.EnglishAcademy.mappers.TestOfflineStudentMapper;
 import com.englishacademy.EnglishAcademy.models.answer_student.CreateAnswerOfflineStudent;
+import com.englishacademy.EnglishAcademy.models.test_offline.CreateTestOffline;
+import com.englishacademy.EnglishAcademy.models.test_offline.ScoreTestOfflineStudent;
 import com.englishacademy.EnglishAcademy.repositories.*;
 import com.englishacademy.EnglishAcademy.services.TestOfflineService;
 import com.englishacademy.EnglishAcademy.utils.JsonConverterUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.ZoneId;
 import java.util.*;
@@ -33,6 +36,8 @@ public class TestOfflineServiceImpl implements TestOfflineService {
     private final AnswerStudentOfflineRepository answerStudentOfflineRepository;
     private final TestOfflineStudentMapper testOfflineStudentMapper;
     private final FileAudioService fileAudioService;
+    private final SubjectRepository subjectRepository;
+    private final ExcelUploadService excelUploadService;
 
     @Override
     public TestOfflineDetail getdetailTest(String slug, Long studentId) {
@@ -237,5 +242,56 @@ public class TestOfflineServiceImpl implements TestOfflineService {
             }
         }
         return testOfflineStudents.stream().map(testOfflineStudentMapper::toTestOfflineStudentDTO).collect(Collectors.toList());
+    }
+
+    @Override
+    public void scoreList(List<ScoreTestOfflineStudent> scoreTestOfflineStudents) {
+        for (ScoreTestOfflineStudent scoreTestOfflineStudent: scoreTestOfflineStudents){
+            TestOfflineStudent testOfflineStudent = testOfflineStudentRepository.findById(scoreTestOfflineStudent.getId()).orElseThrow(()->new AppException(ErrorCode.NOTFOUND));
+            if (testOfflineStudent == null) {
+
+            } else {
+                testOfflineStudent.setScore(scoreTestOfflineStudent.getScore());
+                testOfflineStudent.setModifiedDate(new Timestamp(System.currentTimeMillis()));
+                testOfflineStudentRepository.save(testOfflineStudent);
+            }
+        }
+    }
+
+    @Override
+    public void saveTestOffline(CreateTestOffline createTestOffline) {
+        if(excelUploadService.isValidExcelFile(createTestOffline.getFile())){
+            try {
+                Subject subject = subjectRepository.findById(createTestOffline.getSubjectId()).orElseThrow(()->new AppException(ErrorCode.NOTFOUND));
+                TestOffline offline = testOfflineRepository.findBySlug(createTestOffline.getTitle().toLowerCase().replace(" ", "-"));
+                if (offline != null) throw new AppException(ErrorCode.NOTFOUND);
+
+                TestOffline testInput = TestOffline.builder()
+                        .name(createTestOffline.getTitle())
+                        .slug(createTestOffline.getTitle().toLowerCase().replace(" ", "-"))
+                        .subject(subject)
+                        .startDate(createTestOffline.getStartDate())
+                        .endDate(createTestOffline.getEndDate())
+                        .pastMark(createTestOffline.getPastMark())
+                        .totalMark(createTestOffline.getTotalMark())
+                        .totalQuestion(0)
+                        .createdBy("Demo")
+                        .createdDate(new Timestamp(System.currentTimeMillis()))
+                        .modifiedBy("Demo")
+                        .modifiedDate(new Timestamp(System.currentTimeMillis()))
+                        .build();
+                testOfflineRepository.save(testInput);
+
+                List<QuestionTestOffline> questionTestOfflineList = excelUploadService.getCustomersDataFromExcelOffline(createTestOffline.getFile().getInputStream(), testInput);
+                this.questionTestOfflineRepository.saveAll(questionTestOfflineList);
+                testInput.setTotalQuestion(questionTestOfflineList.size());
+                testOfflineRepository.save(testInput);
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+                throw new IllegalArgumentException("The file is not a valid excel file");
+            }
+        } else {
+            throw new AppException(ErrorCode.NOTFOUND);
+        }
     }
 }

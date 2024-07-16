@@ -59,5 +59,4 @@ public class QuestionTestOffline extends BaseEntity{
     @OneToMany(mappedBy = "questionTestOffline")
     @JsonIgnore
     private List<AnswerStudentOffline> answerStudentOfflines;
-
 }

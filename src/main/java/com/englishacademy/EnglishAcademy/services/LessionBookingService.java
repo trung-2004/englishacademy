@@ -10,14 +10,10 @@ import java.util.List;
 
 public interface LessionBookingService {
     List<LessionBookingDTO> findAll();
-
     void save(CreateLessionBooking createLessionBooking, User user);
-
     List<LessionBookingDTO> findAllByTutor(User user);
-
     List<LessionBookingDTO> findAllByBooking(Long bookingId, User user);
-
     void update(UpdateLessionBooking updateLessionBooking, User currentUser);
-
     LessionBookingDTO getDetail(Long id, Student currentUser);
+    boolean check(Long id, Student currentUser);
 }
