@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -14,8 +15,8 @@ public class CreateItemSlot {
     private String content;
     @NotNull(message = "ItemType cannot be null")
     private Integer itemType;
-    private Date startDate;
-    private Date endDate;
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
     @NotNull(message = "OrderTop cannot be null")
     private Integer orderTop;
     @NotNull(message = "Class id cannot be null")

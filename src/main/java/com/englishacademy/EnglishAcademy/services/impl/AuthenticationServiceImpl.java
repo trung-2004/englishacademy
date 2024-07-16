@@ -46,16 +46,21 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public User signup(SignUpRequest signUpRequest) {
-        User user = new User();
-        user.setCode(generateRandomString(8));
-        user.setFullName(signUpRequest.getFullname());
-        user.setEmail(signUpRequest.getEmail());
-        user.setRole(Role.USER);
-        user.setUserType("user");
-        user.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
+    public void signup(SignUpRequest signUpRequest) {
+        Optional<User> userExiting = userRepository.findByEmail(signUpRequest.getEmail());
+        if (userExiting.isPresent()) {
 
-        return userRepository.save(user);
+        } else {
+            User user = new User();
+            user.setCode(generateRandomString(8));
+            user.setFullName(signUpRequest.getFullname());
+            user.setEmail(signUpRequest.getEmail());
+            user.setPhone(signUpRequest.getPhone());
+            user.setRole(Role.USER);
+            user.setUserType("user");
+            user.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
+            userRepository.save(user);
+        }
     }
 
     @Override
@@ -108,15 +113,27 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public Student studentSignUp(SignUpRequest signUpRequest) {
-        Student student = new Student();
-        student.setCode(generateRandomString(8));
-        student.setFullName(signUpRequest.getFullname());
-        student.setEmail(signUpRequest.getEmail());
-        student.setRole(Role.STUDENT);
-        student.setUserType("student");
-        student.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
-        return studentRepository.save(student);
+    public void studentSignUp(SignUpRequest signUpRequest) {
+        Optional<Student> studentExiting = studentRepository.findByEmail(signUpRequest.getEmail());
+        if (studentExiting.isPresent()) {
+            if (studentExiting.get().getPassword().isEmpty()) {
+                studentExiting.get().setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
+                studentExiting.get().setFullName(signUpRequest.getFullname());
+                studentExiting.get().setPhone(signUpRequest.getPhone());
+                studentRepository.save(studentExiting.get());
+            } else {
+
+            }
+        } else {
+            Student student = new Student();
+            student.setCode(generateRandomString(8));
+            student.setFullName(signUpRequest.getFullname());
+            student.setEmail(signUpRequest.getEmail());
+            student.setRole(Role.STUDENT);
+            student.setUserType("student");
+            student.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
+            studentRepository.save(student);
+        }
     }
 
     @Override
@@ -287,6 +304,30 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         currentStudent.setModifiedDate(new Timestamp(System.currentTimeMillis()));
         currentStudent.setGender(updateProfileStudentRequest.getGender());
         studentRepository.save(currentStudent);
+    }
+
+    @Override
+    public String studentSignUpNew(SignUpRequestNew signUpRequest) {
+        Optional<Student> studentExiting = studentRepository.findByEmail(signUpRequest.getEmail());
+        if (studentExiting.isPresent()) {
+            if (studentExiting.get().getPassword().isEmpty()) {
+                var jwt = jwtService.generateToken2(studentExiting.get());
+                return jwt;
+            } else {
+                return null;
+            }
+        } else {
+            Student student = new Student();
+            student.setCode(generateRandomString(8));
+            student.setFullName(signUpRequest.getFullname());
+            student.setEmail(signUpRequest.getEmail());
+            student.setPassword("");
+            student.setRole(Role.STUDENT);
+            student.setUserType("student");
+            studentRepository.save(student);
+            var jwt = jwtService.generateToken2(student);
+            return jwt;
+        }
     }
 
     private String generateResetToken() {

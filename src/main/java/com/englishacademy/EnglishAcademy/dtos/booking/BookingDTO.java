@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -18,8 +19,8 @@ public class BookingDTO {
     private Long tutorId;
     private Long studentId;
     private Long paymentId;
-    private Date startTime;
-    private Date endTime;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
     private String tutorName;
     private String studentName;
     private String description;

@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -15,10 +16,10 @@ import java.util.Date;
 @Builder
 public class LessionBookingDTO {
     private Long bookingId;
-    private Date scheduledStartTime;
-    private Date scheduledEndTime;
-    private Date actualStartTime;
-    private Date actualEndTime;
+    private LocalDateTime scheduledStartTime;
+    private LocalDateTime scheduledEndTime;
+    private LocalDateTime actualStartTime;
+    private LocalDateTime actualEndTime;
     private String path;
     private LessonBookingStatus status;
     private Long id;

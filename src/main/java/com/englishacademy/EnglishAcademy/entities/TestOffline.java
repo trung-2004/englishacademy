@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -28,10 +29,10 @@ public class TestOffline extends BaseEntity{
     private Integer totalMark;
 
     @Column(name = "startDate", nullable = false)
-    private Date startDate;
+    private LocalDateTime startDate;
 
     @Column(name = "endDate", nullable = false)
-    private Date endDate;
+    private LocalDateTime endDate;
 
     @Column(name = "retakeTestId")
     private Integer retakeTestId;

@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -27,9 +28,9 @@ public class Booking extends BaseEntity{
     @JoinColumn(name = "payment_id")
     private Payment payment;
     @Column(name = "startTime")
-    private Date startTime;
+    private LocalDateTime startTime;
     @Column(name = "endTime")
-    private Date endTime;
+    private LocalDateTime endTime;
     @Column(name = "description")
     private String description;
     @Column(name = "status")

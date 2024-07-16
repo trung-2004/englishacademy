@@ -5,7 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.cglib.core.Local;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -19,13 +21,13 @@ public class LessionBooking extends BaseEntity{
     @JoinColumn(name = "booking_id")
     private Booking booking;
     @Column(name = "scheduledStartTime", nullable = false)
-    private Date scheduledStartTime;
+    private LocalDateTime scheduledStartTime;
     @Column(name = "scheduledEndTime", nullable = false)
-    private Date scheduledEndTime;
+    private LocalDateTime scheduledEndTime;
     @Column(name = "actualStartTime")
-    private Date actualStartTime;
+    private LocalDateTime actualStartTime;
     @Column(name = "actualEndTime")
-    private Date actualEndTime;
+    private LocalDateTime actualEndTime;
     @Column(name = "status", nullable = false)
     private LessonBookingStatus status;
     @Column(name = "path")

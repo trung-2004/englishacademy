@@ -5,8 +5,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Date;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.Date;
 
 @Data
 @NoArgsConstructor
@@ -16,7 +17,7 @@ public class TestOfflineStudentDTO {
     private Long id;
     private String code;
     private Double score;
-    private Date time;
+    private LocalDateTime time;
     private boolean status;
     private boolean isPassed;
     private Long studentId;

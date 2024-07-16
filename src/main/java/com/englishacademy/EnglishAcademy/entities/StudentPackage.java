@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -26,7 +27,7 @@ public class StudentPackage extends BaseEntity{
     @Column(name = "remainingSessions", nullable = false)
     private Integer remainingSessions;
     @Column(name = "purchaseDate", nullable = false)
-    private Date purchaseDate ;
+    private LocalDateTime purchaseDate ;
     @Column(name = "lessonDays", nullable = false, columnDefinition = "TEXT")
     @Lob
     private String lessonDays;

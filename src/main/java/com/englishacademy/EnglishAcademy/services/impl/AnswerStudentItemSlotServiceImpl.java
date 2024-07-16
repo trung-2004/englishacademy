@@ -14,9 +14,12 @@ import com.englishacademy.EnglishAcademy.repositories.ItemSlotRepository;
 import com.englishacademy.EnglishAcademy.repositories.PeerReviewRepository;
 import com.englishacademy.EnglishAcademy.repositories.StudentRepository;
 import com.englishacademy.EnglishAcademy.services.AnswerStudentItemSlotService;
+import com.englishacademy.EnglishAcademy.utils.JsonConverterUtil;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 
 @Service
@@ -51,13 +54,15 @@ public class AnswerStudentItemSlotServiceImpl implements AnswerStudentItemSlotSe
         /*System.out.println(now);
         System.out.println(itemSlot.getStartDate());
         System.out.println(itemSlot.getEndDate());*/
-        if (now.after(itemSlot.getEndDate()) || now.before(itemSlot.getStartDate())) throw new AppException(ErrorCode.EXPIRES);
+        Date startDate = JsonConverterUtil.convertToDateViaInstant(itemSlot.getStartDate());
+        Date endDate = JsonConverterUtil.convertToDateViaInstant(itemSlot.getEndDate());
+        if (now.after(startDate) || now.before(endDate))throw new AppException(ErrorCode.EXPIRES);
 
         AnswerStudentItemSlot answerStudentItemSlot = AnswerStudentItemSlot.builder()
                 .itemSlot(itemSlot)
                 .student(student)
                 .star(0)
-                .time(now)
+                .time(now.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
                 .content(model.getContent())
                 .star1Count(3)
                 .star2Count(3)
@@ -95,7 +100,7 @@ public class AnswerStudentItemSlotServiceImpl implements AnswerStudentItemSlotSe
         peerReviewRepository.save(peerReview);
 
         // logic
-        if (now.after(answerStudentItemSlot.getItemSlot().getEndDate()) || now.before(answerStudentItemSlot.getItemSlot().getStartDate())) throw new AppException(ErrorCode.EXPIRES);
+        if (now.after(JsonConverterUtil.convertToDateViaInstant(answerStudentItemSlot.getItemSlot().getEndDate())) || now.before(JsonConverterUtil.convertToDateViaInstant(answerStudentItemSlot.getItemSlot().getStartDate()))) throw new AppException(ErrorCode.EXPIRES);
         if (scoreAnswerStudentItemSlot.getStar().equals(1) && answerStudentItemSlotExsting.getStar1Count() > 0) {
             answerStudentItemSlot.setStar(answerStudentItemSlot.getStar()+scoreAnswerStudentItemSlot.getStar());
             answerStudentItemSlotExsting.setStar1Count(answerStudentItemSlotExsting.getStar1Count() - 1);

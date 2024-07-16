@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -31,10 +33,10 @@ public class ItemSlot extends BaseEntity{
     private Integer itemType;
 
     @Column(name = "startDate")
-    private Date startDate;
+    private LocalDateTime startDate;
 
     @Column(name = "endDate")
-    private Date endDate;
+    private LocalDateTime endDate;
 
     @Column(name = "orderTop", nullable = false)
     private Integer orderTop;

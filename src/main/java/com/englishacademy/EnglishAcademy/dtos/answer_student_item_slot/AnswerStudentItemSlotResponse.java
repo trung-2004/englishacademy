@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -16,7 +17,7 @@ public class AnswerStudentItemSlotResponse {
     private Long id;
     private String content;
     private Integer star;
-    private Date time;
+    private LocalDateTime time;
     private Integer star3Count;
     private Integer star2Count;
     private Integer star1Count;

@@ -9,6 +9,7 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -27,7 +28,7 @@ public class Certificate extends BaseEntity{
     @Column(name = "fullName", nullable = false)
     private String fullName;
     @Column(name = "issued_date", nullable = false)
-    private Timestamp issuedDate;
+    private LocalDateTime issuedDate;
     @Column(name = "downloads_count", nullable = false)
     private Integer downloadsCount;
 }

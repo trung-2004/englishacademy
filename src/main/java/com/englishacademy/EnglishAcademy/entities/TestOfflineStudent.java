@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -22,7 +23,7 @@ public class TestOfflineStudent extends BaseEntity{
     @Column(name = "score")
     private Double score;
     @Column(name = "time")
-    private Date time;
+    private LocalDateTime time;
     @Column(name = "status")
     private boolean status;
     @Column(name = "isPassed")

@@ -45,7 +45,7 @@ public class PaymentServiceImpl implements PaymentService {
             if (paymentExisting != null) throw new AppException(ErrorCode.NOTFOUND);
             Payment payment = Payment.builder()
                     .paymentMethod(createPayment.getPaymentMethod())
-                    .paymentDate(now)
+                    .paymentDate(now.toLocalDateTime())
                     .studentPackage(studentPackage)
                     .price(createPayment.getPrice())
                     .isPaid(true)
@@ -90,8 +90,8 @@ public class PaymentServiceImpl implements PaymentService {
 
                     LessionBooking lessonBooking = new LessionBooking();
                     lessonBooking.setBooking(booking);
-                    lessonBooking.setScheduledStartTime(java.sql.Timestamp.valueOf(startTime));
-                    lessonBooking.setScheduledEndTime(java.sql.Timestamp.valueOf(endTime));
+                    lessonBooking.setScheduledStartTime(startTime);
+                    lessonBooking.setScheduledEndTime(endTime);
                     lessonBooking.setStatus(LessonBookingStatus.scheduled); // Adjust based on your enum
                     lessonBooking.setCreatedBy("Demo");
                     lessonBooking.setCreatedDate(new Timestamp(System.currentTimeMillis()));
@@ -116,7 +116,7 @@ public class PaymentServiceImpl implements PaymentService {
             if (paymentExisting != null) throw new AppException(ErrorCode.NOTFOUND);
             Payment payment = Payment.builder()
                     .paymentMethod(createPayment.getPaymentMethod())
-                    .paymentDate(now)
+                    .paymentDate(now.toLocalDateTime())
                     .subscription(subscription)
                     .price(createPayment.getPrice())
                     .isPaid(true)

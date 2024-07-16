@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.json.JSONArray;
 
 import java.sql.Timestamp;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -83,7 +84,7 @@ public class BookingServiceImpl implements BookingService {
                     .packages(packages)
                     .student(student)
                     .remainingSessions(packages.getNumSessions())
-                    .purchaseDate(now)
+                    .purchaseDate(now.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
                     .lessonDays(scheduleArray.toString())
                     .price(packages.getHourlyRate())
                     .status(BookingStatus.pending)

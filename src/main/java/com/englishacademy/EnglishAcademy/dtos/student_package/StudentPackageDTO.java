@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -23,7 +24,7 @@ public class StudentPackageDTO {
     private Long studentId;
     private String studentName;
     private Integer remainingSessions;
-    private Date purchaseDate ;
+    private LocalDateTime purchaseDate ;
     private List<LessonDay> lessonDays;
     private BookingStatus status ;
     private Timestamp createdDate;

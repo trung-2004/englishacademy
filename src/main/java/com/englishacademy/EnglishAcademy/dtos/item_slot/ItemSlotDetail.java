@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -22,8 +23,8 @@ public class ItemSlotDetail {
     private Integer itemType;
     private Integer orderTop;
     private String pathUrl;
-    private Date startDate;
-    private Date endDate;
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
     private List<AnswerStudentItemSlotResponse> answerStudentItemSlotResponseListList;
     private Timestamp createdDate;
     private Timestamp modifiedDate;

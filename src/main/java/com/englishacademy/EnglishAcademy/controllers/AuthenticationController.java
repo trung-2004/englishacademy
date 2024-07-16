@@ -10,6 +10,7 @@ import com.englishacademy.EnglishAcademy.exceptions.AppException;
 import com.englishacademy.EnglishAcademy.exceptions.ErrorCode;
 import com.englishacademy.EnglishAcademy.models.auth.*;
 import com.englishacademy.EnglishAcademy.services.AuthenticationService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,23 +25,34 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
 
     @PostMapping("/auth/user/signup")
-    public ResponseEntity<User> signup(@RequestBody SignUpRequest signUpRequest) {
-        return ResponseEntity.ok(authenticationService.signup(signUpRequest));
+    public ResponseEntity<ResponseObject> signup(@RequestBody @Valid SignUpRequest signUpRequest) {
+        authenticationService.signup(signUpRequest);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "Successfully signed up!", "")
+        );
     }
     @PostMapping("/auth/user/signip")
-    public ResponseEntity<JwtAuthenticationResponse> signip(@RequestBody SignInRequest signInRequest) {
-            return ResponseEntity.ok(authenticationService.signin(signInRequest));
+    public ResponseEntity<JwtAuthenticationResponse> signip(@RequestBody @Valid SignInRequest signInRequest) {
+        return ResponseEntity.ok(authenticationService.signin(signInRequest));
     }
     @PostMapping("/auth/user/refresh")
     public ResponseEntity<JwtAuthenticationResponse> refresh(@RequestBody RefreshTokenRequest refreshTokenRequest) {
         return ResponseEntity.ok(authenticationService.refreshToken(refreshTokenRequest));
     }
-
     @PostMapping("/auth/student/signup")
-    public ResponseEntity<Student> studentSignup(@RequestBody SignUpRequest signUpRequest) {
-        return ResponseEntity.ok(authenticationService.studentSignUp(signUpRequest));
+    public ResponseEntity<ResponseObject> studentSignup(@RequestBody SignUpRequest signUpRequest) {
+        authenticationService.studentSignUp(signUpRequest);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "Successfully signed up!", "")
+        );
     }
-
+    @PostMapping("/auth/student/new/signup")
+    public ResponseEntity<ResponseObject> studentSignupNew(@RequestBody SignUpRequestNew signUpRequestNew) {
+        String jwt = authenticationService.studentSignUpNew(signUpRequestNew);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "Successfully signed up!", jwt)
+        );
+    }
     @PostMapping("/auth/student/signip")
     public ResponseEntity<JwtAuthenticationResponse> studentSignip(@RequestBody SignInRequest signInRequest) {
         return ResponseEntity.ok(authenticationService.studentSignIn(signInRequest));

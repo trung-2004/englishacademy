@@ -19,7 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/test-input")
+@RequestMapping("/api/v1")
 public class TestInputController {
     private final TestInputService testInputService;
 
@@ -27,7 +27,7 @@ public class TestInputController {
         this.testInputService = testInputService;
     }
 
-    @GetMapping("")
+    @GetMapping("/any/test-input")
     ResponseEntity<ResponseObject> getAllToiec() {
         List<TestInputDTO> list = testInputService.findAll();
         return ResponseEntity.status(HttpStatus.OK).body(
@@ -36,7 +36,7 @@ public class TestInputController {
     }
 
 
-    @GetMapping("/detail/{slug}")
+    @GetMapping("/any/detail/{slug}")
     ResponseEntity<ResponseObject> getDetailTest(@PathVariable("slug") String slug) {
         TestInputDetail testInputDetail = testInputService.getdetailTest(slug);
         return ResponseEntity.status(HttpStatus.OK).body(

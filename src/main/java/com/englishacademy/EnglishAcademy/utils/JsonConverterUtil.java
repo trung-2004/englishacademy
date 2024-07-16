@@ -6,8 +6,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class JsonConverterUtil {
@@ -40,5 +43,9 @@ public class JsonConverterUtil {
         }
 
         return lessonDays;
+    }
+
+    public static Date convertToDateViaInstant(LocalDateTime dateToConvert) {
+        return Date.from(dateToConvert.atZone(ZoneId.systemDefault()).toInstant());
     }
 }

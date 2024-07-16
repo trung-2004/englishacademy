@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -30,7 +31,7 @@ public class Payment extends BaseEntity{
     @Column(name = "price", nullable = false)
     private Double price;
     @Column(name = "paymentDate", nullable = false)
-    private Date paymentDate;
+    private LocalDateTime paymentDate;
     @OneToMany(mappedBy = "payment")
     @JsonIgnore
     private List<Booking> bookings;

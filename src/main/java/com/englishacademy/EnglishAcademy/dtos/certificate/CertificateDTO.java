@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -22,5 +23,5 @@ public class CertificateDTO {
     private Long courseId;
     private String courseName;
     private String fullName;
-    private Timestamp issuedDate;
+    private LocalDateTime issuedDate;
 }

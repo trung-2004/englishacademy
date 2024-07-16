@@ -9,38 +9,30 @@ import com.englishacademy.EnglishAcademy.dtos.test_session.TestOfflineSessionDet
 import com.englishacademy.EnglishAcademy.entities.*;
 import com.englishacademy.EnglishAcademy.exceptions.AppException;
 import com.englishacademy.EnglishAcademy.exceptions.ErrorCode;
+import com.englishacademy.EnglishAcademy.mappers.TestOfflineStudentMapper;
 import com.englishacademy.EnglishAcademy.models.answer_student.CreateAnswerOfflineStudent;
 import com.englishacademy.EnglishAcademy.repositories.*;
 import com.englishacademy.EnglishAcademy.services.TestOfflineService;
+import com.englishacademy.EnglishAcademy.utils.JsonConverterUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.time.ZoneId;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class TestOfflineServiceImpl implements TestOfflineService {
     private final TestOfflineRepository testOfflineRepository;
     private final StudentRepository studentRepository;
+    private final ClassesRepository classesRepository;
     private final TestOfflineStudentRepository testOfflineStudentRepository;
     private final QuestionTestOfflineRepository questionTestOfflineRepository;
     private final AnswerStudentOfflineRepository answerStudentOfflineRepository;
+    private final TestOfflineStudentMapper testOfflineStudentMapper;
     private final FileAudioService fileAudioService;
-
-    public TestOfflineServiceImpl(
-            TestOfflineRepository testOfflineRepository,
-            StudentRepository studentRepository,
-            TestOfflineStudentRepository testOfflineStudentRepository,
-            QuestionTestOfflineRepository questionTestOfflineRepository,
-            AnswerStudentOfflineRepository answerStudentOfflineRepository,
-            FileAudioService fileAudioService
-    ) {
-        this.testOfflineRepository = testOfflineRepository;
-        this.studentRepository = studentRepository;
-        this.testOfflineStudentRepository = testOfflineStudentRepository;
-        this.questionTestOfflineRepository = questionTestOfflineRepository;
-        this.answerStudentOfflineRepository = answerStudentOfflineRepository;
-        this.fileAudioService = fileAudioService;
-    }
 
     @Override
     public TestOfflineDetail getdetailTest(String slug, Long studentId) {
@@ -49,7 +41,7 @@ public class TestOfflineServiceImpl implements TestOfflineService {
 
         // check time
         Date now = new Timestamp(System.currentTimeMillis());
-        if (now.before(testOffline.getStartDate()) || now.after(testOffline.getEndDate())) throw new AppException(ErrorCode.ITNOTTIME);
+        if (now.before(JsonConverterUtil.convertToDateViaInstant(testOffline.getStartDate())) || now.after(JsonConverterUtil.convertToDateViaInstant(testOffline.getEndDate()))) throw new AppException(ErrorCode.ITNOTTIME);
 
         // Tìm sinh viên theo studentId
         Student student = studentRepository.findById(studentId)
@@ -127,7 +119,7 @@ public class TestOfflineServiceImpl implements TestOfflineService {
 
         // check time
         Date now = new Timestamp(System.currentTimeMillis());
-        if (now.before(testOffline.getStartDate()) || now.after(testOffline.getEndDate())) throw new AppException(ErrorCode.ITNOTTIME);
+        if (now.before(JsonConverterUtil.convertToDateViaInstant(testOffline.getStartDate())) || now.after(JsonConverterUtil.convertToDateViaInstant(testOffline.getEndDate()))) throw new AppException(ErrorCode.ITNOTTIME);
 
         // Tìm sinh viên theo studentId
         Student student = studentRepository.findById(studentId)
@@ -135,7 +127,7 @@ public class TestOfflineServiceImpl implements TestOfflineService {
         TestOfflineStudent testOfflineStudent = testOfflineStudentRepository.findByTestOfflineAndStudent(testOffline, student);
         if (testOfflineStudent == null || testOfflineStudent.isStatus() == true) throw new AppException(ErrorCode.NOTFOUND);
 
-        testOfflineStudent.setTime(now);
+        testOfflineStudent.setTime(now.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
         testOfflineStudent.setStatus(true);
         testOfflineStudentRepository.save(testOfflineStudent);
 
@@ -169,28 +161,45 @@ public class TestOfflineServiceImpl implements TestOfflineService {
             for (QuestionTestOffline questionTestOffline : testOnlineSession.getQuestionTestOfflines()) {
                 AnswerStudentOffline answerStudentOffline = answerStudentOfflineRepository.findByTestOfflineStudentAndQuestionTestOffline(testOfflineStudent, questionTestOffline);
                 if (answerStudentOffline == null) {
-
+                    QuestionTestOfflineDetailResult questionTestOfflineDetailResult = QuestionTestOfflineDetailResult.builder()
+                            .id(questionTestOffline.getId())
+                            .audiomp3(questionTestOffline.getAudiomp3())
+                            .image(questionTestOffline.getImage())
+                            .paragraph(questionTestOffline.getParagraph())
+                            .title(questionTestOffline.getTitle())
+                            .option1(questionTestOffline.getOption1())
+                            .option2(questionTestOffline.getOption2())
+                            .option3(questionTestOffline.getOption3())
+                            .option4(questionTestOffline.getOption4())
+                            .answerCorrect(questionTestOffline.getCorrectanswer())
+                            .result(false)
+                            .answerForStudent(null)
+                            .type(questionTestOffline.getType())
+                            .part(questionTestOffline.getPart())
+                            .orderTop(questionTestOffline.getOrderTop())
+                            .build();
+                    questionTestOfflineDetailResults.add(questionTestOfflineDetailResult);
+                } else {
+                    QuestionTestOfflineDetailResult questionTestOfflineDetailResult = QuestionTestOfflineDetailResult.builder()
+                            .id(questionTestOffline.getId())
+                            .audiomp3(questionTestOffline.getAudiomp3())
+                            .image(questionTestOffline.getImage())
+                            .paragraph(questionTestOffline.getParagraph())
+                            .title(questionTestOffline.getTitle())
+                            .option1(questionTestOffline.getOption1())
+                            .option2(questionTestOffline.getOption2())
+                            .option3(questionTestOffline.getOption3())
+                            .option4(questionTestOffline.getOption4())
+                            .answerCorrect(questionTestOffline.getCorrectanswer())
+                            .result(false)
+                            .answerForStudent(answerStudentOffline.getContent())
+                            .type(questionTestOffline.getType())
+                            .part(questionTestOffline.getPart())
+                            .orderTop(questionTestOffline.getOrderTop())
+                            .build();
+                    questionTestOfflineDetailResults.add(questionTestOfflineDetailResult);
                 }
-                QuestionTestOfflineDetailResult questionTestOfflineDetailResult = QuestionTestOfflineDetailResult.builder()
-                        .id(questionTestOffline.getId())
-                        .audiomp3(questionTestOffline.getAudiomp3())
-                        .image(questionTestOffline.getImage())
-                        .paragraph(questionTestOffline.getParagraph())
-                        .title(questionTestOffline.getTitle())
-                        .option1(questionTestOffline.getOption1())
-                        .option2(questionTestOffline.getOption2())
-                        .option3(questionTestOffline.getOption3())
-                        .option4(questionTestOffline.getOption4())
-                        .answerCorrect(questionTestOffline.getCorrectanswer())
-                        .result(false)
-                        .answerForStudent(answerStudentOffline.getContent())
-                        .type(questionTestOffline.getType())
-                        .part(questionTestOffline.getPart())
-                        .orderTop(questionTestOffline.getOrderTop())
-                        .build();
-                questionTestOfflineDetailResults.add(questionTestOfflineDetailResult);
             }
-
             questionTestOfflineDetailResults.sort(Comparator.comparingInt(QuestionTestOfflineDetailResult::getOrderTop));
 
             TestOfflineSessionDetailResult testOfflineSessionDetailResult = TestOfflineSessionDetailResult.builder()
@@ -216,7 +225,17 @@ public class TestOfflineServiceImpl implements TestOfflineService {
     public List<TestOfflineStudentDTO> getListScore(Long classId, String slug) {
         TestOffline testOffline = testOfflineRepository.findBySlug(slug);
         if (testOffline == null) throw new AppException(ErrorCode.NOTFOUND);
-//        List<TestOfflineStudent> testOfflineStudents = testOfflineStudentRepository.findByTestOfflineAndStudent();
-        return List.of();
+
+        Classes classes = classesRepository.findById(classId).orElseThrow(()-> new AppException(ErrorCode.NOTFOUND));
+        List<TestOfflineStudent> testOfflineStudents = new ArrayList<>();
+        for (Student student: classes.getStudents()){
+            TestOfflineStudent testOfflineStudent = testOfflineStudentRepository.findByTestOfflineAndStudent(testOffline, student);
+            if (testOfflineStudent == null) {
+
+            } else {
+                testOfflineStudents.add(testOfflineStudent);
+            }
+        }
+        return testOfflineStudents.stream().map(testOfflineStudentMapper::toTestOfflineStudentDTO).collect(Collectors.toList());
     }
 }

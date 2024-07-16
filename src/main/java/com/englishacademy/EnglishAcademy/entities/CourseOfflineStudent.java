@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @EqualsAndHashCode(callSuper = true)
@@ -23,9 +24,9 @@ public class CourseOfflineStudent extends BaseEntity{
     private Boolean status;
 
     @Column(name = "startDate", nullable = false)
-    private Date startDate;
+    private LocalDateTime startDate;
 
     @Column(name = "endDate", nullable = false)
-    private Date endDate;
+    private LocalDateTime endDate;
 
 }

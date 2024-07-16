@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -18,8 +19,8 @@ public class TestOfflineDetail {
     private Long id;
     private String title;
     private String slug;
-    private Date startDate;
-    private Date endtDate;
+    private LocalDateTime startDate;
+    private LocalDateTime endtDate;
     private Integer totalQuestion;
     private Integer pastMark;
     private Integer totalMark;

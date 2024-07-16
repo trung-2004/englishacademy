@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -24,10 +25,10 @@ public class Schedule extends BaseEntity{
     private Room room;
 
     @Column(name = "startTime")
-    private Date startTime;
+    private LocalDateTime startTime;
 
     @Column(name = "endTime")
-    private Date endTime;
+    private LocalDateTime endTime;
 
     @Column(name = "dayOfWeek")
     private String dayOfWeek;
