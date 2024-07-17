@@ -1,6 +1,7 @@
 package com.englishacademy.EnglishAcademy.services;
 
 import com.englishacademy.EnglishAcademy.dtos.subject.SubjectDTO;
+import com.englishacademy.EnglishAcademy.dtos.subject.SubjectDTOResponse;
 import com.englishacademy.EnglishAcademy.dtos.subject.SubjectDetail;
 import com.englishacademy.EnglishAcademy.models.subject.CreateSubject;
 import com.englishacademy.EnglishAcademy.models.subject.EditSubject;
@@ -13,8 +14,7 @@ public interface SubjectService {
     SubjectDTO create(CreateSubject createSubject);
     SubjectDTO edit(EditSubject editSubject);
     void delete(Long[] ids);
-
     SubjectDTO getBySlug(String slug);
-
     List<SubjectDTO> getAllByCourseSlug(String slug);
+    List<SubjectDTOResponse> getAllScoreByCourseSlug(String slug, Long studentId);
 }

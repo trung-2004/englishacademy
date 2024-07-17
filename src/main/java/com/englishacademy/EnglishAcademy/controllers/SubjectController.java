@@ -2,6 +2,7 @@ package com.englishacademy.EnglishAcademy.controllers;
 
 import com.englishacademy.EnglishAcademy.dtos.ResponseObject;
 import com.englishacademy.EnglishAcademy.dtos.subject.SubjectDTO;
+import com.englishacademy.EnglishAcademy.dtos.subject.SubjectDTOResponse;
 import com.englishacademy.EnglishAcademy.dtos.subject.SubjectDetail;
 import com.englishacademy.EnglishAcademy.entities.Student;
 import com.englishacademy.EnglishAcademy.entities.User;
@@ -50,6 +51,16 @@ public class SubjectController {
     @GetMapping("/get-all/{slug}")
     ResponseEntity<ResponseObject> getAllByCourse(@PathVariable("slug") String slug) {
         List<SubjectDTO> subjectDTOs = subjectService.getAllByCourseSlug(slug);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "ok", subjectDTOs)
+        );
+    }
+
+    @GetMapping("/get-all-score/{slug}")
+    ResponseEntity<ResponseObject> getAllScoreByCourse(@PathVariable("slug") String slug) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Student currentStudent = (Student) auth.getPrincipal();
+        List<SubjectDTOResponse> subjectDTOs = subjectService.getAllScoreByCourseSlug(slug, currentStudent.getId());
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(true, 200, "ok", subjectDTOs)
         );

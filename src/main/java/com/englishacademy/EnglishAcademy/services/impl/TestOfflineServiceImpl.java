@@ -31,6 +31,7 @@ public class TestOfflineServiceImpl implements TestOfflineService {
     private final TestOfflineRepository testOfflineRepository;
     private final StudentRepository studentRepository;
     private final ClassesRepository classesRepository;
+    private final ClassesTestOfflineRepository classesTestOfflineRepository;
     private final TestOfflineStudentRepository testOfflineStudentRepository;
     private final QuestionTestOfflineRepository questionTestOfflineRepository;
     private final AnswerStudentOfflineRepository answerStudentOfflineRepository;
@@ -265,6 +266,7 @@ public class TestOfflineServiceImpl implements TestOfflineService {
                 Subject subject = subjectRepository.findById(createTestOffline.getSubjectId()).orElseThrow(()->new AppException(ErrorCode.NOTFOUND));
                 TestOffline offline = testOfflineRepository.findBySlug(createTestOffline.getTitle().toLowerCase().replace(" ", "-"));
                 if (offline != null) throw new AppException(ErrorCode.NOTFOUND);
+                Classes classes = classesRepository.findById(createTestOffline.getClassesId()).orElseThrow(()->new AppException(ErrorCode.CLASS_NOTFOUND));
 
                 TestOffline testInput = TestOffline.builder()
                         .name(createTestOffline.getTitle())
@@ -286,6 +288,14 @@ public class TestOfflineServiceImpl implements TestOfflineService {
                 this.questionTestOfflineRepository.saveAll(questionTestOfflineList);
                 testInput.setTotalQuestion(questionTestOfflineList.size());
                 testOfflineRepository.save(testInput);
+
+                ClassesTestOffline classesTestOffline = ClassesTestOffline.builder()
+                        .testOffline(testInput)
+                        .classes(classes)
+                        .time("12")
+                        .build();
+                classesTestOfflineRepository.save(classesTestOffline);
+
             } catch (IOException e) {
                 System.out.println(e.getMessage());
                 throw new IllegalArgumentException("The file is not a valid excel file");

@@ -21,6 +21,8 @@ public class CreateTestOffline {
     private LocalDateTime endDate;
     @NotNull(message = "Topic is mandatory")
     private Long subjectId;
+    @NotNull(message = "ClassesId is mandatory")
+    private Long classesId;
     @NotBlank(message = "file is mandatory")
     private MultipartFile file;
 }

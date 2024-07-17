@@ -34,4 +34,9 @@ public class ClassesServiceImpl implements ClassesService {
     public int countClassesByTeacher(User currentUser) {
         return classesRepository.findAllByTeacherCount(currentUser.getId());
     }
+
+    @Override
+    public List<CLassesDTO> getAll(User currentUser) {
+        return classesRepository.findAll().stream().map(classesMapper::toClassesDTO).collect(Collectors.toList());
+    }
 }

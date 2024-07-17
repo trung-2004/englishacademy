@@ -34,6 +34,16 @@ public class ClassesController {
         );
     }
 
+    @GetMapping("/get-all")
+    ResponseEntity<ResponseObject> getAllClass() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = (User) auth.getPrincipal();
+        List<CLassesDTO> list = classesService.getAll(currentUser);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "ok", list)
+        );
+    }
+
     @GetMapping("/by-teacher/count")
     ResponseEntity<ResponseObject> getCountAllClassByTeacher() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();

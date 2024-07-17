@@ -3,6 +3,7 @@ package com.englishacademy.EnglishAcademy.services.impl;
 import com.englishacademy.EnglishAcademy.dtos.item_slot.ItemSlotResponse;
 import com.englishacademy.EnglishAcademy.dtos.slot.SlotResponseDetail;
 import com.englishacademy.EnglishAcademy.dtos.subject.SubjectDTO;
+import com.englishacademy.EnglishAcademy.dtos.subject.SubjectDTOResponse;
 import com.englishacademy.EnglishAcademy.dtos.subject.SubjectDetail;
 import com.englishacademy.EnglishAcademy.dtos.test_offline.TestOfflineResponse;
 import com.englishacademy.EnglishAcademy.entities.*;
@@ -37,6 +38,7 @@ public class SubjectServiceImpl implements SubjectService {
     private final ClassesTestOfflineRepository classesTestOfflineRepository;
     private final ItemSlotMapper itemSlotMapper;
     private final CourseOfflineRepository courseOfflineRepository;
+    private final TestOfflineStudentRepository testOfflineStudentRepository;
 
 
     @Override
@@ -282,5 +284,67 @@ public class SubjectServiceImpl implements SubjectService {
         List<SubjectDTO> subjects = subjectRepository.findAllByCourseOffline(courseOffline)
                 .stream().map(subjectMapper::toSubjectDTO).collect(Collectors.toList());
         return subjects;
+    }
+
+    @Override
+    public List<SubjectDTOResponse> getAllScoreByCourseSlug(String slug, Long studentId) {
+        CourseOffline courseOffline = courseOfflineRepository.findBySlug(slug);
+        if (courseOffline == null) throw new AppException(ErrorCode.COURSE_NOTFOUND);
+        Student student = studentRepository.findById(studentId).orElseThrow(()-> new AppException(ErrorCode.STUDENT_NOTFOUND));
+        List<SubjectDTOResponse> subjectDTOResponseList = new ArrayList<>();
+        for (Subject subject : courseOffline.getSubjects()) {
+            for (TestOffline testOffline : subject.getTestOfflines()) {
+                if (testOffline == null) {
+                    SubjectDTOResponse subjectDTOResponse = SubjectDTOResponse.builder()
+                            .id(subject.getId())
+                            .name(subject.getName())
+                            .slug(subject.getSlug())
+                            .totalSlot(subject.getTotalSlot())
+                            .orderTop(subject.getOrderTop())
+                            .score(0.0)
+                            .status(false)
+                            .createdBy(subject.getCreatedBy())
+                            .createdDate(subject.getCreatedDate())
+                            .modifiedBy(subject.getModifiedBy())
+                            .modifiedDate(subject.getModifiedDate())
+                            .build();
+                    subjectDTOResponseList.add(subjectDTOResponse);
+                } else {
+                    TestOfflineStudent testOfflineStudent = testOfflineStudentRepository.findByTestOfflineAndStudent(testOffline, student);
+                    if (testOfflineStudent == null) {
+                        SubjectDTOResponse subjectDTOResponse = SubjectDTOResponse.builder()
+                                .id(subject.getId())
+                                .name(subject.getName())
+                                .slug(subject.getSlug())
+                                .totalSlot(subject.getTotalSlot())
+                                .orderTop(subject.getOrderTop())
+                                .score(0.0)
+                                .status(false)
+                                .createdBy(subject.getCreatedBy())
+                                .createdDate(subject.getCreatedDate())
+                                .modifiedBy(subject.getModifiedBy())
+                                .modifiedDate(subject.getModifiedDate())
+                                .build();
+                        subjectDTOResponseList.add(subjectDTOResponse);
+                    } else {
+                        SubjectDTOResponse subjectDTOResponse = SubjectDTOResponse.builder()
+                                .id(subject.getId())
+                                .name(subject.getName())
+                                .slug(subject.getSlug())
+                                .totalSlot(subject.getTotalSlot())
+                                .orderTop(subject.getOrderTop())
+                                .score(testOfflineStudent.getScore())
+                                .status(testOfflineStudent.isStatus())
+                                .createdBy(subject.getCreatedBy())
+                                .createdDate(subject.getCreatedDate())
+                                .modifiedBy(subject.getModifiedBy())
+                                .modifiedDate(subject.getModifiedDate())
+                                .build();
+                        subjectDTOResponseList.add(subjectDTOResponse);
+                    }
+                }
+            }
+        }
+        return subjectDTOResponseList;
     }
 }

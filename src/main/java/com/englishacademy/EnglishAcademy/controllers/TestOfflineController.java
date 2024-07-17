@@ -100,6 +100,7 @@ public class TestOfflineController {
             @RequestParam("totalMark") Integer totalMark,
             @RequestParam("description") String description,
             @RequestParam("subjectId") Long subjectId,
+            @RequestParam("classesId") Long classesId,
             @RequestParam("file") MultipartFile file)
     {
         CreateTestOffline createTestOffline = new CreateTestOffline();
@@ -110,6 +111,7 @@ public class TestOfflineController {
         createTestOffline.setStartDate(startDate);
         createTestOffline.setEndDate(endDate);
         createTestOffline.setSubjectId(subjectId);
+        createTestOffline.setClassesId(classesId);
         testOfflineService.saveTestOffline(createTestOffline);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(true, 200, "ok", "")

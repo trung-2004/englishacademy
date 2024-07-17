@@ -11,4 +11,5 @@ public interface ClassesService {
     List<CLassesDTO> getAllByTeacher(User currentUser);
     CLassesDTO create(CreateClasses createClasses);
     int countClassesByTeacher(User currentUser);
+    List<CLassesDTO> getAll(User currentUser);
 }
