@@ -8,6 +8,7 @@ import com.englishacademy.EnglishAcademy.dtos.test_input_student.TestInputStuden
 import com.englishacademy.EnglishAcademy.entities.Student;
 import com.englishacademy.EnglishAcademy.models.answer_student.SubmitTest;
 import com.englishacademy.EnglishAcademy.models.test_input.CreateTestInput;
+import com.englishacademy.EnglishAcademy.models.test_input.EditTestInput;
 import com.englishacademy.EnglishAcademy.services.TestInputService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +32,7 @@ public class TestInputController {
     ResponseEntity<ResponseObject> getAllToiec() {
         List<TestInputDTO> list = testInputService.findAll();
         return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject(true, 200, "ok", list)
+                new ResponseObject(true, 200, "Successfully", list)
         );
     }
 
@@ -40,7 +41,7 @@ public class TestInputController {
     ResponseEntity<ResponseObject> getDetailTest(@PathVariable("slug") String slug) {
         TestInputDetail testInputDetail = testInputService.getdetailTest(slug);
         return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject(true, 200, "ok", testInputDetail)
+                new ResponseObject(true, 200, "Successfully", testInputDetail)
         );
     }
 
@@ -53,7 +54,7 @@ public class TestInputController {
         Student currentStudent = (Student) auth.getPrincipal();
         String code = testInputService.submitTest(slug, currentStudent.getId(), submitTest);
         return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject(true, 200, "ok", code)
+                new ResponseObject(true, 200, "Successfully", code)
         );
     }
 
@@ -61,7 +62,7 @@ public class TestInputController {
     ResponseEntity<ResponseObject> getResultTest(@PathVariable("code") String code) {
         TestInputStudentDTO testInputStudentDTO = testInputService.getresultTest(code);
         return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject(true, 200, "ok", testInputStudentDTO)
+                new ResponseObject(true, 200, "Successfully", testInputStudentDTO)
         );
     }
 
@@ -69,11 +70,11 @@ public class TestInputController {
     ResponseEntity<ResponseObject> getResultDetailTest(@PathVariable("code") String code) {
         List<QuestionTestInputDetailResult> questionTestInputDetailResults = testInputService.getresultDetailTest(code);
         return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject(true, 200, "ok", questionTestInputDetailResults)
+                new ResponseObject(true, 200, "Successfully", questionTestInputDetailResults)
         );
     }
 
-    @PostMapping("")
+    @PostMapping("/test-input")
     ResponseEntity<ResponseObject> insert(@RequestParam("title") String title,
                                           @RequestParam("type") Integer type,
                                           @RequestParam("time") Integer time,
@@ -88,8 +89,32 @@ public class TestInputController {
 
             testInputService.saveTestInput(createTestInput);
             return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject(true, 200, "ok", "")
+                    new ResponseObject(true, 200, "Successfully", "")
             );
+    }
+
+    @GetMapping("/test-input/{slug}")
+    ResponseEntity<ResponseObject> getTestInput(@PathVariable("slug") String slug) {
+        TestInputDTO testInputDTO = testInputService.getBySLug(slug);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "Successfully", testInputDTO)
+        );
+    }
+
+    @PutMapping("/test-input")
+    ResponseEntity<ResponseObject> update(@RequestBody EditTestInput editTestInput) {
+        TestInputDTO testInputDTO = testInputService.edit(editTestInput);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "Successfully", testInputDTO)
+        );
+    }
+
+    @DeleteMapping("/test-input")
+    ResponseEntity<ResponseObject> delete(@RequestBody List<Long> ids) {
+        testInputService.delete(ids);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "Successfully", "")
+        );
     }
 
 }

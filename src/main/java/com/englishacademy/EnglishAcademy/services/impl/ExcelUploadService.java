@@ -48,6 +48,7 @@ public class ExcelUploadService {
             XSSFWorkbook workbook = new XSSFWorkbook(inputStream);
             XSSFSheet sheet = workbook.getSheet("TestInput");// name sheet
             int rowIndex =0;
+            int orderTop = 0;
             for (Row row : sheet){
                 if (rowIndex ==0){
                     rowIndex++;
@@ -55,7 +56,6 @@ public class ExcelUploadService {
                 }
                 Iterator<Cell> cellIterator = row.iterator();
                 //int cellIndex = 0;
-                int orderTop = 0;
                 int totalQuestion = 0;
                 QuestionTestInput questionTestInput = new QuestionTestInput();
                 for (int cellIndex = 0; cellIndex < row.getLastCellNum(); cellIndex++) {
@@ -433,6 +433,7 @@ public class ExcelUploadService {
             XSSFWorkbook workbook = new XSSFWorkbook(inputStream);
             XSSFSheet sheet = workbook.getSheet("TestOnline");// name sheet
             int rowIndex =0;
+            int orderTop = 0;
             for (Row row : sheet){
                 if (rowIndex ==0){
                     rowIndex++;
@@ -440,7 +441,6 @@ public class ExcelUploadService {
                 }
                 Iterator<Cell> cellIterator = row.iterator();
                 //int cellIndex = 0;
-                int orderTop = 0;
                 int totalQuestion = 0;
                 QuestionTestOnline questionTestOnline = new QuestionTestOnline();
                 for (int cellIndex = 0; cellIndex < row.getLastCellNum(); cellIndex++) {
@@ -636,6 +636,7 @@ public class ExcelUploadService {
             XSSFWorkbook workbook = new XSSFWorkbook(inputStream);
             XSSFSheet sheet = workbook.getSheet("TestOffline");// name sheet
             int rowIndex =0;
+            int orderTop = 0;
             for (Row row : sheet){
                 if (rowIndex ==0){
                     rowIndex++;
@@ -643,7 +644,7 @@ public class ExcelUploadService {
                 }
                 Iterator<Cell> cellIterator = row.iterator();
                 //int cellIndex = 0;
-                int orderTop = 0;
+
                 int totalQuestion = 0;
                 QuestionTestOffline questionTestOffline = new QuestionTestOffline();
                 for (int cellIndex = 0; cellIndex < row.getLastCellNum(); cellIndex++) {

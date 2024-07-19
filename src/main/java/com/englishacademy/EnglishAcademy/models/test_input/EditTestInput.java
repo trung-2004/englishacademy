@@ -3,14 +3,12 @@ package com.englishacademy.EnglishAcademy.models.test_input;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
-@Getter
-@Setter
 @Data
-public class CreateTestInput {
+public class EditTestInput {
+    @NotNull(message = "Id is mandatory")
+    private Long id;
     @NotBlank(message = "Title is mandatory")
     private String title;
     @NotNull(message = "Type is mandatory")
@@ -19,6 +17,6 @@ public class CreateTestInput {
     private Integer time;
     @NotBlank(message = "Des is mandatory")
     private String description;
-    @NotBlank(message = "File is mandatory")
-    private MultipartFile file;
+    @NotNull(message = "Total Question is manadatory")
+    private Integer totalQuestion;
 }

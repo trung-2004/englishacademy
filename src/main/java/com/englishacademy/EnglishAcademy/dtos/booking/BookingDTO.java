@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -25,7 +26,7 @@ public class BookingDTO {
     private String studentName;
     private String description;
     private BookingStatus status;
-    private String lessonDays;
+    private List<LessonDay> lessonDays;
     private Timestamp createdDate;
     private Timestamp modifiedDate;
     private String createdBy;

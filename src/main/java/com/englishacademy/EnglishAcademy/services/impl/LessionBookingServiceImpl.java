@@ -94,9 +94,69 @@ public class LessionBookingServiceImpl implements LessionBookingService {
     }
 
     @Override
-    public boolean check(Long id, Student currentUser) {
-        LessionBooking lessionBooking = lessionBookingRepository.findById(id)
+    public boolean check(String code, Student currentUser) {
+        LessionBooking lessionBooking = lessionBookingRepository.findByCodeAndStatus(code, LessonBookingStatus.inprogress)
                 .orElseThrow(() -> new AppException(ErrorCode.NOTFOUND));
         return lessionBooking.getBooking().getStudent().getId().equals(currentUser.getId());
+    }
+
+    @Override
+    public void delete(List<Long> ids) {
+        lessionBookingRepository.deleteAllById(ids);
+    }
+
+    @Override
+    public void updateStatusComplete(Long id, User currentUser) {
+        LessionBooking lessionBooking = lessionBookingRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.NOTFOUND));
+        if (lessionBooking.getStatus().equals(LessonBookingStatus.scheduled) ||
+                lessionBooking.getStatus().equals(LessonBookingStatus.rescheduled) ||
+                lessionBooking.getStatus().equals(LessonBookingStatus.cancelled)
+        ) {
+            throw new AppException(ErrorCode.NOTFOUND);
+        }
+        lessionBooking.setStatus(LessonBookingStatus.completed);
+        lessionBooking.setModifiedBy(currentUser.getFullName());
+        lessionBooking.setModifiedDate(new Timestamp(System.currentTimeMillis()));
+        lessionBookingRepository.save(lessionBooking);
+    }
+
+    @Override
+    public void updateStatusInprocess(Long id, User currentUser) {
+        LessionBooking lessionBooking = lessionBookingRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.NOTFOUND));
+        if (lessionBooking.getStatus().equals(LessonBookingStatus.completed) || lessionBooking.getStatus().equals(LessonBookingStatus.cancelled)) {
+            throw new AppException(ErrorCode.NOTFOUND);
+        }
+        lessionBooking.setStatus(LessonBookingStatus.inprogress);
+        lessionBooking.setModifiedBy(currentUser.getFullName());
+        lessionBooking.setModifiedDate(new Timestamp(System.currentTimeMillis()));
+        lessionBookingRepository.save(lessionBooking);
+    }
+
+    @Override
+    public void updateStatusCancel(Long id, User currentUser) {
+        LessionBooking lessionBooking = lessionBookingRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.NOTFOUND));
+        if (lessionBooking.getStatus().equals(LessonBookingStatus.completed) || lessionBooking.getStatus().equals(LessonBookingStatus.inprogress)) {
+            throw new AppException(ErrorCode.NOTFOUND);
+        }
+        lessionBooking.setStatus(LessonBookingStatus.cancelled);
+        lessionBooking.setModifiedBy(currentUser.getFullName());
+        lessionBooking.setModifiedDate(new Timestamp(System.currentTimeMillis()));
+        lessionBookingRepository.save(lessionBooking);
+    }
+
+    @Override
+    public void updateStatusRescheduled(Long id, User currentUser) {
+        LessionBooking lessionBooking = lessionBookingRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.NOTFOUND));
+        if (lessionBooking.getStatus().equals(LessonBookingStatus.completed) || lessionBooking.getStatus().equals(LessonBookingStatus.inprogress) || lessionBooking.getStatus().equals(LessonBookingStatus.cancelled)) {
+            throw new AppException(ErrorCode.NOTFOUND);
+        }
+        lessionBooking.setStatus(LessonBookingStatus.rescheduled);
+        lessionBooking.setModifiedBy(currentUser.getFullName());
+        lessionBooking.setModifiedDate(new Timestamp(System.currentTimeMillis()));
+        lessionBookingRepository.save(lessionBooking);
     }
 }

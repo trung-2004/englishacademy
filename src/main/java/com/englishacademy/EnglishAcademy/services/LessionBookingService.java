@@ -15,5 +15,10 @@ public interface LessionBookingService {
     List<LessionBookingDTO> findAllByBooking(Long bookingId, User user);
     void update(UpdateLessionBooking updateLessionBooking, User currentUser);
     LessionBookingDTO getDetail(Long id, Student currentUser);
-    boolean check(Long id, Student currentUser);
+    boolean check(String code, Student currentUser);
+    void delete(List<Long> ids);
+    void updateStatusComplete(Long id, User currentUser);
+    void updateStatusInprocess(Long id, User currentUser);
+    void updateStatusCancel(Long id, User currentUser);
+    void updateStatusRescheduled(Long id, User currentUser);
 }

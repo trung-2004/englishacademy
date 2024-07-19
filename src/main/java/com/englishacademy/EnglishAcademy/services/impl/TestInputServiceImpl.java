@@ -15,8 +15,10 @@ import com.englishacademy.EnglishAcademy.mappers.TestInputMapper;
 import com.englishacademy.EnglishAcademy.models.answer_student.CreateAnswerStudent;
 import com.englishacademy.EnglishAcademy.models.answer_student.SubmitTest;
 import com.englishacademy.EnglishAcademy.models.test_input.CreateTestInput;
+import com.englishacademy.EnglishAcademy.models.test_input.EditTestInput;
 import com.englishacademy.EnglishAcademy.repositories.*;
 import com.englishacademy.EnglishAcademy.services.TestInputService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,26 +31,18 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class TestInputServiceImpl implements TestInputService {
     private static final String ALLOWED_CHARACTERS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-    @Autowired
-    private TestInputRepository testInputRepository;
-    @Autowired
-    private StudentRepository studentRepository;
-    @Autowired
-    private TestInputStudentRepository testInputStudentRepository;
-    @Autowired
-    private AnswerStudentRepository answerStudentRepository;
-    @Autowired
-    private QuestionTestInputRepository questionTestInputRepository;
-    @Autowired
-    private CourseOnlineRepository courseOnlineRepository;
-    @Autowired
-    private TestInputMapper testInputMapper;
-    @Autowired
-    private CourseOnlineMapper courseOnlineMapper;
-    @Autowired
-    private ExcelUploadService excelUploadService;
+    private final TestInputRepository testInputRepository;
+    private final StudentRepository studentRepository;
+    private final TestInputStudentRepository testInputStudentRepository;
+    private final AnswerStudentRepository answerStudentRepository;
+    private final QuestionTestInputRepository questionTestInputRepository;
+    private final CourseOnlineRepository courseOnlineRepository;
+    private final TestInputMapper testInputMapper;
+    private final CourseOnlineMapper courseOnlineMapper;
+    private final ExcelUploadService excelUploadService;
 
     @Override
     public List<TestInputDTO> findAll() {
@@ -377,6 +371,9 @@ public class TestInputServiceImpl implements TestInputService {
     public void saveTestInput(CreateTestInput createTestInput) {
         if(excelUploadService.isValidExcelFile(createTestInput.getFile())){
             try {
+                TestInput testInputExisting = testInputRepository.findBySlug(createTestInput.getTitle().toLowerCase().replace(" ", "-"));
+                if (testInputExisting != null) throw new AppException(ErrorCode.NOTFOUND);
+
                 TestInput testInput = TestInput.builder()
                         .title(createTestInput.getTitle())
                         .slug(createTestInput.getTitle().toLowerCase().replace(" ", "-"))
@@ -398,6 +395,35 @@ public class TestInputServiceImpl implements TestInputService {
         } else {
             throw new AppException(ErrorCode.NOTFOUND);
         }
+    }
+
+    @Override
+    public TestInputDTO getBySLug(String slug) {
+        TestInput testInput = testInputRepository.findBySlug(slug);
+        if (testInput == null) throw new AppException(ErrorCode.NOTFOUND);
+        return testInputMapper.toTestInputDTO(testInput);
+    }
+
+    @Override
+    public TestInputDTO edit(EditTestInput editTestInput) {
+        TestInput testInput = testInputRepository.findById(editTestInput.getId()).orElseThrow(()->new AppException(ErrorCode.NOTFOUND));
+        if (!testInput.getSlug().equals(editTestInput.getTitle().toLowerCase().replace(" ", "-"))){
+            TestInput testInputEdited = testInputRepository.findBySlug(editTestInput.getTitle().toLowerCase().replace(" ", "-"));
+            if (testInputEdited != null) throw new AppException(ErrorCode.NOTFOUND);
+        }
+        testInput.setTitle(editTestInput.getTitle());
+        testInput.setSlug(editTestInput.getTitle().toLowerCase().replace(" ", "-"));
+        testInput.setDescription(editTestInput.getDescription());
+        testInput.setType(editTestInput.getType());
+        testInput.setTime(editTestInput.getTime());
+        testInput.setTotalQuestion(editTestInput.getTotalQuestion());
+        testInputRepository.save(testInput);
+        return testInputMapper.toTestInputDTO(testInput);
+    }
+
+    @Override
+    public void delete(List<Long> ids) {
+
     }
 
     public static double roundToNearestHalf(double number) {

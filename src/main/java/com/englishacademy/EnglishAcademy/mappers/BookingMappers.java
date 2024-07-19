@@ -4,6 +4,7 @@ import com.englishacademy.EnglishAcademy.dtos.booking.BookingDTO;
 import com.englishacademy.EnglishAcademy.entities.Booking;
 import com.englishacademy.EnglishAcademy.exceptions.AppException;
 import com.englishacademy.EnglishAcademy.exceptions.ErrorCode;
+import com.englishacademy.EnglishAcademy.utils.JsonConverterUtil;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -24,7 +25,7 @@ public class BookingMappers {
                 .startTime(model.getStartTime())
                 .endTime(model.getEndTime())
                 .status(model.getStatus())
-                .lessonDays(model.getLessonDays())
+                .lessonDays(JsonConverterUtil.convertJsonToLessonDay(model.getLessonDays()))
                 .createdDate(model.getCreatedDate())
                 .modifiedBy(model.getModifiedBy())
                 .modifiedDate(model.getModifiedDate())
