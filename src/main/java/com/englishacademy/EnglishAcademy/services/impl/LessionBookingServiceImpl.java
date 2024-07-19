@@ -95,7 +95,7 @@ public class LessionBookingServiceImpl implements LessionBookingService {
 
     @Override
     public boolean check(String code, Student currentUser) {
-        LessionBooking lessionBooking = lessionBookingRepository.findByCodeAndStatus(code, LessonBookingStatus.inprogress)
+        LessionBooking lessionBooking = lessionBookingRepository.findByPathAndStatus(code, LessonBookingStatus.inprogress)
                 .orElseThrow(() -> new AppException(ErrorCode.NOTFOUND));
         return lessionBooking.getBooking().getStudent().getId().equals(currentUser.getId());
     }

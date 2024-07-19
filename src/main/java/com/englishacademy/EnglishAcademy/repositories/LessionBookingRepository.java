@@ -14,4 +14,5 @@ public interface LessionBookingRepository extends JpaRepository<LessionBooking, 
     List<LessionBooking> findAllByBooking(Booking booking);
     Optional<LessionBooking> findByCode(String code);
     Optional<LessionBooking> findByCodeAndStatus(String code, LessonBookingStatus status);
+    Optional<LessionBooking> findByPathAndStatus(String path, LessonBookingStatus status);
 }
