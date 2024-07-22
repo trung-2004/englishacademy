@@ -125,19 +125,9 @@ public class TestOnlineServiceImpl implements TestOnlineService {
     }
 
     @Override
-    public TestOnlineDetailResponse getdetailTestByUser(String slug, Long id) {
+    public TestOnlineDetailResponse getdetailTestByUser(String slug) {
         TestOnline testOnline = testOnlineRepository.findBySlug(slug);
         if (testOnline == null) throw new AppException(ErrorCode.NOTFOUND);
-
-        // Tìm sinh viên theo studentId
-        Student student = studentRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Student Not Found"));
-
-        CourseOnlineStudent courseOnlineStudent = courseOnlineStudentRepository.findByCourseOnlineAndStudent(testOnline.getTopicOnline().getCourseOnline(), student);
-        if (courseOnlineStudent == null) throw new AppException(ErrorCode.NOTFOUND);
-
-        TestOnlineStudent testOnlineStudent = testOnlineStudentRepository.findByTestOnlineAndStudentAndStatus(testOnline, student, true);
-        if (testOnlineStudent != null) throw new AppException(ErrorCode.NOTFOUND);
 
         List<TestOnlineSessionDetailResponse> testOnlineSessionDetailList = new ArrayList<>();
         for (TestOnlineSession testOnlineSession : testOnline.getTestOnlineSessions()) {

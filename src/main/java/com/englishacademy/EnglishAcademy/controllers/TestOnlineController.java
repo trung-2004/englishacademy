@@ -41,9 +41,7 @@ public class TestOnlineController {
 
     @GetMapping("/user/detail/{slug}")
     ResponseEntity<ResponseObject> getDetailTestUser(@PathVariable("slug") String slug) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Student currentStudent = (Student) auth.getPrincipal();
-        TestOnlineDetailResponse testInputDetail = testOnlineService.getdetailTestByUser(slug, currentStudent.getId());
+        TestOnlineDetailResponse testInputDetail = testOnlineService.getdetailTestByUser(slug);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(true, 200, "ok", testInputDetail)
         );
