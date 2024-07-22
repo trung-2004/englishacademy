@@ -2,6 +2,7 @@ package com.englishacademy.EnglishAcademy.services;
 
 import com.englishacademy.EnglishAcademy.dtos.test_online.TestOnlineDTO;
 import com.englishacademy.EnglishAcademy.dtos.test_online.TestOnlineDetail;
+import com.englishacademy.EnglishAcademy.dtos.test_online.TestOnlineDetailResponse;
 import com.englishacademy.EnglishAcademy.dtos.test_online_student.TestOnlineStudentDTO;
 import com.englishacademy.EnglishAcademy.models.answer_student.SubmitTest;
 import com.englishacademy.EnglishAcademy.models.test_online.CreateTestOnline;
@@ -17,4 +18,5 @@ public interface TestOnlineService {
     TestOnlineDTO edit(EditTestOnline editTestOnline);
     void delete(List<Long> ids);
     TestOnlineDTO getBySlug(String slug);
+    TestOnlineDetailResponse getdetailTestByUser(String slug, Long id);
 }

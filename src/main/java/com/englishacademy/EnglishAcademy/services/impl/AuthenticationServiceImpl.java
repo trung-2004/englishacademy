@@ -113,7 +113,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public void studentSignUp(SignUpRequest signUpRequest) {
+    public String studentSignUp(SignUpRequest signUpRequest) {
         Optional<Student> studentExiting = studentRepository.findByEmail(signUpRequest.getEmail());
         if (studentExiting.isPresent()) {
             if (studentExiting.get().getPassword().isEmpty()) {
@@ -121,8 +121,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 studentExiting.get().setFullName(signUpRequest.getFullname());
                 studentExiting.get().setPhone(signUpRequest.getPhone());
                 studentRepository.save(studentExiting.get());
+                return jwtService.generateToken(studentExiting.get());
             } else {
-
+                return null;
             }
         } else {
             Student student = new Student();
@@ -133,6 +134,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             student.setUserType("student");
             student.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
             studentRepository.save(student);
+
+            return jwtService.generateToken(studentExiting.get());
         }
     }
 

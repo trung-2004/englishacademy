@@ -1,10 +1,13 @@
 package com.englishacademy.EnglishAcademy.services.impl;
 
 import com.englishacademy.EnglishAcademy.dtos.question_test_online.QuestionTestOnlineDTO;
+import com.englishacademy.EnglishAcademy.dtos.question_test_online.QuestionTestOnlineDTOResponse;
 import com.englishacademy.EnglishAcademy.dtos.test_online.TestOnlineDTO;
 import com.englishacademy.EnglishAcademy.dtos.test_online.TestOnlineDetail;
+import com.englishacademy.EnglishAcademy.dtos.test_online.TestOnlineDetailResponse;
 import com.englishacademy.EnglishAcademy.dtos.test_session.TestOnlineSessionDetail;
 import com.englishacademy.EnglishAcademy.dtos.test_online_student.TestOnlineStudentDTO;
+import com.englishacademy.EnglishAcademy.dtos.test_session.TestOnlineSessionDetailResponse;
 import com.englishacademy.EnglishAcademy.entities.*;
 import com.englishacademy.EnglishAcademy.exceptions.AppException;
 import com.englishacademy.EnglishAcademy.exceptions.ErrorCode;
@@ -104,6 +107,86 @@ public class TestOnlineServiceImpl implements TestOnlineService {
         testOnlineSessionDetailList.sort(Comparator.comparingInt(TestOnlineSessionDetail::getOrderTop));
 
         TestOnlineDetail testOnlineDetail = TestOnlineDetail.builder()
+                .id(testOnline.getId())
+                .title(testOnline.getTitle())
+                .slug(testOnline.getSlug())
+                .type(testOnline.getType())
+                .totalQuestion(testOnline.getTotalQuestion())
+                .time(testOnline.getTime())
+                .description(testOnline.getDescription())
+                .testOnlineSessionDetails(testOnlineSessionDetailList)
+                .createdDate(testOnline.getCreatedDate())
+                .modifiedBy(testOnline.getModifiedBy())
+                .createdBy(testOnline.getCreatedBy())
+                .modifiedDate(testOnline.getModifiedDate())
+                .build();
+
+        return testOnlineDetail;
+    }
+
+    @Override
+    public TestOnlineDetailResponse getdetailTestByUser(String slug, Long id) {
+        TestOnline testOnline = testOnlineRepository.findBySlug(slug);
+        if (testOnline == null) throw new AppException(ErrorCode.NOTFOUND);
+
+        // Tìm sinh viên theo studentId
+        Student student = studentRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Student Not Found"));
+
+        CourseOnlineStudent courseOnlineStudent = courseOnlineStudentRepository.findByCourseOnlineAndStudent(testOnline.getTopicOnline().getCourseOnline(), student);
+        if (courseOnlineStudent == null) throw new AppException(ErrorCode.NOTFOUND);
+
+        TestOnlineStudent testOnlineStudent = testOnlineStudentRepository.findByTestOnlineAndStudentAndStatus(testOnline, student, true);
+        if (testOnlineStudent != null) throw new AppException(ErrorCode.NOTFOUND);
+
+        List<TestOnlineSessionDetailResponse> testOnlineSessionDetailList = new ArrayList<>();
+        for (TestOnlineSession testOnlineSession : testOnline.getTestOnlineSessions()) {
+            List<QuestionTestOnlineDTOResponse> questionTestOnlineDTOS = new ArrayList<>();
+            for (QuestionTestOnline questionTestOnline: testOnlineSession.getQuestionTestOnlines()) {
+                QuestionTestOnlineDTOResponse questionTestOnlineDTO = QuestionTestOnlineDTOResponse.builder()
+                        .id(questionTestOnline.getId())
+                        .audiomp3(questionTestOnline.getAudiomp3())
+                        .image(questionTestOnline.getImage())
+                        .paragraph(questionTestOnline.getParagraph())
+                        .title(questionTestOnline.getTitle())
+                        .option1(questionTestOnline.getOption1())
+                        .option2(questionTestOnline.getOption2())
+                        .option3(questionTestOnline.getOption3())
+                        .option4(questionTestOnline.getOption4())
+                        .correctAnswer(questionTestOnline.getCorrectanswer())
+                        .type(questionTestOnline.getType())
+                        .part(questionTestOnline.getPart())
+                        .orderTop(questionTestOnline.getOrderTop())
+                        .createdBy(questionTestOnline.getCreatedBy())
+                        .createdDate(questionTestOnline.getCreatedDate())
+                        .modifiedBy(questionTestOnline.getModifiedBy())
+                        .modifiedDate(questionTestOnline.getModifiedDate())
+                        .build();
+                questionTestOnlineDTOS.add(questionTestOnlineDTO);
+            }
+
+            // sort by order
+            questionTestOnlineDTOS.sort(Comparator.comparingInt(QuestionTestOnlineDTOResponse::getOrderTop));
+
+            TestOnlineSessionDetailResponse testInputSessionDetail = TestOnlineSessionDetailResponse.builder()
+                    .id(testOnlineSession.getId())
+                    .testInputId(testOnline.getId())
+                    .sessionId(testOnlineSession.getSession().getId())
+                    .sessionName(testOnlineSession.getSession().getTitle())
+                    .totalQuestion(testOnlineSession.getTotalQuestion())
+                    .orderTop(testOnlineSession.getOrderTop())
+                    .questionTestOnlineDTOS(questionTestOnlineDTOS)
+                    .createdBy(testOnlineSession.getCreatedBy())
+                    .createdDate(testOnlineSession.getCreatedDate())
+                    .modifiedBy(testOnlineSession.getModifiedBy())
+                    .modifiedDate(testOnlineSession.getModifiedDate())
+                    .build();
+            testOnlineSessionDetailList.add(testInputSessionDetail);
+        }
+        // sort by order
+        testOnlineSessionDetailList.sort(Comparator.comparingInt(TestOnlineSessionDetailResponse::getOrderTop));
+
+        TestOnlineDetailResponse testOnlineDetail = TestOnlineDetailResponse.builder()
                 .id(testOnline.getId())
                 .title(testOnline.getTitle())
                 .slug(testOnline.getSlug())

@@ -3,6 +3,7 @@ package com.englishacademy.EnglishAcademy.controllers;
 import com.englishacademy.EnglishAcademy.dtos.ResponseObject;
 import com.englishacademy.EnglishAcademy.dtos.test_online.TestOnlineDTO;
 import com.englishacademy.EnglishAcademy.dtos.test_online.TestOnlineDetail;
+import com.englishacademy.EnglishAcademy.dtos.test_online.TestOnlineDetailResponse;
 import com.englishacademy.EnglishAcademy.dtos.test_online_student.TestOnlineStudentDTO;
 import com.englishacademy.EnglishAcademy.entities.Student;
 import com.englishacademy.EnglishAcademy.models.answer_student.SubmitTest;
@@ -33,6 +34,16 @@ public class TestOnlineController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Student currentStudent = (Student) auth.getPrincipal();
         TestOnlineDetail testInputDetail = testOnlineService.getdetailTest(slug, currentStudent.getId());
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "ok", testInputDetail)
+        );
+    }
+
+    @GetMapping("/user/detail/{slug}")
+    ResponseEntity<ResponseObject> getDetailTestUser(@PathVariable("slug") String slug) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Student currentStudent = (Student) auth.getPrincipal();
+        TestOnlineDetailResponse testInputDetail = testOnlineService.getdetailTestByUser(slug, currentStudent.getId());
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(true, 200, "ok", testInputDetail)
         );

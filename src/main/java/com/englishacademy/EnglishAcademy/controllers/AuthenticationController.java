@@ -41,7 +41,7 @@ public class AuthenticationController {
     }
     @PostMapping("/auth/student/signup")
     public ResponseEntity<ResponseObject> studentSignup(@RequestBody SignUpRequest signUpRequest) {
-        authenticationService.studentSignUp(signUpRequest);
+        String jwt = authenticationService.studentSignUp(signUpRequest);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(true, 200, "Successfully signed up!", "")
         );

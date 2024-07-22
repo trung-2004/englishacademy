@@ -11,7 +11,7 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class QuestionTestOnlineDTO {
+public class QuestionTestOnlineDTOResponse {
     private Long id;
     private String title;
     private String audiomp3;
@@ -21,6 +21,7 @@ public class QuestionTestOnlineDTO {
     private String option2;
     private String option3;
     private String option4;
+    private String correctAnswer;
     private Integer type;
     private Integer part;
     private Integer orderTop;
