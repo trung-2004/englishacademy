@@ -13,7 +13,6 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @Builder
 public class CourseOnlineDTO {
-
     private Long id;
     private String name;
     private String slug;

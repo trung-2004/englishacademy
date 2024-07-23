@@ -2,24 +2,35 @@ package com.englishacademy.EnglishAcademy.services.impl;
 
 import com.englishacademy.EnglishAcademy.dtos.admin.Menu;
 import com.englishacademy.EnglishAcademy.dtos.admin.MenuItem;
+import com.englishacademy.EnglishAcademy.dtos.course_online.CourseOnlineRevenueDTO;
+import com.englishacademy.EnglishAcademy.dtos.course_online_student.CourseOnlineMonthlyRevenueDTO;
+import com.englishacademy.EnglishAcademy.dtos.tutor.TutorRevenueDTO;
+import com.englishacademy.EnglishAcademy.entities.CourseOnline;
 import com.englishacademy.EnglishAcademy.entities.Role;
 import com.englishacademy.EnglishAcademy.entities.User;
+import com.englishacademy.EnglishAcademy.repositories.*;
 import com.englishacademy.EnglishAcademy.services.AdminService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.sql.Timestamp;
+import java.time.*;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class AdminServiceImpl implements AdminService {
+    private final CourseOnlineStudentRepository courseOnlineStudentRepository;
+    private final PaymentRepository paymentRepository;
+    private final ClassesRepository classesRepository;
+    private final UserRepository userRepository;
+    private final CourseOnlineRepository courseOnlineRepository;
+    private final CourseOfflineRepository courseOfflineRepository;
+
     @Override
     public List<Menu> getMenu(User currenUser) {
         List<Menu> menus = new ArrayList<>();
@@ -79,6 +90,103 @@ public class AdminServiceImpl implements AdminService {
             menus.add(new Menu("Information", menuItems3));
         }
         return menus;
+    }
+
+    @Override
+    public List<CourseOnlineMonthlyRevenueDTO> getCourseOnlineMonthlyRevenueLast12Months(User currenUser) {
+        LocalDate now = LocalDate.now();
+        LocalDate startDate = now.minusMonths(12).withDayOfMonth(1);
+        Timestamp startTimestamp = Timestamp.valueOf(startDate.atStartOfDay());
+
+        List<CourseOnlineMonthlyRevenueDTO> revenueData = courseOnlineStudentRepository.getMonthlyRevenueLast12Months(startTimestamp);
+        Map<YearMonth, Double> revenueMap = new HashMap<>();
+
+        // Chuyển đổi dữ liệu từ cơ sở dữ liệu thành Map để dễ dàng xử lý
+        for (CourseOnlineMonthlyRevenueDTO dto : revenueData) {
+            YearMonth yearMonth = YearMonth.of(dto.getYear(), dto.getMonth());
+            revenueMap.put(yearMonth, dto.getTotalRevenue());
+        }
+
+        List<CourseOnlineMonthlyRevenueDTO> result = new ArrayList<>();
+        // Tạo dữ liệu cho 12 tháng gần nhất
+        for (int i = 0; i < 12; i++) {
+            YearMonth yearMonth = YearMonth.now().minusMonths(i);
+            Double totalRevenue = revenueMap.getOrDefault(yearMonth, 0.0);
+            result.add(new CourseOnlineMonthlyRevenueDTO(yearMonth.getYear(), yearMonth.getMonthValue(), totalRevenue));
+        }
+
+        return result;
+    }
+
+    @Override
+    public double getCountCourseOnRevenue(User currenUser) {
+        return courseOnlineStudentRepository.getTotalRevenue();
+    }
+
+    @Override
+    public double getCountCourseOfRevenue(User currenUser) {
+        return 0;
+    }
+
+    @Override
+    public double getCountTutorRevenue(User currenUser) {
+        return paymentRepository.getTotalRevenue();
+    }
+
+    @Override
+    public List<CourseOnlineMonthlyRevenueDTO> getTutorMonthlyRevenueLast12Months(User currenUser) {
+        LocalDate now = LocalDate.now();
+        LocalDate startDate = now.minusMonths(12).withDayOfMonth(1);
+        Timestamp startTimestamp = Timestamp.valueOf(startDate.atStartOfDay());
+
+        List<CourseOnlineMonthlyRevenueDTO> revenueData = paymentRepository.getMonthlyRevenueLast12Months(startTimestamp);
+        Map<YearMonth, Double> revenueMap = new HashMap<>();
+
+        // Chuyển đổi dữ liệu từ cơ sở dữ liệu thành Map để dễ dàng xử lý
+        for (CourseOnlineMonthlyRevenueDTO dto : revenueData) {
+            YearMonth yearMonth = YearMonth.of(dto.getYear(), dto.getMonth());
+            revenueMap.put(yearMonth, dto.getTotalRevenue());
+        }
+
+        List<CourseOnlineMonthlyRevenueDTO> result = new ArrayList<>();
+        // Tạo dữ liệu cho 12 tháng gần nhất
+        for (int i = 0; i < 12; i++) {
+            YearMonth yearMonth = YearMonth.now().minusMonths(i);
+            Double totalRevenue = revenueMap.getOrDefault(yearMonth, 0.0);
+            result.add(new CourseOnlineMonthlyRevenueDTO(yearMonth.getYear(), yearMonth.getMonthValue(), totalRevenue));
+        }
+
+        return result;
+    }
+
+    @Override
+    public List<CourseOnlineRevenueDTO> getCourseOnlineTop10Revenue(User currenUser) {
+        return courseOnlineStudentRepository.findTop10CoursesByRevenue();
+    }
+
+    @Override
+    public List<TutorRevenueDTO> getTutorTop10Revenue(User currenUser) {
+        return paymentRepository.findTop10CoursesByRevenue();
+    }
+
+    @Override
+    public int getCountClasses(User currenUser) {
+        return (int) classesRepository.count();
+    }
+
+    @Override
+    public int getCountStaff(User currenUser) {
+        return (int) userRepository.count();
+    }
+
+    @Override
+    public int getCountOnline(User currenUser) {
+        return (int) courseOnlineRepository.count();
+    }
+
+    @Override
+    public int getCountOffline(User currenUser) {
+        return (int) courseOfflineRepository.count();
     }
 
     private Set<Role> convertAuthoritiesToRoles(Collection<? extends GrantedAuthority> authorities) {

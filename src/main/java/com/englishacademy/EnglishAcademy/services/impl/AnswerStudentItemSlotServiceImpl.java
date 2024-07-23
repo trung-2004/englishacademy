@@ -56,7 +56,7 @@ public class AnswerStudentItemSlotServiceImpl implements AnswerStudentItemSlotSe
         System.out.println(itemSlot.getEndDate());*/
         Date startDate = JsonConverterUtil.convertToDateViaInstant(itemSlot.getStartDate());
         Date endDate = JsonConverterUtil.convertToDateViaInstant(itemSlot.getEndDate());
-        if (now.after(startDate) || now.before(endDate))throw new AppException(ErrorCode.EXPIRES);
+        if (now.before(startDate) || now.after(endDate))throw new AppException(ErrorCode.EXPIRES);
 
         AnswerStudentItemSlot answerStudentItemSlot = AnswerStudentItemSlot.builder()
                 .itemSlot(itemSlot)
