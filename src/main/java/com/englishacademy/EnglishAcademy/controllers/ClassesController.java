@@ -2,6 +2,7 @@ package com.englishacademy.EnglishAcademy.controllers;
 
 import com.englishacademy.EnglishAcademy.dtos.ResponseObject;
 import com.englishacademy.EnglishAcademy.dtos.classes.CLassesDTO;
+import com.englishacademy.EnglishAcademy.dtos.classes.RoomDTO;
 import com.englishacademy.EnglishAcademy.dtos.course_offline.CourseOfflineDTO;
 import com.englishacademy.EnglishAcademy.entities.Student;
 import com.englishacademy.EnglishAcademy.entities.User;
@@ -60,6 +61,16 @@ public class ClassesController {
     @PostMapping("")
     ResponseEntity<ResponseObject> create(@RequestBody CreateClasses createClasses) {
         CLassesDTO list = classesService.create(createClasses);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "ok", list)
+        );
+    }
+
+    @GetMapping("/get-all/room")
+    ResponseEntity<ResponseObject> getAllClassRoom() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = (User) auth.getPrincipal();
+        List<RoomDTO> list = classesService.getAllRoom(currentUser);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(true, 200, "ok", list)
         );

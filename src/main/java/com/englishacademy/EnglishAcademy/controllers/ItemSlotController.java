@@ -62,7 +62,7 @@ public class ItemSlotController extends TextWebSocketHandler {
                 new ResponseObject(true, 200, "ok", itemSlotDetail)
         );
     }
-    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'TEACHER')")
     @GetMapping("/api/v1/item-slot/get-by-slug/{slug}")
     public ResponseEntity<ResponseObject> getBySlug(@PathVariable("slug") String slug){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -72,7 +72,7 @@ public class ItemSlotController extends TextWebSocketHandler {
                 new ResponseObject(true, 200, "ok", itemSlotDetail)
         );
     }
-    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'TEACHER')")
     @PostMapping("/api/v1/item-slot")
     public ResponseEntity<ResponseObject> create(@RequestBody @Valid CreateItemSlot createItemSlot){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -82,7 +82,7 @@ public class ItemSlotController extends TextWebSocketHandler {
                 new ResponseObject(true, 200, "ok", itemSlotDetail)
         );
     }
-    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'TEACHER')")
     @PutMapping("/api/v1/item-slot")
     public ResponseEntity<ResponseObject> edit(@RequestBody @Valid EditItemSlot editItemSlot){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -92,7 +92,7 @@ public class ItemSlotController extends TextWebSocketHandler {
                 new ResponseObject(true, 200, "ok", itemSlotDetail)
         );
     }
-    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'TEACHER')")
     @DeleteMapping("/api/v1/item-slot")
     public ResponseEntity<ResponseObject> getBySlug(@RequestBody Long[] ids){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();

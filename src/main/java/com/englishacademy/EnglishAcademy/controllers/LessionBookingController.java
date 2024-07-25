@@ -33,6 +33,16 @@ public class LessionBookingController {
         );
     }
 
+    @GetMapping("/lession-booking/student")
+    ResponseEntity<ResponseObject> getAllBtudent() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Student currentUser = (Student) auth.getPrincipal();
+        List<LessionBookingDTO> list = lessionBookingService.findAllByStudent(currentUser);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "ok", list)
+        );
+    }
+
     @GetMapping("/lession-booking/{booking_id}")
     ResponseEntity<ResponseObject> getAllByBooking(@PathVariable("booking_id") Long bookingId) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();

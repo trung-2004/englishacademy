@@ -1,16 +1,21 @@
 package com.englishacademy.EnglishAcademy.entities;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 import java.util.Date;
 
-@EqualsAndHashCode(callSuper = true)
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "courseOffline_student")
+@SuperBuilder
 public class CourseOfflineStudent extends BaseEntity{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "classes_id")

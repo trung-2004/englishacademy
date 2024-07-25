@@ -4,6 +4,7 @@ import com.englishacademy.EnglishAcademy.entities.Booking;
 import com.englishacademy.EnglishAcademy.entities.LessionBooking;
 import com.englishacademy.EnglishAcademy.entities.LessonBookingStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

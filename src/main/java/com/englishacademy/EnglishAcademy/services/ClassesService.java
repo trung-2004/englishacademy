@@ -1,6 +1,7 @@
 package com.englishacademy.EnglishAcademy.services;
 
 import com.englishacademy.EnglishAcademy.dtos.classes.CLassesDTO;
+import com.englishacademy.EnglishAcademy.dtos.classes.RoomDTO;
 import com.englishacademy.EnglishAcademy.dtos.course_offline.CourseOfflineDTO;
 import com.englishacademy.EnglishAcademy.entities.User;
 import com.englishacademy.EnglishAcademy.models.classes.CreateClasses;
@@ -12,4 +13,5 @@ public interface ClassesService {
     CLassesDTO create(CreateClasses createClasses);
     int countClassesByTeacher(User currentUser);
     List<CLassesDTO> getAll(User currentUser);
+    List<RoomDTO> getAllRoom(User currentUser);
 }

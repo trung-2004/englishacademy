@@ -21,4 +21,5 @@ public interface LessionBookingService {
     void updateStatusInprocess(Long id, User currentUser);
     void updateStatusCancel(Long id, User currentUser);
     void updateStatusRescheduled(Long id, User currentUser);
+    List<LessionBookingDTO> findAllByStudent(Student currentStudent);
 }

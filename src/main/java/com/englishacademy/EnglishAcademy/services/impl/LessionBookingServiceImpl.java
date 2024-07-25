@@ -99,7 +99,9 @@ public class LessionBookingServiceImpl implements LessionBookingService {
         LessionBooking lessionBooking = lessionBookingRepository.findByPathAndStatus(code, LessonBookingStatus.inprogress)
                 .orElseThrow(() -> new AppException(ErrorCode.NOTFOUND));
         Booking booking = lessionBooking.getBooking();
-        if (booking.getStudent().getId().equals(currentUser.getId())) throw new AppException(ErrorCode.NOTFOUND);
+        if (!booking.getStudent().getId().equals(currentUser.getId())) {
+            return false;
+        };
         return lessionBooking.getBooking().getStudent().getId().equals(currentUser.getId());
     }
 
@@ -161,5 +163,15 @@ public class LessionBookingServiceImpl implements LessionBookingService {
         lessionBooking.setModifiedBy(currentUser.getFullName());
         lessionBooking.setModifiedDate(new Timestamp(System.currentTimeMillis()));
         lessionBookingRepository.save(lessionBooking);
+    }
+
+    @Override
+    public List<LessionBookingDTO> findAllByStudent(Student currentUser) {
+        List<LessionBookingDTO> lessionBookingDTOList = new ArrayList<>();
+        List<Booking> bookings = bookingRepository.findAllByStudent(currentUser);
+        for (Booking booking: bookings) {
+            lessionBookingDTOList.addAll(lessionBookingRepository.findAllByBooking(booking).stream().map(lessionBookingMapper::toLessionBookingDTO).toList());
+        }
+        return lessionBookingDTOList;
     }
 }
