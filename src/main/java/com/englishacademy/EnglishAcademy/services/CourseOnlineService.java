@@ -19,4 +19,5 @@ public interface CourseOnlineService {
     List<CourseOnlineDTO> getCourseTop6();
     List<CourseOnlineDTO> getCourseTopToeic(Integer score);
     List<CourseOnlineDTO> getCourseTopIelts(Integer score);
+    List<CourseOnlineDTO> getCourseRelated(String slug);
 }

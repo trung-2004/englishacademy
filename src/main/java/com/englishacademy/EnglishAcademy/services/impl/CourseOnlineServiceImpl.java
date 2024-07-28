@@ -255,6 +255,14 @@ public class CourseOnlineServiceImpl implements CourseOnlineService {
         return courseOnlineDTOList;
     }
 
+    @Override
+    public List<CourseOnlineDTO> getCourseRelated(String slug) {
+        CourseOnline courseOnline = courseOnlineRepository.findBySlug(slug);
+        if (courseOnline == null) throw new AppException(ErrorCode.NOTFOUND);
+        List<CourseOnline> courseOnlines = courseOnlineRepository.findRelatedCoursesByCategoryId(courseOnline.getCategory().getId(), courseOnline.getId());
+        return courseOnlines.stream().map(courseOnlineMapper::toCourseOnlineDTO).collect(Collectors.toList());
+    }
+
     private String convertSecondtoHour(Long seconds){
         int hours = (int) (seconds / 3600);
         int minutes = (int) ((seconds % 3600) / 60);

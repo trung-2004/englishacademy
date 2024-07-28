@@ -1,6 +1,8 @@
 package com.englishacademy.EnglishAcademy.services.impl;
 
 import com.englishacademy.EnglishAcademy.dtos.course_online_student.CourseOnlineStudentDTO;
+import com.englishacademy.EnglishAcademy.dtos.course_online_student.CourseOnlineStudentDTOResponse;
+import com.englishacademy.EnglishAcademy.dtos.topic_online.TopicOnlineDetail;
 import com.englishacademy.EnglishAcademy.entities.*;
 import com.englishacademy.EnglishAcademy.exceptions.AppException;
 import com.englishacademy.EnglishAcademy.exceptions.ErrorCode;
@@ -16,6 +18,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -85,5 +90,26 @@ public class CourseOnlineStudentServiceImpl implements CourseOnlineStudentServic
         CourseOnlineStudent courseOnlineStudentExsiting = courseOnlineStudentRepository.findByCourseOnlineAndStudent(courseOnline, student);
         if (courseOnlineStudentExsiting != null) return true;
         else return false;
+    }
+
+    @Override
+    public List<CourseOnlineStudentDTOResponse> getHistory() {
+        List<CourseOnlineStudent> courseOnlineStudents = courseOnlineStudentRepository.findAll();
+        List<CourseOnlineStudentDTOResponse> courseOnlineStudentDTOResponses = new ArrayList<>();
+        for (CourseOnlineStudent courseOnlineStudent: courseOnlineStudents) {
+            CourseOnlineStudentDTOResponse courseOnlineStudentDTOResponse = CourseOnlineStudentDTOResponse.builder()
+                    .id(courseOnlineStudent.getId())
+                    .courseOnlineId(courseOnlineStudent.getCourseOnline().getId())
+                    .courseOnlineName(courseOnlineStudent.getCourseOnline().getName())
+                    .studentName(courseOnlineStudent.getStudent().getFullName())
+                    .studentId(courseOnlineStudent.getStudent().getId())
+                    .totalPrice(courseOnlineStudent.getTotalPrice())
+                    .paymentMethod(courseOnlineStudent.getPaymentMethod())
+                    .createddate(courseOnlineStudent.getCreatedDate())
+                    .build();
+            courseOnlineStudentDTOResponses.add(courseOnlineStudentDTOResponse);
+        }
+        courseOnlineStudentDTOResponses.sort(Comparator.comparing(CourseOnlineStudentDTOResponse::getCreateddate));
+        return courseOnlineStudentDTOResponses;
     }
 }

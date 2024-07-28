@@ -49,6 +49,14 @@ public class CourseOnlineController {
         );
     }
 
+    @GetMapping("/course-online/related/{slug}")
+    ResponseEntity<ResponseObject> getCourseOnlineTop(@PathVariable("slug") String slug) {
+        List<CourseOnlineDTO> list = courseOnlineService.getCourseRelated(slug);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "ok", list)
+        );
+    }
+
     @GetMapping("/course-online/ielts/get-score/{score}")
     ResponseEntity<ResponseObject> getCourseOnlineTopIelts(@PathVariable("score") Integer score) {
         List<CourseOnlineDTO> list = courseOnlineService.getCourseTopIelts(score);
