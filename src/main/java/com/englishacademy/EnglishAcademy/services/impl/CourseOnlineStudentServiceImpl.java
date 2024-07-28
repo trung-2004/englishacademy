@@ -73,8 +73,7 @@ public class CourseOnlineStudentServiceImpl implements CourseOnlineStudentServic
 
         MailStructure mailStructure = new MailStructure();
         mailStructure.setSubject("Course Online");
-        mailStructure.setMessage("Thank you for purchasing the TOEIC"+ courseOnline.getName() +"course");
-
+        mailStructure.setMessage("Thank you for purchasing the TOEIC "+ courseOnline.getName() +" course");
         mailService.sendMail(student.getEmail(), mailStructure);
 
         CourseOnlineStudentDTO courseOnlineStudentDTO = CourseOnlineStudentDTO.builder()

@@ -5,6 +5,7 @@ import com.englishacademy.EnglishAcademy.entities.*;
 import com.englishacademy.EnglishAcademy.exceptions.AppException;
 import com.englishacademy.EnglishAcademy.exceptions.ErrorCode;
 import com.englishacademy.EnglishAcademy.mappers.StudentPackageMapper;
+import com.englishacademy.EnglishAcademy.models.mail.MailStructure;
 import com.englishacademy.EnglishAcademy.repositories.StudentPackageRepository;
 import com.englishacademy.EnglishAcademy.repositories.TutorRepository;
 import com.englishacademy.EnglishAcademy.services.PackageStudentService;
@@ -17,6 +18,7 @@ public class PackageStudentServiceImpl implements PackageStudentService {
     private final StudentPackageRepository studentPackageRepository;
     private final StudentPackageMapper studentPackageMapper;
     private final TutorRepository tutorRepository;
+    private final MailService mailService;
 
     @Override
     public void confirmStatus(Long id, User currentUser) {
@@ -26,6 +28,11 @@ public class PackageStudentServiceImpl implements PackageStudentService {
         if (tutor == null || !studentPackage.getPackages().getTutor().equals(tutor) || studentPackage.getStatus().name().equals(BookingStatus.cancelled)) throw new AppException(ErrorCode.NOTFOUND);
         studentPackage.setStatus(BookingStatus.confirmed);
         studentPackageRepository.save(studentPackage);
+
+        MailStructure mailStructure = new MailStructure();
+        mailStructure.setSubject("Tutor");
+        mailStructure.setMessage("The teacher you hired has agreed to your registration, please go to the nearest payment");
+        mailService.sendMail(studentPackage.getStudent().getEmail(), mailStructure);
     }
 
     @Override
@@ -43,7 +50,13 @@ public class PackageStudentServiceImpl implements PackageStudentService {
         StudentPackage studentPackage = studentPackageRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.NOTFOUND));
         if(!studentPackage.getStudent().getId().equals(currentStudent.getId())) throw new AppException(ErrorCode.NOTFOUND);
-        return studentPackageMapper.toStudentPackageDTO(studentPackage);
+        StudentPackageDTO studentPackageDTO = studentPackageMapper.toStudentPackageDTO(studentPackage);
+        if (studentPackage.getPayments().size() > 0) {
+            studentPackageDTO.setStatus1(studentPackage.getPayments().get(0).isPaid());
+        } else {
+            studentPackageDTO.setStatus1(false);
+        }
+        return studentPackageDTO;
     }
 
     @Override

@@ -23,10 +23,11 @@ public class StudentPackageDTO {
     private Double packagePrice;
     private Long studentId;
     private String studentName;
+    private boolean status1;
     private Integer remainingSessions;
     private LocalDateTime purchaseDate ;
     private List<LessonDay> lessonDays;
-    private BookingStatus status ;
+    private BookingStatus status;
     private Timestamp createdDate;
     private Timestamp modifiedDate;
     private String createdBy;

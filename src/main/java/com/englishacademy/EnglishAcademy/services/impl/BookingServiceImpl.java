@@ -11,6 +11,7 @@ import com.englishacademy.EnglishAcademy.exceptions.AppException;
 import com.englishacademy.EnglishAcademy.exceptions.ErrorCode;
 import com.englishacademy.EnglishAcademy.mappers.*;
 import com.englishacademy.EnglishAcademy.models.booking.CreateBooking;
+import com.englishacademy.EnglishAcademy.models.mail.MailStructure;
 import com.englishacademy.EnglishAcademy.repositories.*;
 import com.englishacademy.EnglishAcademy.services.BookingService;
 import com.englishacademy.EnglishAcademy.utils.JsonConverterUtil;
@@ -41,6 +42,7 @@ public class BookingServiceImpl implements BookingService {
     private final SubscriptionMapper subscriptionMapper;
     private final StudentPackageMapper studentPackageMapper;
     private final StudentMapper studentMapper;
+    private final MailService mailService;
     @Override
     public List<BookingDTO> findAll() {
         return bookingRepository.findAll().stream().map(bookingMappers::toBookingDTO).collect(Collectors.toList());
@@ -90,6 +92,11 @@ public class BookingServiceImpl implements BookingService {
                     .status(BookingStatus.pending)
                     .build();
             studentPackageRepository.save(studentPackage);
+
+            MailStructure mailStructure = new MailStructure();
+            mailStructure.setSubject("Tutor");
+            mailStructure.setMessage("If a student has hired a tutor, please confirm");
+            mailService.sendMail(studentPackage.getStudent().getEmail(), mailStructure);
 
         } else if (createBooking.getTypeBooking().equals(2)){
             // Sử dụng Calendar để tính ngày của tháng tiếp theo
