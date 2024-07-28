@@ -48,6 +48,16 @@ public class AdminController {
         );
     }
 
+    @GetMapping("/course-offline/monthly-revenue-last-12-months")
+    public ResponseEntity<ResponseObject> getMonthlyRevenueLast12MonthsCourseOff() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User currenUser = (User) auth.getPrincipal();
+        List<CourseOnlineMonthlyRevenueDTO> menuItems = adminService.getCourseOfflineMonthlyRevenueLast12Months(currenUser);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "ok", menuItems)
+        );
+    }
+
     @GetMapping("/course-online/top-10-revenue")
     public ResponseEntity<ResponseObject> getTop10RevenueCourseOn() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();

@@ -30,6 +30,7 @@ public class AdminServiceImpl implements AdminService {
     private final UserRepository userRepository;
     private final CourseOnlineRepository courseOnlineRepository;
     private final CourseOfflineRepository courseOfflineRepository;
+    private final CourseOfflineStudentRepository courseOfflineStudentRepository;
 
     @Override
     public List<Menu> getMenu(User currenUser) {
@@ -187,6 +188,30 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public int getCountOffline(User currenUser) {
         return (int) courseOfflineRepository.count();
+    }
+
+    @Override
+    public List<CourseOnlineMonthlyRevenueDTO> getCourseOfflineMonthlyRevenueLast12Months(User currenUser) {
+        LocalDateTime startDate = LocalDateTime.now().minusMonths(12);
+        List<Object[]> rawData = courseOfflineStudentRepository.getMonthlyRevenueRaw(startDate);
+
+        Map<YearMonth, Double> revenueMap = new HashMap<>();
+        for (Object[] record : rawData) {
+            int year = (int) record[0];
+            int month = (int) record[1];
+            double revenue = (double) record[2];
+            revenueMap.put(YearMonth.of(year, month), revenue);
+        }
+
+        List<CourseOnlineMonthlyRevenueDTO> revenueList = new ArrayList<>();
+        YearMonth currentMonth = YearMonth.now().minusMonths(11);
+        for (int i = 0; i < 12; i++) {
+            double revenue = revenueMap.getOrDefault(currentMonth, 0.0);
+            revenueList.add(new CourseOnlineMonthlyRevenueDTO(currentMonth.getYear(), currentMonth.getMonthValue(), revenue));
+            currentMonth = currentMonth.plusMonths(1);
+        }
+
+        return revenueList;
     }
 
     private Set<Role> convertAuthoritiesToRoles(Collection<? extends GrantedAuthority> authorities) {

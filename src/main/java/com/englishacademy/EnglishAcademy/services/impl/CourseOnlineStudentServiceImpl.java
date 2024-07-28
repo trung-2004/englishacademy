@@ -9,6 +9,7 @@ import com.englishacademy.EnglishAcademy.exceptions.ErrorCode;
 import com.englishacademy.EnglishAcademy.mappers.CourseOnlineMapper;
 import com.englishacademy.EnglishAcademy.mappers.StudentMapper;
 import com.englishacademy.EnglishAcademy.models.course_online_student.CreateCourseOnlineStudent;
+import com.englishacademy.EnglishAcademy.models.mail.MailStructure;
 import com.englishacademy.EnglishAcademy.repositories.CourseOnlineRepository;
 import com.englishacademy.EnglishAcademy.repositories.CourseOnlineStudentRepository;
 import com.englishacademy.EnglishAcademy.repositories.ItemOnlineStudentRepository;
@@ -32,6 +33,7 @@ public class CourseOnlineStudentServiceImpl implements CourseOnlineStudentServic
     private final CourseOnlineStudentRepository courseOnlineStudentRepository;
     private final CourseOnlineMapper courseOnlineMapper;
     private final StudentMapper studentMapper;
+    private final MailService mailService;
 
     @Override
     public CourseOnlineStudentDTO buyCourse(CreateCourseOnlineStudent model, Long studentId) {
@@ -68,6 +70,12 @@ public class CourseOnlineStudentServiceImpl implements CourseOnlineStudentServic
                 itemOnlineStudentRepository.save(itemOnlineStudent);
             }
         }
+
+        MailStructure mailStructure = new MailStructure();
+        mailStructure.setSubject("Course Online");
+        mailStructure.setMessage("Thank you for purchasing the TOEIC"+ courseOnline.getName() +"course");
+
+        mailService.sendMail(student.getEmail(), mailStructure);
 
         CourseOnlineStudentDTO courseOnlineStudentDTO = CourseOnlineStudentDTO.builder()
                 .courseOnline(courseOnlineMapper.toCourseOnlineDTO(courseOnlineStudent.getCourseOnline()))

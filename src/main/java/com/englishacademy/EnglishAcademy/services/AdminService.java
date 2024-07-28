@@ -22,4 +22,5 @@ public interface AdminService {
     int getCountStaff(User currenUser);
     int getCountOnline(User currenUser);
     int getCountOffline(User currenUser);
+    List<CourseOnlineMonthlyRevenueDTO> getCourseOfflineMonthlyRevenueLast12Months(User currenUser);
 }

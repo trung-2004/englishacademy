@@ -6,6 +6,5 @@ import java.util.List;
 
 public interface AvailabilityService {
     List<AvailabilityDTO> findAll();
-
     List<AvailabilityDTO> findALlByTutor(String code);
 }
