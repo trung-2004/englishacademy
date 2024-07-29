@@ -99,15 +99,16 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public UserDTO profile(User currentUser) {
         if (currentUser == null) throw new AppException(ErrorCode.NOTFOUND);
+        User user = userRepository.findById(currentUser.getId()).orElseThrow(()-> new AppException(ErrorCode.NOTFOUND));
         UserDTO userDTO = UserDTO.builder()
-                .id(currentUser.getId())
-                .code(currentUser.getCode())
-                .fullName(currentUser.getFullName())
-                .email(currentUser.getEmail())
-                .phone(currentUser.getPhone())
-                .status(currentUser.getStatus())
-                .dob(currentUser.getDob())
-                .address(currentUser.getAddress())
+                .id(user.getId())
+                .code(user.getCode())
+                .fullName(user.getFullName())
+                .email(user.getEmail())
+                .phone(user.getPhone())
+                .status(user.getStatus())
+                .dob(user.getDob())
+                .address(user.getAddress())
                 .build();
         return userDTO;
     }
@@ -135,7 +136,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             student.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
             studentRepository.save(student);
 
-            return jwtService.generateToken(studentExiting.get());
+            return jwtService.generateToken2(student);
         }
     }
 

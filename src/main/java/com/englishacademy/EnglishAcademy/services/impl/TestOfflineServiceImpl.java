@@ -289,6 +289,16 @@ public class TestOfflineServiceImpl implements TestOfflineService {
                 testInput.setTotalQuestion(questionTestOfflineList.size());
                 testOfflineRepository.save(testInput);
 
+                for (Student student: classes.getStudents()){
+                    TestOfflineStudent testOfflineStudent = TestOfflineStudent.builder()
+                            .student(student)
+                            .testOffline(testInput)
+                            .code(TestOnlineServiceImpl.generateRandomString(8))
+                            .status(false)
+                            .build();
+                    testOfflineStudentRepository.save(testOfflineStudent);
+                }
+
                 ClassesTestOffline classesTestOffline = ClassesTestOffline.builder()
                         .testOffline(testInput)
                         .classes(classes)

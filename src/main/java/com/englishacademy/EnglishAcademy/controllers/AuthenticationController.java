@@ -58,7 +58,7 @@ public class AuthenticationController {
         return ResponseEntity.ok(authenticationService.studentSignIn(signInRequest));
     }
 
-    @GetMapping("/user/profile")
+    @GetMapping("/user/profile/demo")
     ResponseEntity<ResponseObject> profile() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = (User) auth.getPrincipal();
