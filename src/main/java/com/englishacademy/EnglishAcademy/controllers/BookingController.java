@@ -70,7 +70,7 @@ public class BookingController {
         );
     }
 
-    @PreAuthorize("hasAnyAuthority('USER')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'TEACHER')")
     @GetMapping("/tutor/booking")
     ResponseEntity<ResponseObject> getAllByTutor() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();

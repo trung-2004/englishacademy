@@ -55,7 +55,7 @@ public class ClassesServiceImpl implements ClassesService {
                 .classes(classes)
                 .startDate(LocalDateTime.now())
                 .endDate(LocalDateTime.now())
-                .status(false)
+                .status(true)
                 .build();
         courseOfflineStudentRepository.save(courseOfflineStudent);
 
